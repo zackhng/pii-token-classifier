@@ -1,0 +1,46 @@
+# source -> {source_label: TARGET}. Unlisted labels become O. IGNORE => loss-masked (-100).
+entities: [PERSON, BUSINESS, ADDRESS, DOB, ACCOUNT, PHONE, EMAIL, TIN]
+nemotron:
+  first_name: PERSON
+  last_name: PERSON
+  company_name: BUSINESS
+  street_address: ADDRESS
+  city: ADDRESS
+  state: ADDRESS
+  county: ADDRESS
+  country: ADDRESS
+  postcode: ADDRESS
+  coordinate: ADDRESS
+  date_of_birth: DOB
+  account_number: ACCOUNT
+  customer_id: ACCOUNT
+  health_plan_beneficiary_number: ACCOUNT
+  phone_number: PHONE
+  email: EMAIL
+  ssn: TIN
+gretel:
+  name: PERSON
+  first_name: PERSON
+  company: BUSINESS
+  street_address: ADDRESS
+  date_of_birth: DOB
+  bban: ACCOUNT
+  iban: ACCOUNT
+  credit_card_number: ACCOUNT
+  customer_id: ACCOUNT
+  phone_number: PHONE
+  email: EMAIL
+  ssn: TIN
+ai4privacy:
+  GIVENNAME: PERSON
+  SURNAME: PERSON
+  STREET: ADDRESS
+  BUILDINGNUM: ADDRESS
+  CITY: ADDRESS
+  ZIPCODE: ADDRESS
+  CREDITCARDNUMBER: ACCOUNT
+  TELEPHONENUM: PHONE
+  EMAIL: EMAIL
+  TAXNUM: TIN
+  SOCIALNUM: TIN
+  DATE: IGNORE
