@@ -90,7 +90,7 @@ One 100,000-character document (≈23k tokens → 81 windows of 384 tokens, 322 
 | RTX 5060 Ti 16 GB | ~0.5 s |
 | CPU (6 threads) | ~8 s |
 
-Model load adds ~1 s once. Latency scales roughly linearly with document length.
+Model load adds ~1 s once. Latency scales roughly linearly with document length. Full breakdown: [`LATENCY.md`](LATENCY.md).
 
 ## Training data
 
