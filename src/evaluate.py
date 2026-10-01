@@ -1,4 +1,4 @@
-"""Span-level P/R/F1 on data/processed/test.jsonl, overall / per entity / per source.
+"""Span-level P/R/F1 on data/processed/<split>.jsonl, overall / per entity / per source.
 
 Reports strict (exact char boundaries + label) and lenient (any overlap + label) matching.
 Predictions overlapping gold IGNORE spans are discarded.
@@ -50,13 +50,14 @@ def main():
     cfg = load_yaml("train.yaml")
     ap = argparse.ArgumentParser()
     ap.add_argument("--model_dir", default=str(ROOT / cfg["output_dir"]))
+    ap.add_argument("--split", default="test", help="processed split to score (test / stress)")
     ap.add_argument("--limit", type=int)
     ap.add_argument("--out", help="write metrics json here")
     args = ap.parse_args()
 
     t = cfg["tokenize"]
     predictor = PIIPredictor(args.model_dir, t["max_length"], t["stride"], t["label_all_tokens"])
-    ds = load_split("test", args.limit)
+    ds = load_split(args.split, args.limit)
     strict = defaultdict(lambda: defaultdict(int))
     lenient = defaultdict(lambda: defaultdict(int))
 

@@ -1,5 +1,20 @@
-# source -> {source_label: TARGET}. Unlisted labels become O. IGNORE => loss-masked (-100).
+# source -> {source_label: TARGET}. Unlisted labels become O.
+#   O        : look-alikes we deliberately teach as "not PII" (amounts, ordinary dates, PIN,
+#              CVV, SWIFT/routing codes, ...) - leave them unlisted.
+#   IGNORE   : loss-masked (-100); only for spans that are genuinely ambiguous under our
+#              definitions (national ID, fax, passport/ID card, crypto wallets).
+#   DATE_CUE : a date that becomes DOB when a birth cue (birth/born/DOB) precedes it on the
+#              same line, otherwise O.
 entities: [PERSON, BUSINESS, ADDRESS, DOB, ACCOUNT, PHONE, EMAIL, TIN]
+
+# raw labels recorded as look-alike negatives (by group) for eval_confusion.py
+negatives:
+  amount: [AMOUNT, BALANCE, SALARY]
+  currency: [CURRENCY]
+  date: [date, DATE]          # DATE only when DATE_CUE resolves to O
+  code: [pin, cvv, swift_bic, bank_routing_number, account_pin, credit_card_security_code,
+         swift_bic_code, BIC, PIN, CREDITCARDCVV, CREDITCARDEXPIRY]
+
 nemotron:
   first_name: PERSON
   last_name: PERSON
@@ -15,12 +30,17 @@ nemotron:
   account_number: ACCOUNT
   customer_id: ACCOUNT
   health_plan_beneficiary_number: ACCOUNT
+  credit_debit_card: ACCOUNT
   phone_number: PHONE
   email: EMAIL
   ssn: TIN
+  tax_id: TIN
+  national_id: IGNORE
+  fax_number: IGNORE
 gretel:
   name: PERSON
   first_name: PERSON
+  last_name: PERSON
   company: BUSINESS
   street_address: ADDRESS
   date_of_birth: DOB
@@ -43,4 +63,34 @@ ai4privacy:
   EMAIL: EMAIL
   TAXNUM: TIN
   SOCIALNUM: TIN
-  DATE: IGNORE
+  IDCARDNUM: IGNORE
+  PASSPORTNUM: IGNORE
+  DATE: DATE_CUE
+pfi:
+  GIVENNAME: PERSON
+  SURNAME: PERSON
+  BANKNAME: BUSINESS
+  STREET: ADDRESS
+  BUILDINGNUM: ADDRESS
+  CITY: ADDRESS
+  ZIPCODE: ADDRESS
+  ACCOUNTNUM: ACCOUNT
+  IBAN: ACCOUNT
+  CREDITCARDNUMBER: ACCOUNT
+  MASKEDNUMBER: ACCOUNT
+  POLICYNUM: ACCOUNT
+  TELEPHONENUM: PHONE
+  EMAIL: EMAIL
+  TAXNUM: TIN
+  SOCIALNUM: TIN
+  DATE: DATE_CUE
+  IDCARDNUM: IGNORE
+  PASSPORTNUM: IGNORE
+  DRIVERLICENSENUM: IGNORE
+  BITCOINADDRESS: IGNORE
+  ETHEREUMADDRESS: IGNORE
+  LITECOINADDRESS: IGNORE
+  # TODO decide after inspecting values (holder name -> PERSON? account type -> O?;
+  # Visa/Mastercard -> BUSINESS or O?). IGNORE until then.
+  ACCOUNTNAME: IGNORE
+  CREDITCARDISSUER: IGNORE

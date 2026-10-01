@@ -1,15 +1,21 @@
 seed: 42
 model_name: microsoft/deberta-v3-xsmall
-output_dir: outputs/deberta-v3-xsmall-pii
+output_dir: outputs/deberta-v3-xsmall-pii-v2
 
 data:
   raw_dir: data/raw
   processed_dir: data/processed
-  # training documents per source (English only). Total = 50k.
+  # training documents per source (English only). Sources not downloaded are skipped.
   # If a source has fewer English docs than its cap, the shortfall is filled from the others.
-  train_caps: {nemotron: 20000, gretel: 15000, ai4privacy: 15000}
+  train_caps: {nemotron: 20000, gretel: 15000, ai4privacy: 15000, pfi: 20000}
   val_per_source: 1000     # held out from train split, on top of train_caps
   test_per_source: 2000    # from each source's official test/validation split
+  # train only: add every other train doc that has a date_of_birth span (on top of caps)
+  dob_boost: [nemotron, gretel]
+  # train only: per-doc probability of re-formatting dates / varying birth-date cues
+  augment: {p_date: 0.5, p_cue: 0.5}
+  # form-style records mixing targets with look-alikes (src/snippets.py)
+  snippets: {train: 6000, stress: 1000}
 
 tokenize:                 # OpenMed: max length 384, first sub-token labelling
   max_length: 384

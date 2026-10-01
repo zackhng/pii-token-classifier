@@ -9,9 +9,11 @@ DATASETS = {
     "nemotron": "nvidia/Nemotron-PII",
     "gretel": "gretelai/synthetic_pii_finance_multilingual",
     "ai4privacy": "ai4privacy/pii-masking-openpii-1.5m",
+    "pfi": "ai4privacy/pii-masking-financial-pfi-400k",   # gated: needs HF login + approval
 }
 
 IGNORE = "IGNORE"
+DATE_CUE = "DATE_CUE"   # label-map target: DOB if a birth cue precedes the date, else O
 
 
 def load_yaml(name: str) -> dict:

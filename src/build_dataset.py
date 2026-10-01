@@ -1,7 +1,10 @@
 """Normalize raw sources to {id, source, text, spans} jsonl with the target label set.
 
-Pipeline per source: English filter -> label map -> overlap cleanup -> merge adjacent
-same-label spans -> seeded subsample (50k train by default) -> train/val/test jsonl in data/processed.
+Pipeline per source: English filter -> (train only: date/cue augmentation) -> label map ->
+overlap cleanup -> merge adjacent same-label spans -> seeded subsample -> train/val/test jsonl in
+data/processed. Train also gets unused DOB-bearing docs (dob_boost) and form-style records
+(snippets). Look-alike spans (amounts, ordinary dates, codes) of test/stress docs are written to
+negatives.jsonl for eval_confusion.py.
 """
 import json
 import random
@@ -10,7 +13,9 @@ from collections import Counter
 
 from datasets import load_from_disk
 
-from common import IGNORE, ROOT, load_yaml
+from augment import augment_doc, has_birth_cue
+from common import DATE_CUE, IGNORE, ROOT, load_yaml
+from snippets import make_records
 
 # Gap text allowed between two same-label spans for them to be merged into one.
 # Addresses span commas/newlines ("12 Main St,\nSpringfield, IL"); other labels only spaces.
@@ -21,6 +26,7 @@ SOURCE_FIELDS = {
     "nemotron": ("text", "spans", "test"),
     "gretel": ("generated_text", "pii_spans", "test"),
     "ai4privacy": ("source_text", "privacy_mask", "validation"),
+    "pfi": ("source_text", "privacy_mask", "validation"),
 }
 
 
@@ -46,16 +52,28 @@ def parse_spans(raw) -> list[dict]:
     return list(raw)
 
 
-def clean_spans(text: str, spans: list[dict], mapping: dict, stats: Counter) -> list[dict]:
+def clean_spans(text: str, spans: list[dict], mapping: dict, stats: Counter,
+                negs: list | None = None, neg_groups: dict | None = None) -> list[dict]:
+    """Map raw spans to target labels. Look-alike spans whose raw label is in `neg_groups`
+    (raw label -> group) are appended to `negs`; they stay O for training."""
     mapped = []
     for s in spans:
-        target = mapping.get(s["label"])
-        if target is None:
-            continue
         start, end = int(s["start"]), int(s["end"])
+        target = mapping.get(s["label"])
+        if target == DATE_CUE:
+            target = "DOB" if has_birth_cue(text, start) else None
+            stats["date_cue_dob" if target else "date_cue_o"] += 1
+        if target is None:
+            group = (neg_groups or {}).get(s["label"])
+            if negs is not None and group and 0 <= start < end <= len(text):
+                negs.append({"start": start, "end": end, "label": group})
+            continue
         if not (0 <= start < end <= len(text)) or not text[start:end].strip():
             stats["invalid"] += 1
             continue
+        if target == "DOB" and not any(c.isdigit() for c in text[start:end]):
+            target = IGNORE            # placeholders like "[Redacted]", "MM/DD/YYYY"
+            stats["dob_placeholder"] += 1
         # trim whitespace so token alignment starts/ends on real characters
         while text[start].isspace():
             start += 1
@@ -88,7 +106,9 @@ def clean_spans(text: str, spans: list[dict], mapping: dict, stats: Counter) -> 
     return merged
 
 
-def normalize(source: str, split, mapping: dict, stats: Counter) -> list[dict]:
+def normalize(source: str, split, mapping: dict, stats: Counter, aug: dict | None = None,
+              rng: random.Random | None = None, neg_groups: dict | None = None,
+              keep_negs: bool = False) -> list[dict]:
     text_col, span_col, _ = SOURCE_FIELDS[source]
     out = []
     for i, row in enumerate(split):
@@ -97,10 +117,24 @@ def normalize(source: str, split, mapping: dict, stats: Counter) -> list[dict]:
         text = row[text_col]
         if not text or not text.strip():
             continue
-        spans = clean_spans(text, parse_spans(row[span_col]), mapping, stats)
+        raw = [{"start": int(s["start"]), "end": int(s["end"]), "label": s["label"]}
+               for s in parse_spans(row[span_col])]
+        if aug:
+            new_text, raw = augment_doc(text, raw, rng, aug["p_date"], aug["p_cue"])
+            stats["augmented"] += new_text != text
+            text = new_text
+        negs = [] if keep_negs else None
+        spans = clean_spans(text, raw, mapping, stats, negs, neg_groups)
         rid = row.get("uid", row.get("index", i))
-        out.append({"id": f"{source}-{rid}", "source": source, "text": text, "spans": spans})
+        rec = {"id": f"{source}-{rid}", "source": source, "text": text, "spans": spans}
+        if keep_negs:
+            rec["negs"] = negs
+        out.append(rec)
     return out
+
+
+def has_raw_label(source: str, row: dict, label: str) -> bool:
+    return any(s["label"] == label for s in parse_spans(row[SOURCE_FIELDS[source][1]]))
 
 
 def english_only(source: str, split):
@@ -133,6 +167,11 @@ def allocate(caps: dict, available: dict) -> dict:
     return alloc
 
 
+def split_negs(rows: list[dict]) -> list[dict]:
+    """Pop the `negs` field (not part of the training schema) into separate records."""
+    return [{"id": r["id"], "negs": r.pop("negs")} for r in rows if "negs" in r]
+
+
 def main():
     cfg = load_yaml("train.yaml")
     label_cfg = load_yaml("label_map.yaml")
@@ -141,15 +180,24 @@ def main():
     raw_dir, out_dir = ROOT / dcfg["raw_dir"], ROOT / dcfg["processed_dir"]
     out_dir.mkdir(parents=True, exist_ok=True)
     n_val = dcfg["val_per_source"]
+    aug = dcfg.get("augment")
+    aug_rng = random.Random(seed)
+    neg_groups = {lab: g for g, labs in label_cfg["negatives"].items() for lab in labs}
 
     splits = {}
     for source, (_, _, eval_split) in SOURCE_FIELDS.items():
+        if source not in dcfg["train_caps"]:
+            continue
+        if not (raw_dir / source).exists():
+            print(f"[skip] {source}: not downloaded (python download.py --only {source})")
+            continue
         ds = load_from_disk(str(raw_dir / source))
         splits[source] = (english_only(source, ds["train"]), english_only(source, ds[eval_split]))
         print(f"{source}: English train={len(splits[source][0])} eval={len(splits[source][1])}")
 
+    caps = {s: dcfg["train_caps"][s] for s in splits}
     available = {s: len(tr) - n_val for s, (tr, _) in splits.items()}
-    alloc = allocate(dcfg["train_caps"], available)
+    alloc = allocate(caps, available)
     print(f"train allocation: {alloc}  total={sum(alloc.values())}")
 
     train, val, test = [], [], []
@@ -158,10 +206,17 @@ def main():
         stats = Counter()
         tr_split = tr_split.shuffle(seed=seed)
         val_rows = normalize(source, tr_split.select(range(n_val)), mapping, stats)
-        tr_rows = normalize(source, tr_split.select(range(n_val, n_val + alloc[source])), mapping, stats)
+        used = n_val + alloc[source]
+        tr_rows = normalize(source, tr_split.select(range(n_val, used)), mapping, stats,
+                            aug, aug_rng, neg_groups)
+        if source in dcfg.get("dob_boost", []):
+            rest = tr_split.select(range(used, len(tr_split)))
+            rest = rest.filter(lambda r: has_raw_label(source, r, "date_of_birth"))
+            tr_rows += normalize(source, rest, mapping, stats, aug, aug_rng, neg_groups)
+            print(f"{source}: dob_boost +{len(rest)} docs")
         te_split = te_split.shuffle(seed=seed)
         te_rows = normalize(source, te_split.select(range(min(dcfg["test_per_source"], len(te_split)))),
-                            mapping, stats)
+                            mapping, stats, neg_groups=neg_groups, keep_negs=True)
         train += tr_rows
         val += val_rows
         test += te_rows
@@ -171,8 +226,25 @@ def main():
         print(f"   span labels: {dict(label_counts.most_common())}")
         print(f"   cleanup: {dict(stats)}")
 
+    # form-style records: train ones from train spans, stress ones (other templates) from test
+    sn = dcfg.get("snippets", {})
+    snips = make_records(train, sn.get("train", 0), seed, "train", "snip")
+    for r in snips:
+        r.pop("negs")
+    train += snips
+    stress = make_records(test, sn.get("stress", 0), seed + 1, "stress", "stress")
+    print(f"\nsnippets: train +{len(snips)}, stress {len(stress)}")
+
+    # the sources' official splits share some identical texts: keep them out of train
+    held_out = {r["text"] for r in val + test}
+    n_before = len(train)
+    train = [r for r in train if r["text"] not in held_out]
+    print(f"dropped {n_before - len(train)} train docs identical to a val/test doc")
+
     random.Random(seed).shuffle(train)
-    for name, rows in [("train", train), ("val", val), ("test", test)]:
+    negatives = split_negs(test) + split_negs(stress)
+    for name, rows in [("train", train), ("val", val), ("test", test), ("stress", stress),
+                       ("negatives", negatives)]:
         write_jsonl(out_dir / f"{name}.jsonl", rows)
         print(f"wrote {name}: {len(rows)} rows")
 
