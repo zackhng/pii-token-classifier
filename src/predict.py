@@ -3,6 +3,7 @@
     python src/predict.py --text "Call John Smith at 555-123-4567"
 """
 import argparse
+import bisect
 import json
 
 import torch
@@ -36,15 +37,16 @@ class PIIPredictor:
             mask = torch.tensor([[1] * len(w["input_ids"]) + [0] * (width - len(w["input_ids"]))
                                  for w in chunk])
             logits = self.model(input_ids=ids.to(self.device), attention_mask=mask.to(self.device)).logits
-            probs = logits.float().softmax(-1).cpu()
+            top_p, top_lab = logits.float().softmax(-1).max(-1)
+            top_p, top_lab = top_p.tolist(), top_lab.tolist()
             # a token seen in several windows keeps its most confident prediction
             for w, win in enumerate(chunk):
                 for i, (s, e) in enumerate(win["offset_mapping"]):
                     if win["special_tokens_mask"][i] or s == e:
                         continue
-                    p, lab = probs[w, i].max(-1)
-                    if (s, e) not in best or p.item() > best[(s, e)][0]:
-                        best[(s, e)] = (p.item(), lab.item())
+                    p = top_p[w][i]
+                    if (s, e) not in best or p > best[(s, e)][0]:
+                        best[(s, e)] = (p, top_lab[w][i])
 
         offsets = sorted(best)
         starts = word_starts(text, offsets)
@@ -52,9 +54,14 @@ class PIIPredictor:
         if not self.label_all_tokens:  # OpenMed-style: word label = first sub-token's label
             names = fill_continuations(names, starts)
         spans = labels_to_spans(offsets, names, text)
+        # span score = mean confidence of the word-initial tokens it covers
+        ends = [o[1] for o in offsets]
         for sp in spans:
-            ps = [best[o][0] for o, st in zip(offsets, starts)
-                  if st and sp["start"] <= o[1] and o[0] < sp["end"]]
+            ps, k = [], bisect.bisect_left(ends, sp["start"])
+            while k < len(offsets) and offsets[k][0] < sp["end"]:
+                if starts[k]:
+                    ps.append(best[offsets[k]][0])
+                k += 1
             sp["score"] = round(sum(ps) / len(ps), 4) if ps else 0.0
             sp["text"] = text[sp["start"]:sp["end"]]
         return spans

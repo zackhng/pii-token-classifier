@@ -47,18 +47,50 @@ Per source: Nemotron 0.968 · AI4Privacy 0.972 · Gretel 0.840. Full numbers: [`
 entities (e.g. `DOB 04/12/1987`, a bare account number, or a well-known bank name) and can clip
 boundaries on hyphenated IDs. English only.
 
+## Quick start (inference only)
+
+```bash
+git clone https://github.com/zackhng/pii-token-classifier.git
+cd pii-token-classifier
+
+# weights -> outputs/deberta-v3-xsmall-pii/ (the default path used by the scripts)
+curl -L -o model.zip https://github.com/zackhng/pii-token-classifier/releases/download/v1.0/deberta-v3-xsmall-pii.zip
+mkdir -p outputs/deberta-v3-xsmall-pii && unzip model.zip -d outputs/deberta-v3-xsmall-pii
+# Windows PowerShell: Expand-Archive model.zip -DestinationPath outputs\deberta-v3-xsmall-pii
+
+python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128   # NVIDIA GPU
+# pip install torch==2.8.0                                                    # CPU-only / macOS
+pip install -r requirements.txt
+
+cd src
+python predict.py --text "Hi, I'm Maria Gonzalez, reach me at maria.g@outlook.com"
+```
+
 ## Usage
 
 ```python
-from predict import PIIPredictor  # src/predict.py
+from predict import PIIPredictor  # run from src/
 
-p = PIIPredictor("path/to/deberta-v3-xsmall-pii")
+p = PIIPredictor("../outputs/deberta-v3-xsmall-pii")
 p.predict("Hi, I'm Maria Gonzalez, reach me at maria.g@outlook.com or (415) 555-0199.")
 # [{'start': 8, 'end': 22, 'label': 'PERSON', 'score': 1.0, 'text': 'Maria Gonzalez'}, ...]
 ```
 
 `PIIPredictor` handles sliding windows for long documents and maps predictions back to character spans.
 If loading the model directly with transformers ≥ 5, pass `dtype=torch.float32`.
+
+### Latency
+
+One 100,000-character document (≈23k tokens → 81 windows of 384 tokens, 322 PII spans found),
+`PIIPredictor.predict`, fp32, model already loaded:
+
+| Device | Latency |
+|---|---|
+| RTX 5060 Ti 16 GB | ~0.5 s |
+| CPU (6 threads) | ~8 s |
+
+Model load adds ~1 s once. Latency scales roughly linearly with document length.
 
 ## Training data
 
