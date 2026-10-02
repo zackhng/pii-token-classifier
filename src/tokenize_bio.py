@@ -49,8 +49,12 @@ def token_labels(text: str, offsets, spans: list[dict], label2id: dict, special_
     for i, (s, e) in enumerate(offsets):
         s, e = _trim_offset(text, s, e)
         if s >= e:
-            labels.append(IGNORE_ID if offsets[i][0] == offsets[i][1] else label2id["O"])
-            prev_span = None
+            # special token: closes any span. Whitespace-only token (a line-break / tab marker
+            # or a lone "▁"): no label, and the span continues - so "12 Main St⏎London" stays
+            # one B-I-I-I address instead of two.
+            if offsets[i][0] == offsets[i][1]:
+                prev_span = None
+            labels.append(IGNORE_ID)
             continue
         while k < len(spans) and spans[k]["end"] <= s:
             k += 1
@@ -69,15 +73,36 @@ def token_labels(text: str, offsets, spans: list[dict], label2id: dict, special_
     return labels
 
 
-def window_encode(tokenizer, text: str, max_length: int, stride: int) -> list[dict]:
+# DeBERTa-v3's SentencePiece normalises "\n" and "\t" to plain spaces, so the model cannot see
+# line or table-cell breaks (multi-line addresses, form fields). They are shown to it as these
+# in-vocabulary marker tokens instead; offsets are mapped back to the original text.
+VISIBLE_BREAKS = {"\n": " ¶ ", "\t": " | ", "\r": " "}
+
+
+def visible_breaks(text: str) -> tuple[str, list[int]]:
+    """(text with breaks replaced by markers, original index of every new character)."""
+    out, back = [], []
+    for i, c in enumerate(text):
+        rep = VISIBLE_BREAKS.get(c, c)
+        out.append(rep)
+        back.extend([i] * len(rep))
+    return "".join(out), back
+
+
+def window_encode(tokenizer, text: str, max_length: int, stride: int,
+                  show_breaks: bool = True) -> list[dict]:
     """Tokenize the whole text once, then cut overlapping windows of `max_length`
-    (incl. [CLS]/[SEP]); consecutive windows share `stride` tokens.
+    (incl. [CLS]/[SEP]); consecutive windows share `stride` tokens. Offsets refer to `text`.
+    `show_breaks`: line/tab markers (v2.1+ models); False reproduces v1/v2 tokenization.
 
     Done by hand because `return_overflowing_tokens` in transformers 5.x drops most of
     long documents for DeBERTa-v3's tokenizer.
     """
-    enc = tokenizer(text, add_special_tokens=False, return_offsets_mapping=True)
-    ids, offs = enc["input_ids"], enc["offset_mapping"]
+    shown, back = visible_breaks(text) if show_breaks else (text, list(range(len(text))))
+    enc = tokenizer(shown, add_special_tokens=False, return_offsets_mapping=True)
+    ids = enc["input_ids"]
+    offs = [(back[s], back[e - 1] + 1) if e > s else (back[s] if s < len(back) else len(text),) * 2
+            for s, e in enc["offset_mapping"]]
     body = max_length - 2
     step = max(1, body - stride)
     windows, start = [], 0
@@ -95,7 +120,7 @@ def window_encode(tokenizer, text: str, max_length: int, stride: int) -> list[di
 
 
 def make_tokenize_fn(tokenizer, label2id: dict, max_length: int, stride: int,
-                     label_all_tokens: bool = False):
+                     label_all_tokens: bool = False, show_breaks: bool = True):
     """Batched map fn: {text, spans} -> windowed input_ids/attention_mask/labels."""
     id2name = {v: k for k, v in label2id.items()}
 
@@ -103,7 +128,7 @@ def make_tokenize_fn(tokenizer, label2id: dict, max_length: int, stride: int,
         out = {"input_ids": [], "attention_mask": [], "labels": []}
         for text, spans in zip(batch["text"], batch["spans"]):
             spans = sorted(spans, key=lambda s: s["start"])
-            for win in window_encode(tokenizer, text, max_length, stride):
+            for win in window_encode(tokenizer, text, max_length, stride, show_breaks):
                 labs = token_labels(text, win["offset_mapping"], spans, label2id,
                                     win["special_tokens_mask"], label_all_tokens)
                 # a window that starts mid-span must open with B-, not I-

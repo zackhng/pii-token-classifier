@@ -21,7 +21,8 @@ def load_split(name: str, limit: int | None = None):
     return ds
 
 
-def tokenize(ds, tokenizer, label2id, max_length, stride, label_all_tokens=False, num_proc=4):
-    fn = make_tokenize_fn(tokenizer, label2id, max_length, stride, label_all_tokens)
+def tokenize(ds, tokenizer, label2id, max_length, stride, label_all_tokens=False, num_proc=4,
+             show_breaks=True):
+    fn = make_tokenize_fn(tokenizer, label2id, max_length, stride, label_all_tokens, show_breaks)
     return ds.map(fn, batched=True, remove_columns=ds.column_names, num_proc=num_proc,
                   desc="tokenize")

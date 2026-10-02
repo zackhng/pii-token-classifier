@@ -1,6 +1,6 @@
 seed: 42
 model_name: microsoft/deberta-v3-xsmall
-output_dir: outputs/deberta-v3-xsmall-pii-v2
+output_dir: outputs/deberta-v3-xsmall-pii-v2.1
 
 data:
   raw_dir: data/raw
@@ -16,11 +16,23 @@ data:
   augment: {p_date: 0.5, p_cue: 0.5}
   # form-style records mixing targets with look-alikes (src/snippets.py)
   snippets: {train: 6000, stress: 1000}
+  # real public addresses (src/address_sources.py -> data/addresses/addresses.jsonl), placed in
+  # letters / KYC forms / statement headers (snippets.make_address_records)
+  addresses:
+    seed: 42
+    libpostal_files: 12          # OpenStreetMap address shards of ellenhp/libpostal (~186 MB each)
+    per_country: {sg: 3000, ae: 2500, gb: 3000, hk: 2500, in: 1500, my: 1500, id: 1500,
+                  cn: 1500, th: 1000, ph: 1000, vn: 800, tw: 800, jp: 800, kr: 800,
+                  sa: 600, kw: 600, qa: 300, bh: 300, om: 300, lk: 500, bd: 500, pk: 500}
+    india_raw: {mca: 1500, bank: 500}   # registered offices / bank branches (gagan1985/indian-addresses-raw)
+    add_country_prob: 0.3
+    records: {train: 8000, stress: 800}
 
 tokenize:                 # OpenMed: max length 384, first sub-token labelling
   max_length: 384
   stride: 96
   label_all_tokens: false
+  visible_breaks: true    # show line breaks / tabs to the model as markers (v2.1+); saved in the model config
 
 train:
   learning_rate: 5.0e-5

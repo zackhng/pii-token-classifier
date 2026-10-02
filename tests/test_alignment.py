@@ -106,3 +106,14 @@ def test_processed_roundtrip(tok):
         total += len(gold)
         hit += len(gold & rec)
     assert total == 0 or hit / total > 0.97, f"recovered {hit}/{total}"
+
+
+def test_multiline_span_stays_one_entity(tok):
+    text = "Address:\n12 Main Street\nLondon SW1A 2AA\nTel: 020 7946 0000"
+    a = text.index("12 Main")
+    b = text.index("2AA") + 3
+    spans = [{"start": a, "end": b, "label": "ADDRESS"}]
+    out, rec = roundtrip(tok, text, spans)
+    assert rec == {(a, b, "ADDRESS")}
+    names = [ID2LABEL[l] for l in out["labels"][0] if l != IGNORE_ID]
+    assert names.count("B-ADDRESS") == 1

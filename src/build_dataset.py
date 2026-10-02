@@ -15,7 +15,7 @@ from datasets import load_from_disk
 
 from augment import augment_doc, has_birth_cue
 from common import DATE_CUE, IGNORE, ROOT, load_yaml
-from snippets import make_records
+from snippets import make_address_records, make_records
 
 # Gap text allowed between two same-label spans for them to be merged into one.
 # Addresses span commas/newlines ("12 Main St,\nSpringfield, IL"); other labels only spaces.
@@ -52,8 +52,22 @@ def parse_spans(raw) -> list[dict]:
     return list(raw)
 
 
+# ADDRESS = full residential / office addresses and their parts. A span made only of place-name
+# parts (no street, building, postcode or coordinates) counts only when an address field cue
+# precedes it on the same line ("City: Boston"); a bare place in running text ("expanding into
+# France") becomes O and is recorded as a "place" look-alike.
+PLACE_ONLY = {"city", "state", "county", "country", "CITY"}
+ADDRESS_CUE = re.compile(r"(address|addr\.?|city|town|state|province|country|county|post ?code|zip|"
+                         r"residen\w*|located at|domicile)\W{0,3}$", re.I)
+# Gretel labels only the street part of "0567 Drake Road, Manchester, M12 4BE, UK"; the unlabelled
+# continuation is masked so a complete prediction is not trained (or scored) as wrong.
+STREET_TAIL = re.compile(r",[^\n.;|()]{1,80}")
+ADDRESS_TAIL_SOURCES = {"gretel"}
+
+
 def clean_spans(text: str, spans: list[dict], mapping: dict, stats: Counter,
-                negs: list | None = None, neg_groups: dict | None = None) -> list[dict]:
+                negs: list | None = None, neg_groups: dict | None = None,
+                address_tail_ignore: bool = False) -> list[dict]:
     """Map raw spans to target labels. Look-alike spans whose raw label is in `neg_groups`
     (raw label -> group) are appended to `negs`; they stay O for training."""
     mapped = []
@@ -79,7 +93,7 @@ def clean_spans(text: str, spans: list[dict], mapping: dict, stats: Counter,
             start += 1
         while text[end - 1].isspace():
             end -= 1
-        mapped.append({"start": start, "end": end, "label": target})
+        mapped.append({"start": start, "end": end, "label": target, "raw": {s["label"]}})
 
     # overlaps: keep the longer span
     mapped.sort(key=lambda s: (s["start"], -(s["end"] - s["start"])))
@@ -100,10 +114,29 @@ def clean_spans(text: str, spans: list[dict], mapping: dict, stats: Counter,
             gap_re = MERGE_GAP.get(s["label"], MERGE_GAP["DEFAULT"])
             if gap_re.fullmatch(text[prev["end"]:s["start"]]):
                 prev["end"] = s["end"]
+                prev["raw"] = prev["raw"] | s["raw"]
                 stats["merged"] += 1
                 continue
         merged.append(dict(s))
-    return merged
+
+    out = []
+    for s in merged:
+        raw = s.pop("raw")
+        if s["label"] == "ADDRESS" and raw <= PLACE_ONLY:
+            line = text[max(0, s["start"] - 40):s["start"]].rsplit("\n", 1)[-1]
+            if not ADDRESS_CUE.search(line):
+                stats["address_bare_place_to_O"] += 1
+                if negs is not None:
+                    negs.append({"start": s["start"], "end": s["end"], "label": "place"})
+                continue
+        out.append(s)
+        if address_tail_ignore and s["label"] == "ADDRESS" and raw == {"street_address"}:
+            m = STREET_TAIL.match(text, s["end"])
+            nxt = min((o["start"] for o in merged if o["start"] >= s["end"]), default=len(text))
+            if m and m.end() <= nxt:
+                out.append({"start": s["end"], "end": m.end(), "label": IGNORE})
+                stats["address_tail_ignored"] += 1
+    return out
 
 
 def normalize(source: str, split, mapping: dict, stats: Counter, aug: dict | None = None,
@@ -124,7 +157,8 @@ def normalize(source: str, split, mapping: dict, stats: Counter, aug: dict | Non
             stats["augmented"] += new_text != text
             text = new_text
         negs = [] if keep_negs else None
-        spans = clean_spans(text, raw, mapping, stats, negs, neg_groups)
+        spans = clean_spans(text, raw, mapping, stats, negs, neg_groups,
+                            address_tail_ignore=source in ADDRESS_TAIL_SOURCES)
         rid = row.get("uid", row.get("index", i))
         rec = {"id": f"{source}-{rid}", "source": source, "text": text, "spans": spans}
         if keep_negs:
@@ -234,6 +268,24 @@ def main():
     train += snips
     stress = make_records(test, sn.get("stress", 0), seed + 1, "stress", "stress")
     print(f"\nsnippets: train +{len(snips)}, stress {len(stress)}")
+
+    # real public addresses in context (src/address_sources.py must have been run)
+    addr_path = ROOT / "data/addresses/addresses.jsonl"
+    acfg = dcfg.get("addresses")
+    if acfg and addr_path.exists():
+        addrs = [json.loads(l) for l in open(addr_path, encoding="utf-8")]
+        rec = acfg["records"]
+        a_train = make_address_records(train, [a for a in addrs if a["split"] == "train"],
+                                       rec["train"], seed + 2, "train", "addr")
+        for r in a_train:
+            r.pop("negs")
+        train += a_train
+        stress += make_address_records(test, [a for a in addrs if a["split"] == "stress"],
+                                       rec["stress"], seed + 3, "stress", "addr-stress")
+        print(f"address records: train +{len(a_train)}, stress +{rec['stress']} "
+              f"(from {len(addrs)} real addresses)")
+    elif acfg:
+        print("[warn] data/addresses/addresses.jsonl missing - run address_sources.py first")
 
     # the sources' official splits share some identical texts: keep them out of train
     held_out = {r["text"] for r in val + test}

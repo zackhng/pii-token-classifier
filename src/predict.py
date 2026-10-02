@@ -21,13 +21,15 @@ class PIIPredictor:
         self.model = AutoModelForTokenClassification.from_pretrained(
             model_dir, dtype=torch.float32).to(self.device).eval()
         self.id2label = self.model.config.id2label
+        # models trained with line/tab markers record it in their config (v2.1+)
+        self.show_breaks = bool(getattr(self.model.config, "visible_breaks", False))
         self.max_length, self.stride = max_length, stride
         self.label_all_tokens = label_all_tokens
         self.batch_windows = batch_windows
 
     @torch.no_grad()
     def predict(self, text: str) -> list[dict]:
-        wins = window_encode(self.tok, text, self.max_length, self.stride)
+        wins = window_encode(self.tok, text, self.max_length, self.stride, self.show_breaks)
         best: dict[tuple[int, int], tuple[float, int]] = {}
         for b in range(0, len(wins), self.batch_windows):
             chunk = wins[b:b + self.batch_windows]

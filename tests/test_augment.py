@@ -94,3 +94,43 @@ def test_snippet_spans_valid():
                 assert r["text"][s["start"]:s["end"]].strip() == r["text"][s["start"]:s["end"]]
             assert any(s["label"] for s in r["spans"])
 
+
+def test_bare_place_becomes_o_but_address_cue_keeps_it():
+    from build_dataset import clean_spans
+    text = "The fund expanded into France last year.\nCity: Boston\nTel: 555 0100\n12 Main St, Springfield"
+    raw = spans_of(text, [("France", "country"), ("Boston", "city"), ("12 Main St", "street_address"),
+                          ("Springfield", "city")])
+    negs = []
+    m = {"country": "ADDRESS", "city": "ADDRESS", "street_address": "ADDRESS"}
+    spans = clean_spans(text, raw, m, Counter(), negs, {})
+    assert [text[s["start"]:s["end"]] for s in spans] == ["Boston", "12 Main St, Springfield"]
+    assert [text[n["start"]:n["end"]] for n in negs] == ["France"]
+
+
+def test_gretel_street_tail_ignored():
+    from build_dataset import clean_spans
+    text = "Send it to 0567 Drake Road, Manchester, M12 4BE, UK. Thanks"
+    raw = spans_of(text, [("0567 Drake Road", "street_address")])
+    spans = clean_spans(text, raw, {"street_address": "ADDRESS"}, Counter(), address_tail_ignore=True)
+    assert [(text[s["start"]:s["end"]], s["label"]) for s in spans] == [
+        ("0567 Drake Road", "ADDRESS"), (", Manchester, M12 4BE, UK", IGNORE)]
+
+
+def test_address_records_valid():
+    from snippets import make_address_records
+    rows = [{"text": "Jane Roe of Acme Bank, account 0012-3456-789, jane@x.com, +65 6123 4567",
+             "spans": spans_of("Jane Roe of Acme Bank, account 0012-3456-789, jane@x.com, +65 6123 4567",
+                               [("Jane Roe", "PERSON"), ("Acme Bank", "BUSINESS"),
+                                ("0012-3456-789", "ACCOUNT"), ("jane@x.com", "EMAIL"),
+                                ("+65 6123 4567", "PHONE")])}]
+    addrs = [{"country": "sg", "lines": ["Blk 123 Ang Mo Kio Avenue 3", "#04-56", "Singapore 560123"]},
+             {"country": "gb", "lines": ["10 Downing Street", "London", "SW1A 2AA"]}]
+    for style in ("train", "stress"):
+        recs = make_address_records(rows, addrs, 200, 0, style, "t")
+        for r in recs:
+            assert any(s["label"] == "ADDRESS" for s in r["spans"])
+            for s in r["spans"] + r["negs"]:
+                v = r["text"][s["start"]:s["end"]]
+                assert v and v == v.strip()
+        multi = sum(any("\n" in r["text"][s["start"]:s["end"]] for s in r["spans"]) for r in recs)
+        assert multi > 20

@@ -9,7 +9,8 @@ first-sub-token labelling, seqeval F1).
 
 | Version | Weights | Highlights | Model card |
 |---|---|---|---|
-| **v2.0** (current) | [`deberta-v3-xsmall-pii-v2.zip`](../../releases/tag/v2.0) | Rejects look-alikes: DOB vs ordinary dates, account numbers vs amounts / codes; label-map fixes; DOB format augmentation; form-style records | [`model_card/v2.md`](model_card/v2.md) |
+| **v2.1** (current) | [`deberta-v3-xsmall-pii-v2.1.zip`](../../releases/tag/v2.1) | ADDRESS: model sees line breaks / tabs (multi-line addresses), 20,848 real public addresses from SG, IN, UAE, UK, HK, ASEAN & Asia in letters / KYC forms / statements / signatures, bare place names no longer ADDRESS | [`model_card/v2.1.md`](model_card/v2.1.md) |
+| v2.0 | [`deberta-v3-xsmall-pii-v2.zip`](../../releases/tag/v2.0) | Rejects look-alikes: DOB vs ordinary dates, account numbers vs amounts / codes; label-map fixes; DOB format augmentation; form-style records | [`model_card/v2.md`](model_card/v2.md) |
 | v1.0 | [`deberta-v3-xsmall-pii.zip`](../../releases/tag/v1.0) | First release | [`model_card/v1.md`](model_card/v1.md) |
 
 ## Labels
@@ -20,7 +21,7 @@ first-sub-token labelling, seqeval F1).
 |---|---|
 | `PERSON` | personal names |
 | `BUSINESS` | company / organization names |
-| `ADDRESS` | street & postal addresses **and** geographic locations (city, state, country, …) |
+| `ADDRESS` | residential and office addresses and their parts (street, building, unit, city, postcode, state, country), single- or multi-line. A bare place name in running text ("expanding into France") is **not** an address (v2.1+) |
 | `DOB` | dates of birth (not other dates) |
 | `ACCOUNT` | bank / card / IBAN / customer / policy account identifiers (not amounts, PINs, CVVs, SWIFT / routing codes) |
 | `PHONE` | telephone numbers |
@@ -31,36 +32,45 @@ Source-label mapping lives in [`configs/label_map.yaml`](configs/label_map.yaml)
 amounts, PINs, CVVs, SWIFT codes and ordinary dates are deliberately labelled `O` so the model learns
 to reject them.
 
-## Results (v2.0)
+## Results (v2.1)
 
-Strict = exact character boundaries + label. v1 is re-scored on the same v2-labelled data.
+Strict = exact character boundaries + label. v2 is re-scored on the same v2.1-labelled data.
 
 **Test set** — 6,000 documents from the datasets' official test/validation splits:
 
-| | v1 F1 | **v2 F1** | v2 Precision | v2 Recall | Support |
+| | v2 F1 | **v2.1 F1** | v2.1 Precision | v2.1 Recall | Support |
 |---|---|---|---|---|---|
-| **All** | 0.916 | **0.925** | 0.909 | 0.941 | 23,348 |
-| DOB | 0.888 | **0.975** | 0.954 | 0.997 | 770 |
-| ACCOUNT | 0.885 | **0.947** | 0.928 | 0.967 | 1,862 |
-| TIN | 0.951 | **0.962** | 0.937 | 0.989 | 876 |
-| EMAIL | 0.972 | 0.975 | 0.967 | 0.984 | 2,807 |
-| PHONE | 0.968 | 0.970 | 0.956 | 0.983 | 1,669 |
-| PERSON | 0.935 | 0.939 | 0.944 | 0.933 | 6,908 |
-| ADDRESS | 0.914 | 0.913 | 0.899 | 0.928 | 4,888 |
-| BUSINESS | 0.829 | 0.828 | 0.779 | 0.885 | 3,568 |
+| **All** | 0.898 | **0.925** | 0.911 | 0.940 | 21,974 |
+| ADDRESS | 0.767 | **0.905** | 0.895 | 0.914 | 3,514 |
+| DOB | 0.975 | 0.980 | 0.966 | 0.995 | 770 |
+| ACCOUNT | 0.947 | 0.954 | 0.933 | 0.976 | 1,862 |
+| TIN | 0.962 | 0.963 | 0.942 | 0.984 | 876 |
+| EMAIL | 0.975 | 0.973 | 0.961 | 0.985 | 2,807 |
+| PHONE | 0.970 | 0.973 | 0.962 | 0.984 | 1,669 |
+| PERSON | 0.939 | 0.936 | 0.934 | 0.937 | 6,908 |
+| BUSINESS | 0.828 | 0.833 | 0.793 | 0.876 | 3,568 |
 
-**Stress set** — 1,000 short form-style records (key–value, tables, sentences) with keys and layouts
-not used in training: F1 **0.893** (v1 0.729); DOB 0.995 (v1 0.530), ACCOUNT 0.890 (v1 0.606).
+(v2's ADDRESS score here is mostly the new definition: v2 tags 95% of bare place names as ADDRESS, v2.1 2.7%.)
 
-**Look-alikes wrongly tagged as PII** (stress set, lower is better): amounts / balances
-**1.3%** (v1 10.9%), PIN / CVV / SWIFT / expiry codes **5.0%** (v1 10.7%), ordinary dates **0.1%** (v1 3.6%).
+**Stress set** — 1,800 short records with layouts not used in training (form records, e-mail
+signatures, upper-case envelopes, CSV rows) and real addresses held out from training:
+F1 **0.921** (v2 0.816); ADDRESS **0.792** (v2 0.519), PERSON 0.982 (v2 0.852), BUSINESS 0.962 (v2 0.796).
 
-Full numbers: [`results/`](results) (`v2_test_*`, `v2_stress_*`) and [`model_card/v2.md`](model_card/v2.md).
+**Addresses** (stress set): found 99.0% (v2 86.2%); exact boundaries single-line **89.4%** (v2 68.6%),
+multi-line **58.9%** (v2 11.1%); per country exact: UK 84.6%, Malaysia 85.7%, Singapore 73.1%,
+Hong Kong 73.0%, UAE 64.9%, India 59.5%.
 
-**Known limitations.** Trained only on synthetic documents and not yet measured on real ones.
-The tokenizer cannot see line breaks or tabs, so multi-line addresses can be missed or cut short;
-ADDRESS (0.913) and BUSINESS (0.828) are the weakest entities. Few Asian-format IDs, company
-names and addresses. English only. Details in the model card.
+**Look-alikes wrongly tagged as PII** (stress set): amounts 1.0%, PIN / CVV / SWIFT / expiry codes 4.6%,
+ordinary dates 0.0%; bare place names on the test set 2.7%.
+
+Full numbers: [`results/`](results) (`*_v21data.*`) and [`model_card/v2.1.md`](model_card/v2.1.md).
+
+**Known limitations.** Trained on synthetic documents plus real addresses placed in templates; not yet
+measured on real documents. Multi-line address boundaries are the weakest part (58.9% exact);
+BUSINESS remains the weakest entity (0.833). UAE and East-Asian addresses are under-represented in the
+public data; Asian IDs (PAN, MyKad, NPWP) and company-name forms (Sdn Bhd, Pte Ltd) are rare.
+**Regression vs v2:** a hyphenated account number after a bare `A/C` cue in a very short input
+(`A/C 0123-456789-0`) can be missed or clipped; `Account No: …` and sentence contexts are fine. English only.
 
 ## Quick start (inference only)
 
@@ -68,10 +78,10 @@ names and addresses. English only. Details in the model card.
 git clone https://github.com/zackhng/pii-token-classifier.git
 cd pii-token-classifier
 
-# weights -> outputs/deberta-v3-xsmall-pii-v2/ (the default path used by the scripts)
-curl -L -o model.zip https://github.com/zackhng/pii-token-classifier/releases/download/v2.0/deberta-v3-xsmall-pii-v2.zip
-mkdir -p outputs/deberta-v3-xsmall-pii-v2 && unzip model.zip -d outputs/deberta-v3-xsmall-pii-v2
-# Windows PowerShell: Expand-Archive model.zip -DestinationPath outputs\deberta-v3-xsmall-pii-v2
+# weights -> outputs/deberta-v3-xsmall-pii-v2.1/ (the default path used by the scripts)
+curl -L -o model.zip https://github.com/zackhng/pii-token-classifier/releases/download/v2.1/deberta-v3-xsmall-pii-v2.1.zip
+mkdir -p outputs/deberta-v3-xsmall-pii-v2.1 && unzip model.zip -d outputs/deberta-v3-xsmall-pii-v2.1
+# Windows PowerShell: Expand-Archive model.zip -DestinationPath outputs\deberta-v3-xsmall-pii-v2.1
 
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128   # NVIDIA GPU
@@ -79,7 +89,12 @@ pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128   # 
 pip install -r requirements.txt
 
 cd src
-python predict.py --text "Hi, I'm Maria Gonzalez, DOB 04/12/1987, account 0123-456789-0, balance SGD 12,450.00"
+python predict.py --text "Maria Gonzalez
+Level 12, 8 Marina Boulevard
+Singapore 018981
+DOB 04/12/1987
+Account No: 0123-456789-0
+Balance: SGD 12,450.00"
 ```
 
 ## Usage
@@ -87,18 +102,21 @@ python predict.py --text "Hi, I'm Maria Gonzalez, DOB 04/12/1987, account 0123-4
 ```python
 from predict import PIIPredictor  # run from src/
 
-p = PIIPredictor("../outputs/deberta-v3-xsmall-pii-v2")
+p = PIIPredictor("../outputs/deberta-v3-xsmall-pii-v2.1")
 p.predict("Hi, I'm Maria Gonzalez, reach me at maria.g@outlook.com or (415) 555-0199.")
 # [{'start': 8, 'end': 22, 'label': 'PERSON', 'score': 1.0, 'text': 'Maria Gonzalez'}, ...]
 ```
 
 `PIIPredictor` handles sliding windows for long documents and maps predictions back to character spans.
-If loading the model directly with transformers ≥ 5, pass `dtype=torch.float32`.
+From v2.1 the model is shown line breaks and tabs as marker tokens; the setting is stored in the model's
+`config.json` (`"visible_breaks": true`) and applied automatically, so v1/v2 weights keep their original
+tokenization. If loading the model directly with transformers ≥ 5, pass `dtype=torch.float32` and use
+`tokenize_bio.window_encode` for the same input handling.
 
 ### Latency
 
 One 100,000-character document (≈23k tokens → 81 windows of 384 tokens, 322 PII spans found),
-`PIIPredictor.predict`, fp32, model already loaded (same architecture for v1 and v2):
+`PIIPredictor.predict`, fp32, model already loaded (same architecture for all versions):
 
 | Device | Latency |
 |---|---|
@@ -107,9 +125,9 @@ One 100,000-character document (≈23k tokens → 81 windows of 384 tokens, 322 
 
 Model load adds ~1 s once. Latency scales roughly linearly with document length. Full breakdown: [`LATENCY.md`](LATENCY.md).
 
-## Training data (v2.0)
+## Training data (v2.1)
 
-66,036 English training documents over 3 epochs (77,812 windows of 384 tokens):
+74,036 English training documents over 3 epochs (88,911 windows of 384 tokens):
 
 | Source | Train docs | License |
 |---|---|---|
@@ -117,26 +135,43 @@ Model load adds ~1 s once. Latency scales roughly linearly with document length.
 | [gretelai/synthetic_pii_finance_multilingual](https://huggingface.co/datasets/gretelai/synthetic_pii_finance_multilingual) (English) | 15,509 | Apache-2.0 |
 | [ai4privacy/pii-masking-openpii-1.5m](https://huggingface.co/datasets/ai4privacy/pii-masking-openpii-1.5m) (English) | 14,999 | CC-BY-4.0 |
 | Form-style records ([`src/snippets.py`](src/snippets.py)), built from train-split entity values | 6,000 | — |
+| Address records ([`src/snippets.py`](src/snippets.py)): letters, KYC forms, statement headers, sign-offs, attention blocks, sentences | 8,000 | — |
+
+Real addresses for the address records ([`src/address_sources.py`](src/address_sources.py)), 20,848 in total
+(90% train / 10% stress only):
+
+| Source | Addresses | License |
+|---|---|---|
+| [ellenhp/libpostal](https://huggingface.co/datasets/ellenhp/libpostal) — OpenStreetMap addresses | 17,350 | ODbL |
+| [ellenhp/libpostal](https://huggingface.co/datasets/ellenhp/libpostal) — UK OpenAddresses | 1,499 | OpenAddresses |
+| [gagan1985/indian-addresses-raw](https://huggingface.co/datasets/gagan1985/indian-addresses-raw) — registered offices, bank branches | 1,999 | Apache-2.0 |
+
+India 3,499 · UK 3,000 · Singapore 2,990 · Hong Kong 2,500 · Indonesia 1,500 · Malaysia 1,500 ·
+Philippines 1,000 · UAE 820 · Kuwait / Saudi Arabia 600 each · Thailand 560 · Bangladesh, Sri Lanka,
+Pakistan 500 each · China 355 · Qatar, Vietnam, Oman, Korea, Taiwan, Japan, Bahrain < 150 each.
 
 Processing ([`src/build_dataset.py`](src/build_dataset.py)):
 - Adjacent same-label spans are merged (first + last name → one `PERSON`; street + city + zip → one `ADDRESS`).
+- A place-only span (city / state / country, no street or postcode) is `ADDRESS` only after an address
+  field cue ("City:", "Address:"); otherwise `O`. Gretel's unlabelled continuation after a street
+  address is masked.
 - AI4Privacy `DATE` becomes `DOB` when a birth cue ("DOB", "born", "date of birth") directly precedes it, otherwise `O`.
 - Train only: in half the documents, birth dates *and* ordinary dates are rewritten in the same random mix
-  of ~25 formats (`22/05/1987`, `22 May 1987`, `22-05-87`, `05/87`, …) and birth cues are varied, so
-  date format is no longer a shortcut for DOB ([`src/augment.py`](src/augment.py)).
+  of ~25 formats and birth cues are varied ([`src/augment.py`](src/augment.py)).
 - Validation (3,000) and test (6,000) documents are never augmented; train docs identical to a val/test doc are dropped.
 
 ## Evaluation
 
 ```bash
 cd src
-python evaluate.py --model_dir ../outputs/deberta-v3-xsmall-pii-v2                  # test set P/R/F1
-python evaluate.py --model_dir ../outputs/deberta-v3-xsmall-pii-v2 --split stress    # form-style stress set
-python eval_confusion.py --model_dir ../outputs/deberta-v3-xsmall-pii-v2 --split stress
+python evaluate.py                    # test set P/R/F1 (default model: outputs/deberta-v3-xsmall-pii-v2.1)
+python evaluate.py --split stress     # stress set
+python eval_confusion.py --split stress
 ```
 
 `eval_confusion.py` reports how often look-alikes (amounts, currencies, ordinary dates, PIN / CVV /
-SWIFT codes) are tagged as PII, plus per-entity recall and PERSON↔BUSINESS swaps.
+SWIFT codes, bare place names) are tagged as PII, per-entity recall and exact-boundary rates,
+PERSON↔BUSINESS swaps, and an ADDRESS breakdown by single- / multi-line and country.
 
 ## Reproduce
 
@@ -145,12 +180,13 @@ pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
 pip install -r requirements.txt
 
 cd src
-python download.py        # ~5 GB into data/raw
-python build_dataset.py   # 66k train / 3k val / 6k test / 1k stress jsonl
-python train.py           # ~20 min on an RTX 5060 Ti -> outputs/deberta-v3-xsmall-pii-v2
+python download.py          # ~5 GB into data/raw
+python address_sources.py   # real addresses -> data/addresses (~2.3 GB of libpostal / Indian data)
+python build_dataset.py     # 74k train / 3k val / 6k test / 1.8k stress jsonl
+python train.py             # ~22 min on an RTX 5060 Ti -> outputs/deberta-v3-xsmall-pii-v2.1
 python evaluate.py
-pytest ../tests           # span <-> BIO round-trip, augmentation and record checks
+pytest ../tests             # span <-> BIO round-trip, multi-line spans, augmentation and record checks
 ```
 
 Hyperparameters are in [`configs/train.yaml`](configs/train.yaml): lr 5e-5, batch 32, 3 epochs,
-10% warmup, weight decay 0.01, bf16 mixed precision, seed 42.
+10% warmup, weight decay 0.01, bf16 mixed precision, seed 42, `visible_breaks: true`.

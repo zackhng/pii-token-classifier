@@ -34,6 +34,7 @@ def main():
     ap.add_argument("--max_eval", type=int, help="limit val docs")
     ap.add_argument("--max_steps", type=int, default=-1)
     ap.add_argument("--output_dir", help="override config output_dir")
+    ap.add_argument("--model_name", help="override config model_name, e.g. a DAPT checkpoint dir")
     ap.add_argument("--eval_steps", type=int, help="override config eval/save steps")
     args = ap.parse_args()
 
@@ -42,13 +43,19 @@ def main():
     labels, label2id, id2label = label_maps(entities)
     set_seed(cfg["seed"])
     out_dir = str(ROOT / (args.output_dir or cfg["output_dir"]))
+    if args.model_name:
+        local = ROOT / args.model_name
+        cfg["model_name"] = str(local) if local.exists() else args.model_name
+    print(f"base model: {cfg['model_name']}")
 
     tok = AutoTokenizer.from_pretrained(cfg["model_name"])
     tcfg = cfg["tokenize"]
     train_ds = tokenize(load_split("train", args.max_train), tok, label2id,
-                        tcfg["max_length"], tcfg["stride"], tcfg["label_all_tokens"])
+                        tcfg["max_length"], tcfg["stride"], tcfg["label_all_tokens"],
+                        show_breaks=tcfg["visible_breaks"])
     val_ds = tokenize(load_split("val", args.max_eval), tok, label2id,
-                      tcfg["max_length"], tcfg["stride"], tcfg["label_all_tokens"])
+                      tcfg["max_length"], tcfg["stride"], tcfg["label_all_tokens"],
+                      show_breaks=tcfg["visible_breaks"])
     print(f"train windows={len(train_ds)}  val windows={len(val_ds)}")
 
     # transformers 5.x loads in the checkpoint dtype (fp16 for deberta-v3-xsmall); fp16 master
@@ -56,6 +63,7 @@ def main():
     model = AutoModelForTokenClassification.from_pretrained(
         cfg["model_name"], num_labels=len(labels), id2label=id2label, label2id=label2id,
         dtype=torch.float32)
+    model.config.visible_breaks = tcfg["visible_breaks"]   # read by PIIPredictor
 
     t = cfg["train"]
     targs = TrainingArguments(

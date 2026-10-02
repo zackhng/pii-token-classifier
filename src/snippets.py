@@ -9,6 +9,7 @@ Two disjoint style pools: "train" and "stress" (different keys, layouts and sent
 stress set measures generalisation rather than template memorisation.
 """
 import random
+import re
 from datetime import date, timedelta
 
 from augment import render_date
@@ -23,7 +24,7 @@ FIELDS = {
         "train": ["Bank", "Beneficiary Bank", "Employer", "Company", "Merchant", "Issuing Bank"],
         "stress": ["Bank Name", "Organisation", "Remitting Bank", "Paid To"]}),
     "address": ("ADDRESS", None, {
-        "train": ["Address", "Residential Address", "Mailing Address"],
+        "train": ["Address", "Residential Address", "Mailing Address", "Office Address"],
         "stress": ["Home Address", "Correspondence Address"]}),
     "dob": ("DOB", None, {
         "train": ["DOB", "D.O.B.", "Date of Birth", "Birth Date", "Birthdate", "DoB"],
@@ -181,6 +182,124 @@ def make_record(pools, rng, style="train") -> dict:
             doc.add(_value(f, pools, rng), f)
         doc.add(tpl)
     return {"text": doc.text().rstrip("\n") + "\n", "spans": doc.spans, "negs": doc.negs}
+
+
+# ---------------------------------------------------------------- address records
+# Real public addresses (address_sources.py) placed where addresses occur in a wealth manager's
+# documents: letters, KYC forms, statement headers, signatures. A third get an office unit /
+# level prefix. Separate layouts for train and stress.
+UNIT_PREFIX = [lambda r: f"Level {r.randint(2, 45)}", lambda r: f"#{r.randint(2, 30):02d}-{r.randint(1, 99):02d}",
+               lambda r: f"Suite {r.randint(100, 4500)}", lambda r: f"Unit {r.randint(1, 60)}{r.choice('ABC')}",
+               lambda r: f"{r.randint(2, 60)}/F", lambda r: f"Office {r.randint(101, 3999)}",
+               lambda r: f"Floor {r.randint(2, 40)}"]
+# job-title lines between name and address in train sign-offs ("Relationship Manager" is kept
+# for the stress set only)
+TITLES = ["Senior Wealth Advisor", "Compliance Officer", "Portfolio Manager", "Head of Private Banking",
+          "Client Service Executive", "Director, Investments", "Investment Counsellor",
+          "Vice President, Risk", "Operations Analyst", "Chief Executive Officer"]
+ADDR_KEYS = {"train": ["Residential Address", "Address", "Mailing Address", "Office Address",
+                       "Registered Address", "Permanent Address"],
+             "stress": ["Home Address", "Correspondence Address", "Business Address", "Address of Employer"]}
+
+
+def _address(addr: dict, rng, multiline=None, upper=False) -> str:
+    lines = list(addr["lines"])
+    if rng.random() < 0.33:
+        lines[0] = f"{rng.choice(UNIT_PREFIX)(rng)}, {lines[0]}"
+    if multiline is None:
+        multiline = rng.random() < 0.5
+    s = "\n".join(lines) if multiline else ", ".join(lines)
+    return s.upper() if upper else s
+
+
+def make_address_records(rows, addresses: list[dict], n: int, seed: int, style: str,
+                         id_prefix: str) -> list[dict]:
+    rng = random.Random(seed)
+    pools = build_pools(rows)
+    pick = lambda f: _value(f, pools, rng)
+    out = []
+    for i in range(n):
+        d, addr = _Doc(), rng.choice(addresses)
+        kind = rng.random()
+        if style == "train" and kind < 0.15:         # sign-off: name / title / company lines
+            d.add(rng.choice(["Best regards,", "Sincerely,", "Thanks and regards,", "Warm regards,"]) + "\n")
+            d.add(pick("person"), "person"); d.add("\n")
+            d.add(rng.choice(TITLES) + "\n")
+            d.add(pick("business"), "business"); d.add("\n")
+            d.add(_address(addr, rng, multiline=rng.random() < .8), "address")
+            d.add("\n" + rng.choice(["Mobile: ", "Direct: ", "Office: "])); d.add(pick("phone"), "phone")
+            d.add("\n")
+        elif style == "train" and kind < 0.3:        # attention / delivery block, often upper case
+            up = rng.random() < 0.4
+            name = pick("person")
+            d.add(rng.choice(["Attn: ", "Deliver to:\n", "Bill To:\n", "Mail to:\n", "Addressee:\n"]))
+            if rng.random() < 0.5:
+                d.add(pick("business").upper() if up else pick("business"), "business"); d.add("\n")
+            d.add(name.upper() if up else name, "person"); d.add("\n")
+            d.add(_address(addr, rng, multiline=True, upper=up), "address"); d.add("\n")
+        elif style == "train" and kind < 0.45:       # letter
+            d.add(pick("person"), "person"); d.add("\n")
+            d.add(_address(addr, rng, multiline=True), "address"); d.add("\n\n")
+            d.add(pick("date"), "date"); d.add("\n\nDear ")
+            d.add(pick("person"), "person"); d.add(",\n\nRe: Account ")
+            d.add(pick("account"), "account")
+            d.add("\nWe confirm that your portfolio statement has been sent to the address above.\n")
+        elif style == "train" and kind < 0.65:       # KYC / onboarding form
+            d.add(rng.choice(["Client Onboarding Form", "KYC Details", "Change of Particulars", ""]) + "\n")
+            avail = [f for f in ("person", "dob", "phone", "email", "tin") if f == "dob" or f in pools]
+            for f in rng.sample(avail, min(3, len(avail))) + ["address"]:
+                key = rng.choice(ADDR_KEYS[style]) if f == "address" else rng.choice(FIELDS[f][2][style])
+                val = _address(addr, rng) if f == "address" else pick(f)
+                d.add(key + (":\n" if "\n" in val else rng.choice(SEPS[style])))
+                d.add(val, f); d.add("\n")
+            if rng.random() < 0.5:
+                d.add("Employer: "); d.add(pick("business"), "business")
+                d.add("\nOffice Address: ")
+                d.add(_address(rng.choice(addresses), rng, multiline=False), "address"); d.add("\n")
+        elif style == "train" and kind < 0.88:       # statement header
+            d.add(pick("business"), "business"); d.add("\n")
+            d.add(_address(rng.choice(addresses), rng, multiline=rng.random() < .7), "address")
+            d.add("\n\nStatement of Account\n")
+            d.add(pick("person"), "person"); d.add("\n")
+            d.add(_address(addr, rng, multiline=True), "address")
+            d.add("\nAccount No: "); d.add(pick("account"), "account")
+            d.add("\nStatement Period: "); d.add(pick("date"), "date"); d.add(" to ")
+            d.add(pick("date"), "date"); d.add("\nClosing Balance: ")
+            d.add(pick("amount"), "amount"); d.add("\n")
+        elif style == "train":                       # one sentence
+            tpl = rng.choice(["Please update my correspondence address to {a}.",
+                              "{p} resides at {a} and holds account {c}.",
+                              "The registered office of {b} is at {a}."])
+            for part in re.split(r"(\{[apcb]\})", tpl):
+                f = {"{a}": "address", "{p}": "person", "{c}": "account", "{b}": "business"}.get(part)
+                if f == "address":
+                    d.add(_address(addr, rng, multiline=False), "address")
+                elif f:
+                    d.add(pick(f), f)
+                else:
+                    d.add(part)
+            d.add("\n")
+        elif kind < 0.3:                             # stress: e-mail signature
+            d.add("Kind regards,\n"); d.add(pick("person"), "person"); d.add("\nRelationship Manager\n")
+            d.add(pick("business"), "business"); d.add("\n")
+            d.add(_address(addr, rng, multiline=True), "address")
+            d.add("\nT: "); d.add(pick("phone"), "phone"); d.add("\n")
+        elif kind < 0.55:                            # stress: envelope, upper case
+            d.add("TO:\n"); d.add(pick("person").upper(), "person"); d.add("\n")
+            d.add(_address(addr, rng, multiline=True, upper=True), "address"); d.add("\n")
+        elif kind < 0.8:                             # stress: CSV export row
+            d.add("name,address,phone,branch_code\n")
+            d.add(pick("person"), "person"); d.add(',"')
+            d.add(_address(addr, rng, multiline=False), "address"); d.add('",')
+            d.add(pick("phone"), "phone"); d.add(","); d.add(pick("code"), "code"); d.add("\n")
+        else:                                        # stress: sentence
+            d.add("The client's mailing address on file is ")
+            d.add(_address(addr, rng, multiline=False), "address")
+            d.add("; please verify it against the proof of residence dated ")
+            d.add(pick("date"), "date"); d.add(".\n")
+        out.append({"id": f"{id_prefix}-{addr['country']}-{i}", "source": f"address_{style}",
+                    "text": d.text(), "spans": d.spans, "negs": d.negs})
+    return out
 
 
 def make_records(rows, n: int, seed: int, style: str, id_prefix: str) -> list[dict]:
