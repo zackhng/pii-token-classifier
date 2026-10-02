@@ -52,7 +52,7 @@ then exactly v2.1's fine-tuning. Same data and labels as v2.1:
 | Look-alike codes tagged as PII (stress) | **4.6%** | 6.6% |
 
 Pretraining halved held-out masked-LM loss on every domain (e.g. regulation 3.53 → 1.38); the
-PII-task gain is modest and concentrated in addresses and phones. Details, corpus, curve and
+PII-task gain is modest and concentrated in addresses and phones. Details, corpus and
 limitations: [`model_card/v3.md`](model_card/v3.md).
 
 ## Results (v2.1)
