@@ -1,0 +1,54 @@
+# v3 domain-adaptive pretraining (src/build_pretrain_corpus.py -> src/pretrain_rtd.py).
+# Public data only. Budgets are DeBERTa-v3 tokenizer tokens; a domain that has less text than its
+# budget contributes what it has (times `repeat`), and the shortfall is NOT refilled, so the
+# actual total is reported in data/pretrain/meta.json.
+base_model: microsoft/deberta-v3-xsmall
+
+corpus:
+  out_dir: data/pretrain
+  seq_len: 512
+  heldout_frac: 0.01          # of documents per domain, never trained on
+  min_chars: 200
+  seed: 42
+  domains:
+    task:                     # A. our fine-tuning sources, train splits only, val/test texts excluded
+      budget: 60_000_000
+    regulation_asia_uk:       # B1. target jurisdictions (public HF datasets)
+      budget: 30_000_000
+      repeat: 2               # small, highly relevant: seen twice
+      max_source_tokens: {sebi_circulars: 7_000_000, rbi_notifications: 4_000_000, uk_legislation: 5_000_000}
+      sources:
+        sebi_circulars: opnsrcntrbtrian/sebi-circulars            # India, CC-BY-4.0
+        rbi_notifications: AISimplyExplained/RBI_Notifications    # India (Q&A over RBI notifications)
+        adgm_obliqa: RegNLP/ObliQA                                 # UAE / ADGM rulebook passages, Apache-2.0
+        uk_fin_regulation: RegNLP/xrefrag-ukfin-dpel               # UK financial regulation passages, Apache-2.0
+        uk_legislation: santoshtyss/uk_legislation                 # UK Acts / SIs, filtered to finance
+        eu_fin_regulation: chenjigaram/eu-financial-regulation-aligned   # MiFID II etc. (English rows), CC-BY-4.0
+        central_banks: gtfintechlab                                # MAS, BNM, RBI, BoT, BSP, BoE, ... sentences, CC-BY-NC-SA
+    regulation_us:            # B2. Pile-of-Law (CC-BY-NC-SA), filtered to financial regulators
+      budget: 20_000_000
+      sources: [cfr, federal_register, sec, cfpb_cc]
+      max_source_tokens: {cfr: 9_000_000, federal_register: 6_000_000}
+    investment_risk:          # C. EDGAR-CORPUS 10-K sections 1A / 7 / 7A (Apache-2.0)
+      budget: 50_000_000
+      years: [2016, 2018, 2020]
+      sections: [section_1A, section_7, section_7A]
+      max_chars_per_section: 60000
+    communication:            # D. client / RM style
+      budget: 38_000_000
+      sources:
+        enron: corbt/enron-emails       # real business e-mail (non-commercial research use)
+        fiqa: BeIR/fiqa                 # personal finance / investing Q&A, CC-BY-SA-4.0
+
+train:
+  out_dir: outputs/dapt-v3
+  total_tokens: 200_000_000
+  checkpoint_every_tokens: 50_000_000
+  micro_batch: 8
+  grad_accum: 16              # 8 x 16 = 128 seqs x 512 = 65,536 tokens per optimizer step
+  learning_rate: 5.0e-5       # DeBERTa reference RTD script
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+  rtd_lambda: 10              # DeBERTa reference default (rtd_task.py)
+  log_every: 20
+  seed: 42

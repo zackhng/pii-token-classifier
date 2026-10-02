@@ -9,7 +9,8 @@ first-sub-token labelling, seqeval F1).
 
 | Version | Weights | Highlights | Model card |
 |---|---|---|---|
-| **v2.1** (current) | [`deberta-v3-xsmall-pii-v2.1.zip`](../../releases/tag/v2.1) | ADDRESS: model sees line breaks / tabs (multi-line addresses), 20,848 real public addresses from SG, IN, UAE, UK, HK, ASEAN & Asia in letters / KYC forms / statements / signatures, bare place names no longer ADDRESS | [`model_card/v2.1.md`](model_card/v2.1.md) |
+| **v3.0** (current) | [`deberta-v3-xsmall-pii-v3.zip`](../../releases/tag/v3.0) | v2.1's fine-tuning on top of **domain-adaptive pretraining** (178M tokens of public financial / regulatory / RM-communication text): stress F1 0.921 → 0.936, ADDRESS 0.792 → 0.848, multi-line addresses exact 59% → 70% | [`model_card/v3.md`](model_card/v3.md) |
+| v2.1 | [`deberta-v3-xsmall-pii-v2.1.zip`](../../releases/tag/v2.1) | ADDRESS: model sees line breaks / tabs (multi-line addresses), 20,848 real public addresses from SG, IN, UAE, UK, HK, ASEAN & Asia in letters / KYC forms / statements / signatures, bare place names no longer ADDRESS | [`model_card/v2.1.md`](model_card/v2.1.md) |
 | v2.0 | [`deberta-v3-xsmall-pii-v2.zip`](../../releases/tag/v2.0) | Rejects look-alikes: DOB vs ordinary dates, account numbers vs amounts / codes; label-map fixes; DOB format augmentation; form-style records | [`model_card/v2.md`](model_card/v2.md) |
 | v1.0 | [`deberta-v3-xsmall-pii.zip`](../../releases/tag/v1.0) | First release | [`model_card/v1.md`](model_card/v1.md) |
 
@@ -31,6 +32,28 @@ first-sub-token labelling, seqeval F1).
 Source-label mapping lives in [`configs/label_map.yaml`](configs/label_map.yaml): look-alikes such as
 amounts, PINs, CVVs, SWIFT codes and ordinary dates are deliberately labelled `O` so the model learns
 to reject them.
+
+## Results (v3.0)
+
+v3 = domain-adaptive pretraining of the base model (replaced-token detection, DeBERTa-v3's own
+objective) on 178M tokens of public text — PII task documents, regulation from India / UAE / UK / EU /
+US plus central-bank statements, 10-K risk and MD&A sections, business e-mail and investing Q&A —
+then exactly v2.1's fine-tuning. Same data and labels as v2.1:
+
+| | v2.1 | **v3** |
+|---|---|---|
+| Test F1 (6k docs) | 0.925 | **0.925** |
+| Test ADDRESS / ACCOUNT / TIN | 0.905 / 0.954 / 0.963 | **0.914 / 0.961 / 0.969** |
+| Test BUSINESS | **0.833** | 0.821 |
+| Stress F1 (1.8k unseen-layout records) | 0.921 | **0.936** |
+| Stress ADDRESS / PHONE | 0.792 / 0.883 | **0.848 / 0.955** |
+| Stress TIN | **0.885** | 0.849 |
+| Addresses with exact boundaries (stress): multi-line / India | 58.9% / 59.5% | **69.7% / 78.5%** |
+| Look-alike codes tagged as PII (stress) | **4.6%** | 6.6% |
+
+Pretraining halved held-out masked-LM loss on every domain (e.g. regulation 3.53 → 1.38); the
+PII-task gain is modest and concentrated in addresses and phones. Details, corpus, curve and
+limitations: [`model_card/v3.md`](model_card/v3.md).
 
 ## Results (v2.1)
 
@@ -78,10 +101,10 @@ public data; Asian IDs (PAN, MyKad, NPWP) and company-name forms (Sdn Bhd, Pte L
 git clone https://github.com/zackhng/pii-token-classifier.git
 cd pii-token-classifier
 
-# weights -> outputs/deberta-v3-xsmall-pii-v2.1/ (the default path used by the scripts)
-curl -L -o model.zip https://github.com/zackhng/pii-token-classifier/releases/download/v2.1/deberta-v3-xsmall-pii-v2.1.zip
-mkdir -p outputs/deberta-v3-xsmall-pii-v2.1 && unzip model.zip -d outputs/deberta-v3-xsmall-pii-v2.1
-# Windows PowerShell: Expand-Archive model.zip -DestinationPath outputs\deberta-v3-xsmall-pii-v2.1
+# weights -> outputs/deberta-v3-xsmall-pii-v3/
+curl -L -o model.zip https://github.com/zackhng/pii-token-classifier/releases/download/v3.0/deberta-v3-xsmall-pii-v3.zip
+mkdir -p outputs/deberta-v3-xsmall-pii-v3 && unzip model.zip -d outputs/deberta-v3-xsmall-pii-v3
+# Windows PowerShell: Expand-Archive model.zip -DestinationPath outputs\deberta-v3-xsmall-pii-v3
 
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128   # NVIDIA GPU
@@ -89,7 +112,7 @@ pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128   # 
 pip install -r requirements.txt
 
 cd src
-python predict.py --text "Maria Gonzalez
+python predict.py --model_dir ../outputs/deberta-v3-xsmall-pii-v3 --text "Maria Gonzalez
 Level 12, 8 Marina Boulevard
 Singapore 018981
 DOB 04/12/1987
@@ -102,7 +125,7 @@ Balance: SGD 12,450.00"
 ```python
 from predict import PIIPredictor  # run from src/
 
-p = PIIPredictor("../outputs/deberta-v3-xsmall-pii-v2.1")
+p = PIIPredictor("../outputs/deberta-v3-xsmall-pii-v3")   # or -v2.1, -v2
 p.predict("Hi, I'm Maria Gonzalez, reach me at maria.g@outlook.com or (415) 555-0199.")
 # [{'start': 8, 'end': 22, 'label': 'PERSON', 'score': 1.0, 'text': 'Maria Gonzalez'}, ...]
 ```
@@ -190,3 +213,15 @@ pytest ../tests             # span <-> BIO round-trip, multi-line spans, augment
 
 Hyperparameters are in [`configs/train.yaml`](configs/train.yaml): lr 5e-5, batch 32, 3 epochs,
 10% warmup, weight decay 0.01, bf16 mixed precision, seed 42, `visible_breaks: true`.
+
+### v3: domain-adaptive pretraining, then the same fine-tuning
+
+```bash
+cd src
+python build_pretrain_corpus.py   # 178M-token corpus -> data/pretrain (downloads EDGAR, Pile-of-Law, ...)
+python pretrain_rtd.py            # ~2.4 h on an RTX 5060 Ti; checkpoints every 50M tokens -> outputs/dapt-v3
+python train.py --model_name outputs/dapt-v3/tokens-178M --output_dir outputs/deberta-v3-xsmall-pii-v3
+```
+
+Settings in [`configs/pretrain.yaml`](configs/pretrain.yaml). The domain-adapted base model (before
+PII fine-tuning) is attached to the v3.0 release as `deberta-v3-xsmall-dapt-wealth.zip`.
