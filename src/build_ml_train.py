@@ -23,6 +23,7 @@ from build_dataset import clean_spans, normalize, write_jsonl
 from build_ml_eval import ml_birth_cue, tag_scripts
 from common import IGNORE, ROOT, load_yaml
 from ml_sources import READERS, ai4privacy_500k_hi
+from ml_lookalikes import records as lookalike_records
 from ml_train_docs import generate
 
 LANGS = ["en", "zh-Hans", "zh-Hant", "ja", "ko", "hi", "ar", "th", "vi", "ms", "id", "tl"]
@@ -196,6 +197,26 @@ def main():
                 if v and len(picked) < scfg["val_per_lang"]:
                     picked.append(v.pop())
         val_rows += picked
+    # look-alike form records per language (ml_lookalikes.py): real PII values from that language's
+    # training docs next to codes / amounts that must stay O
+    n_look = scfg.get("lookalikes_per_lang", 0)
+    if n_look:
+        pools = defaultdict(lambda: defaultdict(set))
+        for r in train:     # generated docs count too: th / ar / hi have few real values for some types
+            if r["source"].startswith("lookalike_"):
+                continue
+            for s in r["spans"]:
+                v = r["text"][s["start"]:s["end"]]
+                if s["label"] in ("PERSON", "ACCOUNT", "PHONE", "EMAIL", "TIN") and "\n" not in v and len(v) <= 60:
+                    pools[r["lang"]][s["label"]].add(v)
+        for lang in LANGS:
+            if lang == "en":            # English has v2's snippet records already
+                continue
+            pool = {k: sorted(v) for k, v in pools[lang].items()}
+            recs = lookalike_records(lang, pool, n_look, seed)
+            train += recs
+            print(f"lookalike_{lang:8s} train {len(recs):6d}  (pool sizes {dict((k, len(v)) for k, v in pool.items())})")
+
     val_texts = {r["text"] for r in val_rows}
     train = [r for r in train if r["text"] not in val_texts]
     rng.shuffle(train)

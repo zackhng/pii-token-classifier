@@ -117,9 +117,14 @@ sources:
            why: "no public Devanagari dates of birth / accounts / tax IDs (AI4Privacy hi is romanised)"}
 
   # ------------------------------------------------------------ English: the v2.1 training set
-  english: {reader: english, licence: see README, lang: en, kind: pii, partial: "", cap: 30000}
+  # all 74k v2.1 training docs (incl. 6,000 look-alike form records); the pilot used 30k and lost
+  # 2.9 F1 on the English test set
+  english: {reader: english, licence: see README, lang: en, kind: pii, partial: "", cap: 80000}
 
 # zh sources are split in half: one half stays zh-Hans, the other is converted to zh-Hant (OpenCC s2t)
 zh_hant_share: 0.5
 val_per_lang: 500
+# look-alike form records per non-English language (ml_lookalikes.py, kind generated): no public
+# dataset in these languages labels SWIFT / branch codes, PIN, CVV, OTP, expiry, amounts as not-PII
+lookalikes_per_lang: 1500
 min_spans: 1000     # per language x entity type in train; build fails below this unless --allow_gaps

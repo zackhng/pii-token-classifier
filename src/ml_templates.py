@@ -692,7 +692,8 @@ def zh_hant():
     """zh-Hans text converted with OpenCC (Taiwan phrasing); TW / HK value pools."""
     import opencc
     cc = opencc.OpenCC("s2twp")
-    conv = lambda x: cc.convert(x)
+    # s2twp renders 代码 ("code") as 程式碼 ("program code"); bank / branch / SWIFT codes are 代碼
+    conv = lambda x: cc.convert(x).replace("程式碼", "代碼")
     lang = dict(
         cues={k: [conv(c) for c in v] for k, v in ZH["cues"].items()},
         seps=ZH["seps"],
