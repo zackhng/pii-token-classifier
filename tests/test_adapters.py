@@ -73,3 +73,45 @@ def test_save_and_load_round_trip(tmp_path):
         a = model(input_ids=ids, attention_mask=mask, lang_ids=langs).logits
         b = loaded(input_ids=ids, attention_mask=mask, lang_ids=langs).logits
     assert torch.allclose(a, b, atol=1e-6)
+
+
+def _identity_and_routing(base_factory):
+    ids, mask = batch()
+    with torch.no_grad():
+        ref = base_factory().eval()(input_ids=ids, attention_mask=mask).logits
+        model = AdapterTokenClassifier(base_factory(), bottleneck=8).eval()
+        got = model(input_ids=ids, attention_mask=mask, lang_ids=torch.tensor([0, 1, 2, 3])).logits
+        assert torch.allclose(ref, got, atol=1e-6)               # fresh adapters = identity
+        for p in model.parameters():
+            p.add_(torch.randn_like(p) * 0.05)
+        langs = torch.tensor([LANG_IDS["th"], LANG_IDS["ar"], LANG_IDS["th"], LANG_IDS["ko"]])
+        mixed = model(input_ids=ids, attention_mask=mask, lang_ids=langs).logits
+        one = model(input_ids=ids[1:2], attention_mask=mask[1:2], lang_ids=langs[1:2]).logits
+        assert torch.allclose(mixed[1], one[0], atol=1e-5)
+    assert all(".adapters." in n or n.startswith("base.classifier.")
+               for n, p in model.named_parameters() if p.requires_grad)
+
+
+def test_encoder_is_swappable_deberta_v2():
+    """mDeBERTa-v3 (DeBERTa-v2 architecture) works as the shared encoder."""
+    from transformers import DebertaV2Config, DebertaV2ForTokenClassification
+
+    def make():
+        torch.manual_seed(0)
+        return DebertaV2ForTokenClassification(DebertaV2Config(
+            vocab_size=100, hidden_size=32, num_hidden_layers=2, num_attention_heads=2, intermediate_size=64,
+            max_position_embeddings=64, num_labels=5, relative_attention=True, position_buckets=16,
+            pos_att_type=["p2c", "c2p"]))
+    _identity_and_routing(make)
+
+
+def test_encoder_is_swappable_bert():
+    """BERT-architecture encoders (e.g. multilingual MiniLM / mBERT) work as the shared encoder."""
+    from transformers import BertConfig, BertForTokenClassification
+
+    def make():
+        torch.manual_seed(0)
+        return BertForTokenClassification(BertConfig(
+            vocab_size=100, hidden_size=32, num_hidden_layers=2, num_attention_heads=2, intermediate_size=64,
+            max_position_embeddings=64, num_labels=5))
+    _identity_and_routing(make)
