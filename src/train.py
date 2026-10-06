@@ -46,6 +46,8 @@ def main():
     ap.add_argument("--output_dir", help="override config output_dir")
     ap.add_argument("--model_name", help="override config model_name, e.g. a DAPT checkpoint dir")
     ap.add_argument("--eval_steps", type=int, help="override config eval/save steps")
+    ap.add_argument("--resume", nargs="?", const="last", default=None,
+                    help="continue an interrupted run: from the newest checkpoint in output_dir, or a given checkpoint dir")
     ap.add_argument("--cpu", action="store_true", help="run on CPU without bf16 (smoke tests while the GPU is busy)")
     ap.add_argument("--config", default="train.yaml", help="configs/<name>: train.yaml (English DeBERTa) "
                     "or train_ml.yaml (multilingual)")
@@ -141,7 +143,7 @@ def main():
         processing_class=tok,
         compute_metrics=build_compute_metrics(id2label, window_langs),
     )
-    trainer.train()
+    trainer.train(resume_from_checkpoint=True if args.resume == "last" else args.resume)
     print(trainer.evaluate())
     if acfg:
         # frozen encoder: store only adapters + head and point at the base; else save everything

@@ -237,6 +237,33 @@ def synth_set(n: int, seed: int) -> list[dict]:
     return rows
 
 
+# ---------------------------------------------------------------- mixed-language set
+MIXED_PAIRS = [("en", l) for l in ["zh-Hans", "zh-Hant", "ja", "ko", "hi", "vi", "ms", "id", "tl"]] +               [("zh-Hans", "en"), ("ms", "zh-Hans"), ("id", "ja"), ("ko", "vi"), ("hi", "tl")]
+
+
+def mixed_set(real: list[dict], per_pair: int, seed: int) -> list[dict]:
+    """Two ml_real documents in different languages joined by a blank line, the way an English
+    cover note precedes a Chinese statement. Tests per-segment routing; assembled from real data,
+    nothing generated. `lang` = "<first>+<second>"; `segment_langs` gives (start, end, lang)."""
+    by = defaultdict(list)
+    for r in real:
+        by[r["lang"]].append(r)
+    rng = random.Random(seed)
+    out = []
+    for a, b in MIXED_PAIRS:
+        for i in range(per_pair):
+            ra, rb = rng.choice(by[a]), rng.choice(by[b])
+            sep = "\n\n"
+            text = ra["text"] + sep + rb["text"]
+            off = len(ra["text"]) + len(sep)
+            shift = lambda xs: [{**s, "start": s["start"] + off, "end": s["end"] + off} for s in xs]
+            out.append({"id": f"mixed_{a}+{b}-{i}", "source": "ml_mixed", "lang": f"{a}+{b}", "text": text,
+                        "spans": [dict(s) for s in ra["spans"]] + shift(rb["spans"]),
+                        "negs": [dict(s) for s in ra.get("negs", [])] + shift(rb.get("negs", [])),
+                        "segment_langs": [(0, len(ra["text"]), a), (off, len(text), b)]})
+    return out
+
+
 # ---------------------------------------------------------------- checks / report
 def check(rows: list[dict], min_per_entity: int = 0):
     per_lang = defaultdict(Counter)
@@ -266,10 +293,18 @@ def main():
     ap.add_argument("--n_real", type=int, default=1000)
     ap.add_argument("--n_synth", type=int, default=300)
     ap.add_argument("--skip_real", action="store_true")
+    ap.add_argument("--mixed_only", action="store_true", help="only (re)build ml_mixed from the existing ml_real.jsonl")
     args = ap.parse_args()
     seed = load_yaml("train.yaml")["seed"]
     out_dir = ROOT / load_yaml("train.yaml")["data"]["processed_dir"]
 
+    if args.mixed_only:
+        real = [json.loads(l) for l in open(out_dir / "ml_real.jsonl", encoding="utf-8")]
+        mixed = mixed_set(real, 100, seed)
+        check(mixed)
+        write_jsonl(out_dir / "ml_mixed.jsonl", mixed)
+        print(f"ml_mixed: {len(mixed)} docs ({len(MIXED_PAIRS)} language pairs)")
+        return
     synth = synth_set(args.n_synth, seed)
     print(f"\nml_synth: {len(synth)} docs")
     check(synth, min_per_entity=30)
@@ -280,6 +315,9 @@ def main():
         print(f"\nml_real: {len(real)} docs")
         check(real)
         write_jsonl(out_dir / "ml_real.jsonl", real)
+        mixed = mixed_set(real, 100, seed)
+        print(f"\nml_mixed: {len(mixed)} docs ({len(MIXED_PAIRS)} language pairs)")
+        write_jsonl(out_dir / "ml_mixed.jsonl", mixed)
 
 
 if __name__ == "__main__":

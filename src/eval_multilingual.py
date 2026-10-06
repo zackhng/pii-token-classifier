@@ -140,6 +140,18 @@ def report(res: dict, langs: list[str], entities: list[str]) -> str:
     return "\n".join(lines)
 
 
+def predict_row(predictor, row, gold_lang):
+    if not (gold_lang and predictor.adapter):
+        return predictor.predict(row["text"])
+    if "segment_langs" not in row:
+        return predictor.predict(row["text"], lang=row["lang"])
+    out = []
+    for s, e, lang in row["segment_langs"]:
+        out += [{**p, "start": p["start"] + s, "end": p["end"] + s}
+                for p in predictor.predict(row["text"][s:e], lang=lang)]
+    return out
+
+
 def main():
     cfg = load_yaml("train.yaml")
     ap = argparse.ArgumentParser()
@@ -147,6 +159,9 @@ def main():
     ap.add_argument("--split", default="ml_synth", help="ml_synth or ml_real")
     ap.add_argument("--limit", type=int, help="docs per language")
     ap.add_argument("--out", help="write <out>.json / <out>.txt")
+    ap.add_argument("--gold_lang", action="store_true",
+                    help="adapter models: route by the gold language (segment_langs for ml_mixed) "
+                         "instead of the router, to separate routing errors")
     ap.add_argument("--script_boundaries", choices=["model", "on", "off"], default="model",
                     help="word boundaries in unspaced scripts: as the model config says, or forced")
     args = ap.parse_args()
@@ -155,7 +170,8 @@ def main():
     if args.limit:
         seen = Counter()
         rows = [r for r in rows if (seen.update([r["lang"]]) or seen[r["lang"]] <= args.limit)]
-    langs = [l for l in LANG_ORDER if any(r["lang"] == l for r in rows)]
+    present = {r["lang"] for r in rows}
+    langs = [l for l in LANG_ORDER if l in present] + sorted(present - set(LANG_ORDER))
     entities = load_yaml("label_map.yaml")["entities"]
 
     t = cfg["tokenize"]
@@ -165,7 +181,7 @@ def main():
     for row in tqdm(rows, desc=f"predict {args.split}"):
         for mode, alltok in MODES.items():   # same weights; only the word-level decoding differs
             predictor.label_all_tokens = alltok
-            preds[mode][row["id"]] = predictor.predict(row["text"])
+            preds[mode][row["id"]] = predict_row(predictor, row, args.gold_lang)
 
     res = {mode: evaluate_mode(rows, preds[mode]) for mode in MODES}
     txt = (f"model: {args.model_dir}\nsplit: {args.split} ({len(rows)} docs)\n"
