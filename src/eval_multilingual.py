@@ -147,6 +147,8 @@ def main():
     ap.add_argument("--split", default="ml_synth", help="ml_synth or ml_real")
     ap.add_argument("--limit", type=int, help="docs per language")
     ap.add_argument("--out", help="write <out>.json / <out>.txt")
+    ap.add_argument("--script_boundaries", choices=["model", "on", "off"], default="model",
+                    help="word boundaries in unspaced scripts: as the model config says, or forced")
     args = ap.parse_args()
 
     rows = read_jsonl(ROOT / cfg["data"]["processed_dir"] / f"{args.split}.jsonl")
@@ -157,7 +159,8 @@ def main():
     entities = load_yaml("label_map.yaml")["entities"]
 
     t = cfg["tokenize"]
-    predictor = PIIPredictor(args.model_dir, t["max_length"], t["stride"], False)
+    sb = {"model": None, "on": True, "off": False}[args.script_boundaries]
+    predictor = PIIPredictor(args.model_dir, t["max_length"], t["stride"], False, script_boundaries=sb)
     preds = {m: {} for m in MODES}
     for row in tqdm(rows, desc=f"predict {args.split}"):
         for mode, alltok in MODES.items():   # same weights; only the word-level decoding differs
@@ -165,11 +168,13 @@ def main():
             preds[mode][row["id"]] = predictor.predict(row["text"])
 
     res = {mode: evaluate_mode(rows, preds[mode]) for mode in MODES}
-    txt = f"model: {args.model_dir}\nsplit: {args.split} ({len(rows)} docs)\n" + report(res, langs, entities)
+    txt = (f"model: {args.model_dir}\nsplit: {args.split} ({len(rows)} docs)\n"
+           f"script_boundaries: {predictor.script_boundaries}\n" + report(res, langs, entities))
     print(txt)
     if args.out:
         with open(args.out + ".json", "w", encoding="utf-8") as f:
-            json.dump({"model": args.model_dir, "split": args.split, "n_docs": len(rows), **res}, f,
+            json.dump({"model": args.model_dir, "split": args.split, "n_docs": len(rows),
+                   "script_boundaries": predictor.script_boundaries, **res}, f,
                       indent=1, ensure_ascii=False)
         with open(args.out + ".txt", "w", encoding="utf-8") as f:
             f.write(txt + "\n")

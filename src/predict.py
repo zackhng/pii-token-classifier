@@ -15,7 +15,8 @@ from tokenize_bio import fill_continuations, labels_to_spans, window_encode, wor
 
 class PIIPredictor:
     def __init__(self, model_dir: str, max_length: int = 384, stride: int = 96,
-                 label_all_tokens: bool = False, device=None, batch_windows: int = 16):
+                 label_all_tokens: bool = False, device=None, batch_windows: int = 16,
+                 script_boundaries: bool | None = None):
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.tok = AutoTokenizer.from_pretrained(model_dir)
         self.model = AutoModelForTokenClassification.from_pretrained(
@@ -23,6 +24,9 @@ class PIIPredictor:
         self.id2label = self.model.config.id2label
         # models trained with line/tab markers record it in their config (v2.1+)
         self.show_breaks = bool(getattr(self.model.config, "visible_breaks", False))
+        # word boundaries in unspaced scripts (multilingual models); None = as the model was trained
+        self.script_boundaries = (bool(getattr(self.model.config, "script_boundaries", False))
+                                  if script_boundaries is None else script_boundaries)
         self.max_length, self.stride = max_length, stride
         self.label_all_tokens = label_all_tokens
         self.batch_windows = batch_windows
@@ -51,7 +55,7 @@ class PIIPredictor:
                         best[(s, e)] = (p, top_lab[w][i])
 
         offsets = sorted(best)
-        starts = word_starts(text, offsets)
+        starts = word_starts(text, offsets, self.script_boundaries)
         names = [self.id2label[best[o][1]] for o in offsets]
         if not self.label_all_tokens:  # OpenMed-style: word label = first sub-token's label
             names = fill_continuations(names, starts)

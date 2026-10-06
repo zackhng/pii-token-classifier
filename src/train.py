@@ -52,10 +52,12 @@ def main():
     tcfg = cfg["tokenize"]
     train_ds = tokenize(load_split("train", args.max_train), tok, label2id,
                         tcfg["max_length"], tcfg["stride"], tcfg["label_all_tokens"],
-                        show_breaks=tcfg["visible_breaks"])
+                        show_breaks=tcfg["visible_breaks"],
+                        script_boundaries=tcfg.get("script_boundaries", False))
     val_ds = tokenize(load_split("val", args.max_eval), tok, label2id,
                       tcfg["max_length"], tcfg["stride"], tcfg["label_all_tokens"],
-                      show_breaks=tcfg["visible_breaks"])
+                      show_breaks=tcfg["visible_breaks"],
+                      script_boundaries=tcfg.get("script_boundaries", False))
     print(f"train windows={len(train_ds)}  val windows={len(val_ds)}")
 
     # transformers 5.x loads in the checkpoint dtype (fp16 for deberta-v3-xsmall); fp16 master
@@ -64,6 +66,7 @@ def main():
         cfg["model_name"], num_labels=len(labels), id2label=id2label, label2id=label2id,
         dtype=torch.float32)
     model.config.visible_breaks = tcfg["visible_breaks"]   # read by PIIPredictor
+    model.config.script_boundaries = tcfg.get("script_boundaries", False)
 
     t = cfg["train"]
     targs = TrainingArguments(

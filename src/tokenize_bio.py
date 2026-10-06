@@ -22,8 +22,32 @@ def _is_word_char(c: str) -> bool:
     return c.isalnum()
 
 
-def word_starts(text: str, offsets) -> list[bool]:
-    """True where a (non-special) token begins a new word."""
+def script_of(c: str) -> str:
+    """Coarse script class for word boundaries in unspaced text."""
+    if c.isdigit():
+        return "digit"
+    o = ord(c)
+    if 0x3400 <= o <= 0x9FFF or 0xF900 <= o <= 0xFAFF or 0x20000 <= o <= 0x2FA1F:
+        return "han"
+    if 0x3040 <= o <= 0x30FF or 0x31F0 <= o <= 0x31FF or 0xFF66 <= o <= 0xFF9F:
+        return "kana"
+    if 0xAC00 <= o <= 0xD7AF or 0x1100 <= o <= 0x11FF or 0x3130 <= o <= 0x318F:
+        return "hangul"
+    if 0x0E00 <= o <= 0x0E7F:
+        return "thai"
+    return "other"
+
+
+# scripts written without spaces between words: every token is its own word
+UNSPACED = {"han", "kana", "thai"}
+
+
+def word_starts(text: str, offsets, script_boundaries: bool = False) -> list[bool]:
+    """True where a (non-special) token begins a new word.
+
+    `script_boundaries` (multilingual models): also start a word at every token of an unspaced
+    script (CJK, kana, Thai) and wherever the script class changes ("电话|13812345678",
+    "257|입니다"). Off reproduces v1-v3 exactly."""
     starts, prev_end = [], None
     for s, e in offsets:
         s, e = _trim_offset(text, s, e)
@@ -33,18 +57,21 @@ def word_starts(text: str, offsets) -> list[bool]:
         new = (prev_end is None or s > prev_end                     # whitespace gap
                or not _is_word_char(text[s])                         # punctuation token
                or not _is_word_char(text[prev_end - 1]))             # after punctuation
+        if script_boundaries and not new:
+            cur, prev = script_of(text[s]), script_of(text[prev_end - 1])
+            new = cur in UNSPACED or cur != prev
         starts.append(new)
         prev_end = e
     return starts
 
 
 def token_labels(text: str, offsets, spans: list[dict], label2id: dict, special_mask=None,
-                 label_all_tokens: bool = False) -> list[int]:
+                 label_all_tokens: bool = False, script_boundaries: bool = False) -> list[int]:
     """BIO label id per token. Special tokens, IGNORE spans and (optionally)
     word-continuation tokens -> -100."""
     offsets = [(0, 0) if (special_mask is not None and special_mask[i]) else o
                for i, o in enumerate(offsets)]
-    starts = word_starts(text, offsets)
+    starts = word_starts(text, offsets, script_boundaries)
     labels, prev_span, k = [], None, 0
     for i, (s, e) in enumerate(offsets):
         s, e = _trim_offset(text, s, e)
@@ -120,7 +147,8 @@ def window_encode(tokenizer, text: str, max_length: int, stride: int,
 
 
 def make_tokenize_fn(tokenizer, label2id: dict, max_length: int, stride: int,
-                     label_all_tokens: bool = False, show_breaks: bool = True):
+                     label_all_tokens: bool = False, show_breaks: bool = True,
+                     script_boundaries: bool = False):
     """Batched map fn: {text, spans} -> windowed input_ids/attention_mask/labels."""
     id2name = {v: k for k, v in label2id.items()}
 
@@ -130,7 +158,7 @@ def make_tokenize_fn(tokenizer, label2id: dict, max_length: int, stride: int,
             spans = sorted(spans, key=lambda s: s["start"])
             for win in window_encode(tokenizer, text, max_length, stride, show_breaks):
                 labs = token_labels(text, win["offset_mapping"], spans, label2id,
-                                    win["special_tokens_mask"], label_all_tokens)
+                                    win["special_tokens_mask"], label_all_tokens, script_boundaries)
                 # a window that starts mid-span must open with B-, not I-
                 for j, l in enumerate(labs):
                     if l == IGNORE_ID:
