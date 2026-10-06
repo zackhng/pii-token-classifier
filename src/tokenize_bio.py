@@ -65,10 +65,25 @@ def word_starts(text: str, offsets, script_boundaries: bool = False) -> list[boo
     return starts
 
 
+def _partial_mask(tok_text: str, partial: str | None) -> bool:
+    """True if a token outside every gold span is unlabelled (-100) for a partially annotated
+    source: "all" (only its spans are known), "digits" (no number labels: dates, accounts ...),
+    "letters" (no name labels)."""
+    if partial == "all":
+        return True
+    if partial == "digits":
+        return any(c.isdigit() for c in tok_text)
+    if partial == "letters":
+        return any(c.isalpha() for c in tok_text)
+    return False
+
+
 def token_labels(text: str, offsets, spans: list[dict], label2id: dict, special_mask=None,
-                 label_all_tokens: bool = False, script_boundaries: bool = False) -> list[int]:
+                 label_all_tokens: bool = False, script_boundaries: bool = False,
+                 partial: str | None = None) -> list[int]:
     """BIO label id per token. Special tokens, IGNORE spans and (optionally)
-    word-continuation tokens -> -100."""
+    word-continuation tokens -> -100. A span labelled "O" is a known non-PII look-alike: always O,
+    even in a partially annotated source (`partial`, see _partial_mask)."""
     offsets = [(0, 0) if (special_mask is not None and special_mask[i]) else o
                for i, o in enumerate(offsets)]
     starts = word_starts(text, offsets, script_boundaries)
@@ -87,6 +102,8 @@ def token_labels(text: str, offsets, spans: list[dict], label2id: dict, special_
             k += 1
         hit = k if k < len(spans) and s < spans[k]["end"] and e > spans[k]["start"] else None
         if hit is None:
+            lab_id = IGNORE_ID if _partial_mask(text[s:e], partial) else label2id["O"]
+        elif spans[hit]["label"] == "O":
             lab_id = label2id["O"]
         elif spans[hit]["label"] == IGNORE:
             lab_id = IGNORE_ID
@@ -154,11 +171,13 @@ def make_tokenize_fn(tokenizer, label2id: dict, max_length: int, stride: int,
 
     def fn(batch):
         out = {"input_ids": [], "attention_mask": [], "labels": []}
-        for text, spans in zip(batch["text"], batch["spans"]):
+        partials = batch.get("partial") or [None] * len(batch["text"])
+        for text, spans, partial in zip(batch["text"], batch["spans"], partials):
             spans = sorted(spans, key=lambda s: s["start"])
             for win in window_encode(tokenizer, text, max_length, stride, show_breaks):
                 labs = token_labels(text, win["offset_mapping"], spans, label2id,
-                                    win["special_tokens_mask"], label_all_tokens, script_boundaries)
+                                    win["special_tokens_mask"], label_all_tokens, script_boundaries,
+                                    partial or None)
                 # a window that starts mid-span must open with B-, not I-
                 for j, l in enumerate(labs):
                     if l == IGNORE_ID:

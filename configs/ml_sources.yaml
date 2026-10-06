@@ -1,0 +1,125 @@
+# Training sources for the multilingual model (build_ml_train.py). Evaluation sets
+# (ml_real = AI4Privacy *validation*, ml_synth = ml_templates.py) are never used here.
+#
+# kind      financial | pii | ner | generated   (reported in the coverage table)
+# reader    ml_sources.READERS key, or "ai4privacy" (AI4Privacy format via build_dataset.normalize)
+# partial   which tokens outside the gold spans are unlabelled (-100) instead of O:
+#           ""      the source labels every target type it contains
+#           digits  no number labels (NER corpora): dates / accounts / phones are not taught as O
+#           all     only the row's own spans are known (SITR labels one PII type per row)
+# map       source label -> PERSON BUSINESS ADDRESS DOB ACCOUNT PHONE EMAIL TIN | IGNORE | DATE_CUE
+#           (DOB when a birth cue is next to it, else O); unlisted labels are O
+# neg       source label -> look-alike group (amount / date / code); kept as explicit O spans so a
+#           partial source still teaches them as not-PII
+# No medical sources (user requirement): Meddies PII and PhoNER_COVID19 are excluded, SITR's
+# medical-record / medicine rows are dropped in ml_sources.sitr.
+
+ner_common: &ner_common
+  kind: ner
+  partial: digits
+  map: {PER: PERSON, PERSON: PERSON, ORG: BUSINESS, ORGANISATION: BUSINESS, LOC: IGNORE,
+        PLACE: IGNORE, MISC: IGNORE}
+
+sources:
+  # ------------------------------------------------------------ PII, financial
+  kiii:
+    hub: nmixx-fin/kiii-kiii
+    licence: CC-BY-NC-4.0
+    lang: ko
+    kind: financial
+    partial: ""
+    map: {person_name: PERSON, bank_account_no: ACCOUNT, card_no: ACCOUNT, securities_account_no: ACCOUNT,
+          customer_id: ACCOUNT, phone_no: PHONE, email: EMAIL, address: ADDRESS, dob_age: DOB,
+          business_reg_no: TIN, corp_reg_no: TIN, rrn: IGNORE, foreigner_reg_no: IGNORE,
+          passport_no: IGNORE, driver_license_no: IGNORE, contract_no: IGNORE,
+          employer_affiliation: IGNORE, location_mention: IGNORE, access_credential: IGNORE}
+    neg: {hard_negative: code}
+    note: only a "test" split upstream; first 1,200 docs (by doc_id) train, last 240 -> ml_kiii_test
+
+  # ------------------------------------------------------------ PII, general (not medical)
+  ai4p_zh: {hub: ai4privacy/pii-masking-openpii-1.5m, licence: CC-BY-4.0, lang: zh, reader: ai4privacy, kind: pii, partial: "", cap: 20000}
+  ai4p_ja: {hub: ai4privacy/pii-masking-openpii-1.5m, licence: CC-BY-4.0, lang: ja, reader: ai4privacy, kind: pii, partial: "", cap: 15000}
+  ai4p_ko: {hub: ai4privacy/pii-masking-openpii-1.5m, licence: CC-BY-4.0, lang: ko, reader: ai4privacy, kind: pii, partial: "", cap: 15000}
+  ai4p_vi: {hub: ai4privacy/pii-masking-openpii-1.5m, licence: CC-BY-4.0, lang: vi, reader: ai4privacy, kind: pii, partial: "", cap: 15000}
+  ai4p_ms: {hub: ai4privacy/pii-masking-openpii-1.5m, licence: CC-BY-4.0, lang: ms, reader: ai4privacy, kind: pii, partial: "", cap: 15000}
+  ai4p_id: {hub: ai4privacy/pii-masking-openpii-1.5m, licence: CC-BY-4.0, lang: id, reader: ai4privacy, kind: pii, partial: "", cap: 15000}
+  ai4p_tl: {hub: ai4privacy/pii-masking-openpii-1.5m, licence: CC-BY-4.0, lang: tl, reader: ai4privacy, kind: pii, partial: "", cap: 15000}
+  ai4p_hi: {hub: ai4privacy/open-pii-masking-500k-ai4privacy, licence: CC-BY-4.0, lang: hi, reader: ai4privacy, kind: pii, partial: "", cap: 15000}
+  sitr:
+    hub: mabahboh/sitr-arabic-pii
+    licence: Apache-2.0
+    lang: ar
+    kind: pii
+    partial: all
+    map: {private_phone: PHONE, gulf_phone: PHONE, syria_phone: PHONE, spoken_phone: PHONE,
+          private_email: EMAIL, private_date: DATE_CUE, account_number: ACCOUNT, gulf_iban: ACCOUNT,
+          credit_card: ACCOUNT, insurance_policy: ACCOUNT, national_address: ADDRESS,
+          private_address: ADDRESS, short_address: ADDRESS, postal_code: ADDRESS, building_number: ADDRESS,
+          national_id: IGNORE, iqama: IGNORE, spoken_iqama: IGNORE, spoken_national_id: IGNORE,
+          passport_number: IGNORE, kuwait_civil_id: IGNORE, syria_national_id: IGNORE, emirates_id: IGNORE,
+          oman_civil_id: IGNORE, bahrain_cpr: IGNORE, qatar_qid: IGNORE, employee_id: IGNORE,
+          contract_number: IGNORE, deed_number: IGNORE, vehicle_plate: IGNORE, visitor_number: IGNORE,
+          boundary_number: IGNORE, commercial_registration: IGNORE}
+    neg: {private_date: date, otp_code: code, spoken_otp: code, card_cvv: code, card_pin: code,
+          password: code, api_key: code, access_token: code, db_connection: code}
+
+  # ------------------------------------------------------------ NER (names / organisations)
+  cluener:
+    hub: xusenlin/clue-ner
+    licence: Apache-2.0
+    lang: zh
+    kind: ner
+    partial: digits
+    map: {name: PERSON, company: BUSINESS, organization: BUSINESS, government: BUSINESS, address: ADDRESS}
+    note: an "address" without street / number markers is a bare place -> IGNORE (build_ml_train)
+  stockmark_ja:
+    hub: stockmark/ner-wikipedia-dataset
+    licence: CC-BY-SA-3.0
+    lang: ja
+    kind: ner
+    partial: digits
+    map: {人名: PERSON, 法人名: BUSINESS, 政治的組織名: BUSINESS, その他の組織名: BUSINESS, 地名: IGNORE, 施設名: IGNORE}
+  klue_ner:
+    hub: klue/klue (ner)
+    licence: CC-BY-SA-4.0
+    lang: ko
+    kind: ner
+    partial: ""
+    map: {PS: PERSON, OG: BUSINESS, LC: IGNORE, DT: DATE_CUE}
+    neg: {QT: amount, DT: date}
+  naamapadam_hi: {<<: *ner_common, hub: ai4bharat/naamapadam (hi), licence: CC0-1.0, lang: hi, cap: 15000}
+  anercorp: {<<: *ner_common, hub: asas-ai/ANERCorp, licence: CC-BY-SA-4.0, lang: ar}
+  wikiann_ar: {<<: *ner_common, hub: unimelb-nlp/wikiann (ar), licence: unknown (Wikipedia-derived), lang: ar, cap: 10000}
+  thainer:
+    hub: pythainlp/thainer-corpus-v2
+    licence: CC-BY-3.0
+    lang: th
+    kind: ner
+    partial: ""
+    map: {PERSON: PERSON, ORGANIZATION: BUSINESS, LOCATION: IGNORE, FACILITY: IGNORE, DATE: DATE_CUE,
+          PHONE: PHONE, EMAIL: EMAIL, ZIP: ADDRESS}
+    neg: {MONEY: amount, DATE: date}
+  wikiann_vi: {<<: *ner_common, hub: unimelb-nlp/wikiann (vi), licence: unknown (Wikipedia-derived), lang: vi, cap: 10000}
+  wikiann_ms: {<<: *ner_common, hub: unimelb-nlp/wikiann (ms), licence: unknown (Wikipedia-derived), lang: ms, cap: 10000}
+  nergrit: {<<: *ner_common, hub: IndoNLP/indonlu nergrit (GitHub), licence: MIT, lang: id}
+  tlunified: {<<: *ner_common, hub: ljvmiranda921/tlunified-ner, licence: GPL-3.0, lang: tl}
+
+  # ------------------------------------------------------------ generated financial documents
+  # Only where no public source exists (src/ml_train_docs.py; templates / pools disjoint from the
+  # test-only ml_templates.py). Searched and rejected: Meddies PII (medical), Maskara Indian PII
+  # (its "hi-IN" rows are Indian English, no Devanagari), IndiaPII-Bench (evaluation-only by licence
+  # terms), PFI-400k (gated, access pending - will replace generation where it covers a language).
+  gen_th: {reader: generated, lang: th, kind: generated, partial: "", cap: 5000, licence: own,
+           why: "no public Thai PII data; ThaiNER has names / organisations only"}
+  gen_ar: {reader: generated, lang: ar, kind: generated, partial: "", cap: 4000, licence: own,
+           why: "no public Arabic tax IDs; few dates of birth in SITR"}
+  gen_hi: {reader: generated, lang: hi, kind: generated, partial: "", cap: 4000, licence: own,
+           why: "no public Devanagari dates of birth / accounts / tax IDs (AI4Privacy hi is romanised)"}
+
+  # ------------------------------------------------------------ English: the v2.1 training set
+  english: {reader: english, licence: see README, lang: en, kind: pii, partial: "", cap: 30000}
+
+# zh sources are split in half: one half stays zh-Hans, the other is converted to zh-Hant (OpenCC s2t)
+zh_hant_share: 0.5
+val_per_lang: 500
+min_spans: 1000     # per language x entity type in train; build fails below this unless --allow_gaps
