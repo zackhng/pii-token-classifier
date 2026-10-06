@@ -93,7 +93,7 @@ measured on real documents. Multi-line address boundaries are the weakest part (
 BUSINESS remains the weakest entity (0.833). UAE and East-Asian addresses are under-represented in the
 public data; Asian IDs (PAN, MyKad, NPWP) and company-name forms (Sdn Bhd, Pte Ltd) are rare.
 **Regression vs v2:** a hyphenated account number after a bare `A/C` cue in a very short input
-(`A/C 0123-456789-0`) can be missed or clipped; `Account No: …` and sentence contexts are fine. English only.
+(`A/C 0123-456789-0`) can be missed or clipped; `Account No: …` and sentence contexts are fine. **English only**: zero-shot on 11 Asian / Middle-Eastern languages it scores 0.28–0.76 F1 and misses most native-script names, companies and addresses (Thai 0%); see [`model_card/multilingual_zero_shot.md`](model_card/multilingual_zero_shot.md).
 
 ## Quick start (inference only)
 

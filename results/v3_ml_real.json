@@ -1,0 +1,2663 @@
+{
+ "model": "../outputs/deberta-v3-xsmall-pii-v3",
+ "split": "ml_real",
+ "n_docs": 10000,
+ "default": {
+  "strict": {
+   "ALL": {
+    "precision": 0.6094791409528512,
+    "recall": 0.5864956351327276,
+    "f1": 0.5977665466210695,
+    "support": 33678,
+    "f1_lenient": 0.815482855672911
+   },
+   "lang/en": {
+    "precision": 0.9821634062140391,
+    "recall": 0.9847130083645803,
+    "f1": 0.983436554803399,
+    "support": 3467,
+    "f1_lenient": 0.9906380527149647
+   },
+   "lang/en/PERSON": {
+    "precision": 0.9889336016096579,
+    "recall": 0.9879396984924623,
+    "f1": 0.988436400201106,
+    "support": 995,
+    "f1_lenient": 0.9934640522875817
+   },
+   "lang/en/DOB": {
+    "precision": 0.9754601226993865,
+    "recall": 0.9875776397515528,
+    "f1": 0.9814814814814815,
+    "support": 161,
+    "f1_lenient": 0.9938271604938271
+   },
+   "lang/en/EMAIL": {
+    "precision": 0.995,
+    "recall": 1.0,
+    "f1": 0.9974937343358395,
+    "support": 597,
+    "f1_lenient": 0.9974937343358395
+   },
+   "lang/en/PHONE": {
+    "precision": 0.9889135254988913,
+    "recall": 0.9933184855233853,
+    "f1": 0.991111111111111,
+    "support": 449,
+    "f1_lenient": 0.9977777777777778
+   },
+   "lang/en/ADDRESS": {
+    "precision": 0.9747023809523809,
+    "recall": 0.9646539027982327,
+    "f1": 0.9696521095484826,
+    "support": 679,
+    "f1_lenient": 0.9800148038490007
+   },
+   "lang/en/TIN": {
+    "precision": 0.9838274932614556,
+    "recall": 0.989159891598916,
+    "f1": 0.9864864864864865,
+    "support": 369,
+    "f1_lenient": 0.9864864864864865
+   },
+   "lang/en/ACCOUNT": {
+    "precision": 0.954337899543379,
+    "recall": 0.9631336405529954,
+    "f1": 0.9587155963302753,
+    "support": 217,
+    "f1_lenient": 0.9954128440366972
+   },
+   "lang/en/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/zh-Hans": {
+    "precision": 0.45411255411255413,
+    "recall": 0.3012636415852958,
+    "f1": 0.3622237569060773,
+    "support": 3482,
+    "f1_lenient": 0.6933701657458562
+   },
+   "lang/zh-Hans/PERSON": {
+    "precision": 0.25194401244167963,
+    "recall": 0.17494600431965443,
+    "f1": 0.20650095602294455,
+    "support": 926,
+    "f1_lenient": 0.6768642447418738
+   },
+   "lang/zh-Hans/ADDRESS": {
+    "precision": 0.5833333333333334,
+    "recall": 0.20685579196217493,
+    "f1": 0.30541012216404884,
+    "support": 846,
+    "f1_lenient": 0.4363001745200698
+   },
+   "lang/zh-Hans/TIN": {
+    "precision": 0.8556701030927835,
+    "recall": 0.2398843930635838,
+    "f1": 0.3747178329571106,
+    "support": 346,
+    "f1_lenient": 0.40632054176072235
+   },
+   "lang/zh-Hans/DOB": {
+    "precision": 0.5714285714285714,
+    "recall": 0.0625,
+    "f1": 0.11267605633802817,
+    "support": 128,
+    "f1_lenient": 0.16901408450704225
+   },
+   "lang/zh-Hans/ACCOUNT": {
+    "precision": 0.5543478260869565,
+    "recall": 0.5953307392996109,
+    "f1": 0.574108818011257,
+    "support": 257,
+    "f1_lenient": 0.5928705440900564
+   },
+   "lang/zh-Hans/PHONE": {
+    "precision": 0.6090047393364929,
+    "recall": 0.607565011820331,
+    "f1": 0.6082840236686391,
+    "support": 423,
+    "f1_lenient": 0.9846153846153846
+   },
+   "lang/zh-Hans/EMAIL": {
+    "precision": 0.37949640287769787,
+    "recall": 0.37949640287769787,
+    "f1": 0.37949640287769787,
+    "support": 556,
+    "f1_lenient": 0.9910071942446043
+   },
+   "lang/zh-Hans/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/zh-Hant": {
+    "precision": 0.4671371857079841,
+    "recall": 0.3041355542791499,
+    "f1": 0.3684118977213429,
+    "support": 3482,
+    "f1_lenient": 0.6950774047660464
+   },
+   "lang/zh-Hant/PERSON": {
+    "precision": 0.255700325732899,
+    "recall": 0.1695464362850972,
+    "f1": 0.20389610389610388,
+    "support": 926,
+    "f1_lenient": 0.6597402597402597
+   },
+   "lang/zh-Hant/ADDRESS": {
+    "precision": 0.658703071672355,
+    "recall": 0.2281323877068558,
+    "f1": 0.33889376646180863,
+    "support": 846,
+    "f1_lenient": 0.4705882352941176
+   },
+   "lang/zh-Hant/TIN": {
+    "precision": 0.86,
+    "recall": 0.24855491329479767,
+    "f1": 0.38565022421524664,
+    "support": 346,
+    "f1_lenient": 0.41704035874439466
+   },
+   "lang/zh-Hant/DOB": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 128,
+    "f1_lenient": 0.045112781954887216
+   },
+   "lang/zh-Hant/ACCOUNT": {
+    "precision": 0.555956678700361,
+    "recall": 0.5992217898832685,
+    "f1": 0.5767790262172284,
+    "support": 257,
+    "f1_lenient": 0.5955056179775281
+   },
+   "lang/zh-Hant/PHONE": {
+    "precision": 0.6146572104018913,
+    "recall": 0.6146572104018913,
+    "f1": 0.6146572104018913,
+    "support": 423,
+    "f1_lenient": 0.983451536643026
+   },
+   "lang/zh-Hant/EMAIL": {
+    "precision": 0.3779385171790235,
+    "recall": 0.37589928057553956,
+    "f1": 0.37691614066726775,
+    "support": 556,
+    "f1_lenient": 0.9936880072137061
+   },
+   "lang/zh-Hant/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/ja": {
+    "precision": 0.3099596649084704,
+    "recall": 0.2731000546746856,
+    "f1": 0.29036477256212767,
+    "support": 3658,
+    "f1_lenient": 0.7725621275977329
+   },
+   "lang/ja/ACCOUNT": {
+    "precision": 0.512,
+    "recall": 0.46545454545454545,
+    "f1": 0.4876190476190476,
+    "support": 275,
+    "f1_lenient": 0.761904761904762
+   },
+   "lang/ja/TIN": {
+    "precision": 0.3993993993993994,
+    "recall": 0.35185185185185186,
+    "f1": 0.37412095639943743,
+    "support": 378,
+    "f1_lenient": 0.5372714486638538
+   },
+   "lang/ja/EMAIL": {
+    "precision": 0.32062391681109187,
+    "recall": 0.32062391681109187,
+    "f1": 0.32062391681109187,
+    "support": 577,
+    "f1_lenient": 1.0
+   },
+   "lang/ja/ADDRESS": {
+    "precision": 0.21169354838709678,
+    "recall": 0.12152777777777778,
+    "f1": 0.15441176470588236,
+    "support": 864,
+    "f1_lenient": 0.6264705882352942
+   },
+   "lang/ja/PERSON": {
+    "precision": 0.2110792741165234,
+    "recall": 0.2188118811881188,
+    "f1": 0.21487603305785125,
+    "support": 1010,
+    "f1_lenient": 0.7690811861934856
+   },
+   "lang/ja/PHONE": {
+    "precision": 0.4430379746835443,
+    "recall": 0.47085201793721976,
+    "f1": 0.4565217391304348,
+    "support": 446,
+    "f1_lenient": 0.9565217391304347
+   },
+   "lang/ja/DOB": {
+    "precision": 0.4358974358974359,
+    "recall": 0.1574074074074074,
+    "f1": 0.2312925170068027,
+    "support": 108,
+    "f1_lenient": 0.44897959183673475
+   },
+   "lang/ja/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/ko": {
+    "precision": 0.3569972826086957,
+    "recall": 0.3118694362017804,
+    "f1": 0.3329109914475768,
+    "support": 3370,
+    "f1_lenient": 0.8248337028824834
+   },
+   "lang/ko/PERSON": {
+    "precision": 0.2907801418439716,
+    "recall": 0.25840336134453784,
+    "f1": 0.2736373748609566,
+    "support": 952,
+    "f1_lenient": 0.796440489432703
+   },
+   "lang/ko/EMAIL": {
+    "precision": 0.497029702970297,
+    "recall": 0.497029702970297,
+    "f1": 0.497029702970297,
+    "support": 505,
+    "f1_lenient": 1.0
+   },
+   "lang/ko/ADDRESS": {
+    "precision": 0.28444444444444444,
+    "recall": 0.18577648766328012,
+    "f1": 0.22475856014047413,
+    "support": 689,
+    "f1_lenient": 0.6409130816505707
+   },
+   "lang/ko/DOB": {
+    "precision": 0.3333333333333333,
+    "recall": 0.01680672268907563,
+    "f1": 0.032,
+    "support": 119,
+    "f1_lenient": 0.064
+   },
+   "lang/ko/ACCOUNT": {
+    "precision": 0.39759036144578314,
+    "recall": 0.42857142857142855,
+    "f1": 0.4125,
+    "support": 308,
+    "f1_lenient": 0.953125
+   },
+   "lang/ko/PHONE": {
+    "precision": 0.391578947368421,
+    "recall": 0.4492753623188406,
+    "f1": 0.41844769403824517,
+    "support": 414,
+    "f1_lenient": 0.9088863892013498
+   },
+   "lang/ko/TIN": {
+    "precision": 0.3271604938271605,
+    "recall": 0.27676240208877284,
+    "f1": 0.2998585572842999,
+    "support": 383,
+    "f1_lenient": 0.8628005657708627
+   },
+   "lang/ko/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/vi": {
+    "precision": 0.675153643546971,
+    "recall": 0.6034527857703375,
+    "f1": 0.637292817679558,
+    "support": 3823,
+    "f1_lenient": 0.8091160220994476
+   },
+   "lang/vi/PERSON": {
+    "precision": 0.43789097408400357,
+    "recall": 0.4939516129032258,
+    "f1": 0.4642349597347229,
+    "support": 992,
+    "f1_lenient": 0.8147797252486974
+   },
+   "lang/vi/ADDRESS": {
+    "precision": 0.4226190476190476,
+    "recall": 0.29583333333333334,
+    "f1": 0.3480392156862745,
+    "support": 960,
+    "f1_lenient": 0.6495098039215687
+   },
+   "lang/vi/EMAIL": {
+    "precision": 0.9947643979057592,
+    "recall": 0.9965034965034965,
+    "f1": 0.9956331877729258,
+    "support": 572,
+    "f1_lenient": 0.9991266375545852
+   },
+   "lang/vi/PHONE": {
+    "precision": 0.9718004338394793,
+    "recall": 0.9718004338394793,
+    "f1": 0.9718004338394793,
+    "support": 461,
+    "f1_lenient": 0.980477223427332
+   },
+   "lang/vi/TIN": {
+    "precision": 0.9555555555555556,
+    "recall": 0.6564885496183206,
+    "f1": 0.7782805429864253,
+    "support": 393,
+    "f1_lenient": 0.7782805429864253
+   },
+   "lang/vi/DOB": {
+    "precision": 0.8,
+    "recall": 0.021052631578947368,
+    "f1": 0.041025641025641026,
+    "support": 190,
+    "f1_lenient": 0.041025641025641026
+   },
+   "lang/vi/ACCOUNT": {
+    "precision": 0.834983498349835,
+    "recall": 0.9921568627450981,
+    "f1": 0.9068100358422939,
+    "support": 255,
+    "f1_lenient": 0.9068100358422939
+   },
+   "lang/vi/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/ms": {
+    "precision": 0.7200980392156863,
+    "recall": 0.8104827586206896,
+    "f1": 0.762621674237508,
+    "support": 3625,
+    "f1_lenient": 0.8776119402985074
+   },
+   "lang/ms/ADDRESS": {
+    "precision": 0.6974169741697417,
+    "recall": 0.7306701030927835,
+    "f1": 0.7136563876651982,
+    "support": 776,
+    "f1_lenient": 0.8848332284455632
+   },
+   "lang/ms/PERSON": {
+    "precision": 0.46977660972404733,
+    "recall": 0.6790123456790124,
+    "f1": 0.5553398058252428,
+    "support": 1053,
+    "f1_lenient": 0.7798058252427185
+   },
+   "lang/ms/ACCOUNT": {
+    "precision": 0.9913419913419913,
+    "recall": 0.9786324786324786,
+    "f1": 0.9849462365591398,
+    "support": 234,
+    "f1_lenient": 0.9849462365591398
+   },
+   "lang/ms/EMAIL": {
+    "precision": 0.984375,
+    "recall": 0.9895287958115183,
+    "f1": 0.9869451697127937,
+    "support": 573,
+    "f1_lenient": 0.9973890339425587
+   },
+   "lang/ms/PHONE": {
+    "precision": 0.9628865979381444,
+    "recall": 0.9936170212765958,
+    "f1": 0.9780104712041885,
+    "support": 470,
+    "f1_lenient": 0.9842931937172774
+   },
+   "lang/ms/TIN": {
+    "precision": 0.9631578947368421,
+    "recall": 0.9336734693877551,
+    "f1": 0.9481865284974093,
+    "support": 392,
+    "f1_lenient": 0.966321243523316
+   },
+   "lang/ms/DOB": {
+    "precision": 0.8181818181818182,
+    "recall": 0.2125984251968504,
+    "f1": 0.3375,
+    "support": 127,
+    "f1_lenient": 0.36250000000000004
+   },
+   "lang/ms/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/id": {
+    "precision": 0.6126335346028797,
+    "recall": 0.7299391256225789,
+    "f1": 0.6661616161616162,
+    "support": 3614,
+    "f1_lenient": 0.797979797979798
+   },
+   "lang/id/PERSON": {
+    "precision": 0.373134328358209,
+    "recall": 0.6127450980392157,
+    "f1": 0.463821892393321,
+    "support": 1020,
+    "f1_lenient": 0.7035250463821893
+   },
+   "lang/id/EMAIL": {
+    "precision": 0.9825783972125436,
+    "recall": 0.9877408056042032,
+    "f1": 0.9851528384279475,
+    "support": 571,
+    "f1_lenient": 0.9973799126637556
+   },
+   "lang/id/PHONE": {
+    "precision": 0.9662650602409638,
+    "recall": 0.9709443099273608,
+    "f1": 0.9685990338164251,
+    "support": 413,
+    "f1_lenient": 0.9975845410628019
+   },
+   "lang/id/ADDRESS": {
+    "precision": 0.6649269311064718,
+    "recall": 0.7355658198614319,
+    "f1": 0.6984649122807017,
+    "support": 866,
+    "f1_lenient": 0.8925438596491226
+   },
+   "lang/id/DOB": {
+    "precision": 0.8,
+    "recall": 0.11594202898550725,
+    "f1": 0.20253164556962025,
+    "support": 138,
+    "f1_lenient": 0.24050632911392408
+   },
+   "lang/id/ACCOUNT": {
+    "precision": 0.5339168490153173,
+    "recall": 0.9799196787148594,
+    "f1": 0.6912181303116147,
+    "support": 249,
+    "f1_lenient": 0.6912181303116147
+   },
+   "lang/id/TIN": {
+    "precision": 0.949685534591195,
+    "recall": 0.42296918767507,
+    "f1": 0.5852713178294574,
+    "support": 357,
+    "f1_lenient": 0.5852713178294574
+   },
+   "lang/id/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/tl": {
+    "precision": 0.6712003454231433,
+    "recall": 0.8567098374207771,
+    "f1": 0.7526933785256023,
+    "support": 3629,
+    "f1_lenient": 0.8178186660210629
+   },
+   "lang/tl/PERSON": {
+    "precision": 0.5035931453841902,
+    "recall": 0.7907986111111112,
+    "f1": 0.6153326578858495,
+    "support": 1152,
+    "f1_lenient": 0.7362377575143533
+   },
+   "lang/tl/ADDRESS": {
+    "precision": 0.5335892514395394,
+    "recall": 0.8188512518409425,
+    "f1": 0.6461359674607787,
+    "support": 679,
+    "f1_lenient": 0.7309703660662407
+   },
+   "lang/tl/PHONE": {
+    "precision": 0.8517110266159695,
+    "recall": 0.9824561403508771,
+    "f1": 0.9124236252545824,
+    "support": 456,
+    "f1_lenient": 0.924643584521385
+   },
+   "lang/tl/DOB": {
+    "precision": 0.8208955223880597,
+    "recall": 0.4824561403508772,
+    "f1": 0.6077348066298343,
+    "support": 114,
+    "f1_lenient": 0.6740331491712708
+   },
+   "lang/tl/TIN": {
+    "precision": 0.96875,
+    "recall": 0.7664835164835165,
+    "f1": 0.8558282208588958,
+    "support": 364,
+    "f1_lenient": 0.8650306748466258
+   },
+   "lang/tl/ACCOUNT": {
+    "precision": 0.9281045751633987,
+    "recall": 0.993006993006993,
+    "f1": 0.9594594594594594,
+    "support": 286,
+    "f1_lenient": 0.9594594594594594
+   },
+   "lang/tl/EMAIL": {
+    "precision": 0.9829351535836177,
+    "recall": 0.9965397923875432,
+    "f1": 0.9896907216494845,
+    "support": 578,
+    "f1_lenient": 0.993127147766323
+   },
+   "lang/tl/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/hi": {
+    "precision": 0.6776953793496863,
+    "recall": 0.7774869109947644,
+    "f1": 0.7241694605303262,
+    "support": 1528,
+    "f1_lenient": 0.8479122218835723
+   },
+   "lang/hi/PERSON": {
+    "precision": 0.6560565870910698,
+    "recall": 0.7969924812030075,
+    "f1": 0.7196896217264791,
+    "support": 931,
+    "f1_lenient": 0.8205625606207566
+   },
+   "lang/hi/ADDRESS": {
+    "precision": 0.5152838427947598,
+    "recall": 0.5784313725490197,
+    "f1": 0.5450346420323327,
+    "support": 204,
+    "f1_lenient": 0.817551963048499
+   },
+   "lang/hi/PHONE": {
+    "precision": 0.7892156862745098,
+    "recall": 0.817258883248731,
+    "f1": 0.8029925187032418,
+    "support": 197,
+    "f1_lenient": 0.972568578553616
+   },
+   "lang/hi/EMAIL": {
+    "precision": 0.9491525423728814,
+    "recall": 0.9655172413793104,
+    "f1": 0.9572649572649573,
+    "support": 116,
+    "f1_lenient": 0.9914529914529915
+   },
+   "lang/hi/DOB": {
+    "precision": 0.5,
+    "recall": 0.09090909090909091,
+    "f1": 0.15384615384615385,
+    "support": 11,
+    "f1_lenient": 0.15384615384615385
+   },
+   "lang/hi/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/hi/TIN": {
+    "precision": 0.918918918918919,
+    "recall": 0.6938775510204082,
+    "f1": 0.7906976744186046,
+    "support": 49,
+    "f1_lenient": 0.8372093023255813
+   },
+   "lang/hi/ACCOUNT": {
+    "precision": 0.8333333333333334,
+    "recall": 1.0,
+    "f1": 0.9090909090909091,
+    "support": 20,
+    "f1_lenient": 0.9090909090909091
+   }
+  },
+  "script_recall": {
+   "en/latin": {
+    "n": 3467,
+    "strict": 0.9847130083645803,
+    "lenient": 0.992789154888953
+   },
+   "zh-Hans/nonlatin": {
+    "n": 1612,
+    "strict": 0.20099255583126552,
+    "lenient": 0.6377171215880894
+   },
+   "zh-Hans/latin": {
+    "n": 1870,
+    "strict": 0.3877005347593583,
+    "lenient": 0.5352941176470588
+   },
+   "zh-Hant/nonlatin": {
+    "n": 1612,
+    "strict": 0.19292803970223324,
+    "lenient": 0.6228287841191067
+   },
+   "zh-Hant/latin": {
+    "n": 1870,
+    "strict": 0.4,
+    "lenient": 0.5433155080213904
+   },
+   "ja/latin": {
+    "n": 1893,
+    "strict": 0.33967247754886426,
+    "lenient": 0.7115689381933439
+   },
+   "ja/nonlatin": {
+    "n": 1765,
+    "strict": 0.201699716713881,
+    "lenient": 0.7807365439093484
+   },
+   "ko/nonlatin": {
+    "n": 1649,
+    "strict": 0.27835051546391754,
+    "lenient": 0.7337780473013947
+   },
+   "ko/latin": {
+    "n": 1721,
+    "strict": 0.34398605461940734,
+    "lenient": 0.8198721673445671
+   },
+   "vi/latin": {
+    "n": 3823,
+    "strict": 0.6034527857703375,
+    "lenient": 0.7862934867904787
+   },
+   "ms/latin": {
+    "n": 3625,
+    "strict": 0.8104827586206896,
+    "lenient": 0.9464827586206896
+   },
+   "id/latin": {
+    "n": 3614,
+    "strict": 0.7299391256225789,
+    "lenient": 0.8837852794687328
+   },
+   "tl/latin": {
+    "n": 3629,
+    "strict": 0.8567098374207771,
+    "lenient": 0.9352438688343896
+   },
+   "hi/latin": {
+    "n": 1528,
+    "strict": 0.7774869109947644,
+    "lenient": 0.9116492146596858
+   }
+  },
+  "detection": {
+   "en/PERSON": 0.9939698492462311,
+   "en/ALL": 0.9942313239111624,
+   "en/DOB": 1.0,
+   "en/EMAIL": 1.0,
+   "en/PHONE": 1.0,
+   "en/ADDRESS": 0.9823269513991163,
+   "en/TIN": 0.994579945799458,
+   "en/ACCOUNT": 1.0,
+   "zh-Hans/PERSON": 0.5831533477321814,
+   "zh-Hans/ALL": 0.6280873061458931,
+   "zh-Hans/ADDRESS": 0.3333333333333333,
+   "zh-Hans/DOB": 0.1015625,
+   "zh-Hans/TIN": 0.6184971098265896,
+   "zh-Hans/ACCOUNT": 0.6459143968871596,
+   "zh-Hans/PHONE": 0.9929078014184397,
+   "zh-Hans/EMAIL": 0.9928057553956835,
+   "zh-Hant/PERSON": 0.5572354211663066,
+   "zh-Hant/ALL": 0.6249282021826537,
+   "zh-Hant/ADDRESS": 0.3557919621749409,
+   "zh-Hant/DOB": 0.03125,
+   "zh-Hant/TIN": 0.6271676300578035,
+   "zh-Hant/ACCOUNT": 0.6459143968871596,
+   "zh-Hant/PHONE": 0.9929078014184397,
+   "zh-Hant/EMAIL": 0.9928057553956835,
+   "ja/ACCOUNT": 0.7418181818181818,
+   "ja/ALL": 0.80098414434117,
+   "ja/TIN": 0.6904761904761905,
+   "ja/EMAIL": 1.0,
+   "ja/ADDRESS": 0.7118055555555556,
+   "ja/PERSON": 0.7861386138613862,
+   "ja/PHONE": 0.9955156950672646,
+   "ja/DOB": 0.32407407407407407,
+   "ko/PERSON": 0.7531512605042017,
+   "ko/ALL": 0.7985163204747775,
+   "ko/EMAIL": 1.0,
+   "ko/DOB": 0.03361344537815126,
+   "ko/ADDRESS": 0.5544267053701016,
+   "ko/ACCOUNT": 0.9967532467532467,
+   "ko/TIN": 0.9477806788511749,
+   "ko/PHONE": 0.9975845410628019,
+   "vi/PERSON": 0.8790322580645161,
+   "vi/ALL": 0.8114046560292963,
+   "vi/EMAIL": 1.0,
+   "vi/PHONE": 1.0,
+   "vi/TIN": 0.7862595419847328,
+   "vi/DOB": 0.021052631578947368,
+   "vi/ADDRESS": 0.6552083333333333,
+   "vi/ACCOUNT": 1.0,
+   "ms/ADDRESS": 0.9716494845360825,
+   "ms/ALL": 0.9522758620689655,
+   "ms/PERSON": 0.9601139601139601,
+   "ms/ACCOUNT": 0.9957264957264957,
+   "ms/EMAIL": 1.0,
+   "ms/PHONE": 1.0,
+   "ms/TIN": 0.9719387755102041,
+   "ms/DOB": 0.23622047244094488,
+   "id/PERSON": 0.9480392156862745,
+   "id/ALL": 0.9463198671831765,
+   "id/EMAIL": 1.0,
+   "id/PHONE": 1.0,
+   "id/DOB": 0.14492753623188406,
+   "id/ADDRESS": 0.9803695150115473,
+   "id/ACCOUNT": 1.0,
+   "id/TIN": 0.9831932773109243,
+   "tl/PERSON": 0.9652777777777778,
+   "tl/ALL": 0.9639019013502342,
+   "tl/ADDRESS": 0.9499263622974963,
+   "tl/PHONE": 1.0,
+   "tl/DOB": 0.5350877192982456,
+   "tl/TIN": 0.9917582417582418,
+   "tl/ACCOUNT": 0.9965034965034965,
+   "tl/EMAIL": 1.0,
+   "hi/PERSON": 0.9183673469387755,
+   "hi/ALL": 0.9214659685863874,
+   "hi/ADDRESS": 0.8774509803921569,
+   "hi/PHONE": 0.9949238578680203,
+   "hi/EMAIL": 1.0,
+   "hi/DOB": 0.09090909090909091,
+   "hi/TIN": 0.8367346938775511,
+   "hi/ACCOUNT": 1.0
+  },
+  "confusion": {
+   "en/PERSON": {
+    "PERSON": 988,
+    "BUSINESS": 1,
+    "MISS": 6
+   },
+   "en/DOB": {
+    "DOB": 161
+   },
+   "en/EMAIL": {
+    "EMAIL": 597
+   },
+   "en/PHONE": {
+    "PHONE": 448,
+    "TIN": 1
+   },
+   "en/ADDRESS": {
+    "ADDRESS": 665,
+    "MISS": 12,
+    "TIN": 2
+   },
+   "en/TIN": {
+    "TIN": 365,
+    "ACCOUNT": 2,
+    "MISS": 2
+   },
+   "en/ACCOUNT": {
+    "ACCOUNT": 217
+   },
+   "zh-Hans/PERSON": {
+    "MISS": 386,
+    "PERSON": 532,
+    "EMAIL": 2,
+    "ADDRESS": 3,
+    "PHONE": 3
+   },
+   "zh-Hans/ADDRESS": {
+    "MISS": 564,
+    "ADDRESS": 267,
+    "PHONE": 5,
+    "EMAIL": 4,
+    "PERSON": 4,
+    "TIN": 1,
+    "ACCOUNT": 1
+   },
+   "zh-Hans/DOB": {
+    "MISS": 115,
+    "EMAIL": 1,
+    "DOB": 12
+   },
+   "zh-Hans/TIN": {
+    "MISS": 132,
+    "ACCOUNT": 119,
+    "TIN": 91,
+    "PHONE": 2,
+    "PERSON": 1,
+    "ADDRESS": 1
+   },
+   "zh-Hans/ACCOUNT": {
+    "ACCOUNT": 158,
+    "MISS": 91,
+    "TIN": 6,
+    "ADDRESS": 1,
+    "PHONE": 1
+   },
+   "zh-Hans/PHONE": {
+    "PHONE": 413,
+    "TIN": 2,
+    "EMAIL": 5,
+    "MISS": 3
+   },
+   "zh-Hans/EMAIL": {
+    "EMAIL": 552,
+    "MISS": 4
+   },
+   "zh-Hant/PERSON": {
+    "MISS": 410,
+    "PERSON": 509,
+    "EMAIL": 2,
+    "ADDRESS": 2,
+    "PHONE": 3
+   },
+   "zh-Hant/ADDRESS": {
+    "MISS": 545,
+    "ADDRESS": 286,
+    "PHONE": 5,
+    "EMAIL": 4,
+    "PERSON": 4,
+    "TIN": 1,
+    "ACCOUNT": 1
+   },
+   "zh-Hant/DOB": {
+    "MISS": 124,
+    "EMAIL": 1,
+    "DOB": 3
+   },
+   "zh-Hant/TIN": {
+    "MISS": 129,
+    "ACCOUNT": 119,
+    "TIN": 94,
+    "PHONE": 3,
+    "ADDRESS": 1
+   },
+   "zh-Hant/ACCOUNT": {
+    "ACCOUNT": 159,
+    "MISS": 91,
+    "TIN": 5,
+    "ADDRESS": 1,
+    "PHONE": 1
+   },
+   "zh-Hant/PHONE": {
+    "PHONE": 411,
+    "EMAIL": 5,
+    "MISS": 3,
+    "TIN": 2,
+    "ADDRESS": 2
+   },
+   "zh-Hant/EMAIL": {
+    "EMAIL": 552,
+    "MISS": 4
+   },
+   "ja/ACCOUNT": {
+    "ACCOUNT": 200,
+    "MISS": 71,
+    "PERSON": 1,
+    "TIN": 2,
+    "EMAIL": 1
+   },
+   "ja/TIN": {
+    "TIN": 206,
+    "MISS": 117,
+    "ACCOUNT": 52,
+    "ADDRESS": 2,
+    "PHONE": 1
+   },
+   "ja/EMAIL": {
+    "EMAIL": 577
+   },
+   "ja/ADDRESS": {
+    "ADDRESS": 455,
+    "TIN": 130,
+    "PHONE": 28,
+    "MISS": 249,
+    "PERSON": 2
+   },
+   "ja/PERSON": {
+    "PERSON": 789,
+    "MISS": 216,
+    "PHONE": 1,
+    "ADDRESS": 4
+   },
+   "ja/PHONE": {
+    "PHONE": 438,
+    "TIN": 5,
+    "MISS": 2,
+    "EMAIL": 1
+   },
+   "ja/DOB": {
+    "DOB": 33,
+    "MISS": 73,
+    "PERSON": 1,
+    "EMAIL": 1
+   },
+   "ko/PERSON": {
+    "PERSON": 716,
+    "MISS": 235,
+    "ADDRESS": 1
+   },
+   "ko/EMAIL": {
+    "EMAIL": 505
+   },
+   "ko/DOB": {
+    "MISS": 115,
+    "DOB": 4
+   },
+   "ko/ADDRESS": {
+    "ADDRESS": 382,
+    "MISS": 307
+   },
+   "ko/ACCOUNT": {
+    "ACCOUNT": 305,
+    "TIN": 2,
+    "MISS": 1
+   },
+   "ko/TIN": {
+    "ACCOUNT": 19,
+    "TIN": 286,
+    "PHONE": 58,
+    "MISS": 20
+   },
+   "ko/PHONE": {
+    "PHONE": 404,
+    "TIN": 9,
+    "MISS": 1
+   },
+   "vi/PERSON": {
+    "PERSON": 860,
+    "MISS": 120,
+    "ADDRESS": 4,
+    "BUSINESS": 8
+   },
+   "vi/EMAIL": {
+    "EMAIL": 572
+   },
+   "vi/PHONE": {
+    "PHONE": 452,
+    "ACCOUNT": 1,
+    "TIN": 7,
+    "ADDRESS": 1
+   },
+   "vi/TIN": {
+    "TIN": 258,
+    "MISS": 84,
+    "ACCOUNT": 49,
+    "PHONE": 2
+   },
+   "vi/DOB": {
+    "MISS": 186,
+    "DOB": 4
+   },
+   "vi/ADDRESS": {
+    "ADDRESS": 596,
+    "PHONE": 3,
+    "MISS": 331,
+    "PERSON": 30
+   },
+   "vi/ACCOUNT": {
+    "ACCOUNT": 253,
+    "TIN": 2
+   },
+   "ms/ADDRESS": {
+    "ADDRESS": 753,
+    "MISS": 22,
+    "PERSON": 1
+   },
+   "ms/PERSON": {
+    "PERSON": 1004,
+    "MISS": 42,
+    "ADDRESS": 7
+   },
+   "ms/ACCOUNT": {
+    "ACCOUNT": 229,
+    "TIN": 4,
+    "MISS": 1
+   },
+   "ms/EMAIL": {
+    "EMAIL": 573
+   },
+   "ms/PHONE": {
+    "PHONE": 470
+   },
+   "ms/TIN": {
+    "TIN": 371,
+    "PHONE": 9,
+    "MISS": 11,
+    "ACCOUNT": 1
+   },
+   "ms/DOB": {
+    "MISS": 97,
+    "DOB": 29,
+    "ADDRESS": 1
+   },
+   "id/PERSON": {
+    "PERSON": 948,
+    "ADDRESS": 14,
+    "MISS": 53,
+    "BUSINESS": 5
+   },
+   "id/EMAIL": {
+    "EMAIL": 571
+   },
+   "id/PHONE": {
+    "PHONE": 412,
+    "TIN": 1
+   },
+   "id/DOB": {
+    "MISS": 118,
+    "DOB": 19,
+    "ADDRESS": 1
+   },
+   "id/ADDRESS": {
+    "ADDRESS": 848,
+    "MISS": 17,
+    "PERSON": 1
+   },
+   "id/ACCOUNT": {
+    "ACCOUNT": 244,
+    "TIN": 5
+   },
+   "id/TIN": {
+    "ACCOUNT": 199,
+    "TIN": 151,
+    "PHONE": 1,
+    "MISS": 6
+   },
+   "tl/PERSON": {
+    "PERSON": 1088,
+    "MISS": 40,
+    "ADDRESS": 23,
+    "BUSINESS": 1
+   },
+   "tl/ADDRESS": {
+    "ADDRESS": 645,
+    "MISS": 34
+   },
+   "tl/PHONE": {
+    "PHONE": 453,
+    "ACCOUNT": 1,
+    "ADDRESS": 2
+   },
+   "tl/DOB": {
+    "DOB": 61,
+    "MISS": 53
+   },
+   "tl/TIN": {
+    "TIN": 282,
+    "PHONE": 65,
+    "MISS": 3,
+    "ADDRESS": 3,
+    "ACCOUNT": 11
+   },
+   "tl/ACCOUNT": {
+    "ACCOUNT": 284,
+    "TIN": 1,
+    "MISS": 1
+   },
+   "tl/EMAIL": {
+    "EMAIL": 578
+   },
+   "hi/PERSON": {
+    "PERSON": 846,
+    "MISS": 76,
+    "BUSINESS": 2,
+    "ADDRESS": 6,
+    "EMAIL": 1
+   },
+   "hi/ADDRESS": {
+    "ADDRESS": 179,
+    "MISS": 25
+   },
+   "hi/PHONE": {
+    "PHONE": 194,
+    "ACCOUNT": 1,
+    "MISS": 1,
+    "TIN": 1
+   },
+   "hi/EMAIL": {
+    "EMAIL": 116
+   },
+   "hi/DOB": {
+    "MISS": 10,
+    "DOB": 1
+   },
+   "hi/TIN": {
+    "MISS": 8,
+    "TIN": 35,
+    "ACCOUNT": 2,
+    "PHONE": 3,
+    "ADDRESS": 1
+   },
+   "hi/ACCOUNT": {
+    "ACCOUNT": 20
+   }
+  },
+  "negatives": {
+   "en/date": {
+    "n": 744,
+    "flagged": 0.0013440860215053765,
+    "as": {
+     "DOB": 1
+    }
+   },
+   "en/place": {
+    "n": 262,
+    "flagged": 0.03816793893129771,
+    "as": {
+     "ADDRESS": 3,
+     "PERSON": 5,
+     "BUSINESS": 1,
+     "EMAIL": 1
+    }
+   },
+   "zh-Hans/date": {
+    "n": 751,
+    "flagged": 0.011984021304926764,
+    "as": {
+     "PHONE": 4,
+     "PERSON": 4,
+     "EMAIL": 1
+    }
+   },
+   "zh-Hans/place": {
+    "n": 400,
+    "flagged": 0.1275,
+    "as": {
+     "ADDRESS": 42,
+     "EMAIL": 2,
+     "PERSON": 5,
+     "PHONE": 2
+    }
+   },
+   "zh-Hans/amount": {
+    "n": 3,
+    "flagged": 0.0,
+    "as": {}
+   },
+   "zh-Hant/date": {
+    "n": 751,
+    "flagged": 0.011984021304926764,
+    "as": {
+     "PHONE": 4,
+     "PERSON": 4,
+     "EMAIL": 1
+    }
+   },
+   "zh-Hant/place": {
+    "n": 400,
+    "flagged": 0.0625,
+    "as": {
+     "PERSON": 4,
+     "ADDRESS": 17,
+     "EMAIL": 2,
+     "PHONE": 2
+    }
+   },
+   "zh-Hant/amount": {
+    "n": 3,
+    "flagged": 0.0,
+    "as": {}
+   },
+   "ja/date": {
+    "n": 778,
+    "flagged": 0.030848329048843187,
+    "as": {
+     "EMAIL": 2,
+     "PERSON": 13,
+     "ADDRESS": 2,
+     "ACCOUNT": 3,
+     "DOB": 2,
+     "PHONE": 2
+    }
+   },
+   "ja/place": {
+    "n": 468,
+    "flagged": 0.15598290598290598,
+    "as": {
+     "ADDRESS": 69,
+     "PERSON": 3,
+     "PHONE": 1
+    }
+   },
+   "ja/amount": {
+    "n": 1,
+    "flagged": 0.0,
+    "as": {}
+   },
+   "ko/place": {
+    "n": 353,
+    "flagged": 0.1388101983002833,
+    "as": {
+     "ADDRESS": 49
+    }
+   },
+   "ko/date": {
+    "n": 662,
+    "flagged": 0.0075528700906344415,
+    "as": {
+     "ADDRESS": 4,
+     "DOB": 1
+    }
+   },
+   "ko/amount": {
+    "n": 3,
+    "flagged": 0.3333333333333333,
+    "as": {
+     "TIN": 1
+    }
+   },
+   "vi/date": {
+    "n": 666,
+    "flagged": 0.0015015015015015015,
+    "as": {
+     "DOB": 1
+    }
+   },
+   "vi/place": {
+    "n": 284,
+    "flagged": 0.36971830985915494,
+    "as": {
+     "ADDRESS": 49,
+     "PERSON": 56
+    }
+   },
+   "ms/date": {
+    "n": 829,
+    "flagged": 0.006031363088057901,
+    "as": {
+     "DOB": 3,
+     "ADDRESS": 2
+    }
+   },
+   "ms/place": {
+    "n": 261,
+    "flagged": 0.11877394636015326,
+    "as": {
+     "ADDRESS": 29,
+     "BUSINESS": 2
+    }
+   },
+   "id/date": {
+    "n": 710,
+    "flagged": 0.0028169014084507044,
+    "as": {
+     "ADDRESS": 1,
+     "DOB": 1
+    }
+   },
+   "id/place": {
+    "n": 296,
+    "flagged": 0.23986486486486486,
+    "as": {
+     "ADDRESS": 71
+    }
+   },
+   "tl/date": {
+    "n": 753,
+    "flagged": 0.0199203187250996,
+    "as": {
+     "ADDRESS": 12,
+     "DOB": 3
+    }
+   },
+   "tl/place": {
+    "n": 317,
+    "flagged": 0.2902208201892745,
+    "as": {
+     "ADDRESS": 89,
+     "PERSON": 3
+    }
+   },
+   "tl/amount": {
+    "n": 2,
+    "flagged": 0.5,
+    "as": {
+     "ADDRESS": 1
+    }
+   },
+   "hi/date": {
+    "n": 85,
+    "flagged": 0.011764705882352941,
+    "as": {
+     "DOB": 1
+    }
+   },
+   "hi/place": {
+    "n": 106,
+    "flagged": 0.25471698113207547,
+    "as": {
+     "ADDRESS": 9,
+     "PERSON": 18
+    }
+   }
+  }
+ },
+ "alltok": {
+  "strict": {
+   "ALL": {
+    "precision": 0.6162555379314117,
+    "recall": 0.669101490587327,
+    "f1": 0.6415921644553272,
+    "support": 33678,
+    "f1_lenient": 0.8108877626558852
+   },
+   "lang/en": {
+    "precision": 0.97310443490701,
+    "recall": 0.9809633689068359,
+    "f1": 0.9770180982476301,
+    "support": 3467,
+    "f1_lenient": 0.9887963228957197
+   },
+   "lang/en/PERSON": {
+    "precision": 0.9829488465396189,
+    "recall": 0.9849246231155779,
+    "f1": 0.9839357429718876,
+    "support": 995,
+    "f1_lenient": 0.9929718875502007
+   },
+   "lang/en/DOB": {
+    "precision": 0.9754601226993865,
+    "recall": 0.9875776397515528,
+    "f1": 0.9814814814814815,
+    "support": 161,
+    "f1_lenient": 0.9938271604938271
+   },
+   "lang/en/EMAIL": {
+    "precision": 0.995,
+    "recall": 1.0,
+    "f1": 0.9974937343358395,
+    "support": 597,
+    "f1_lenient": 0.9974937343358395
+   },
+   "lang/en/PHONE": {
+    "precision": 0.9845474613686535,
+    "recall": 0.9933184855233853,
+    "f1": 0.9889135254988913,
+    "support": 449,
+    "f1_lenient": 0.9955654101995565
+   },
+   "lang/en/ADDRESS": {
+    "precision": 0.9583952451708767,
+    "recall": 0.9499263622974963,
+    "f1": 0.9541420118343196,
+    "support": 679,
+    "f1_lenient": 0.9792899408284024
+   },
+   "lang/en/TIN": {
+    "precision": 0.9554973821989529,
+    "recall": 0.989159891598916,
+    "f1": 0.9720372836218375,
+    "support": 369,
+    "f1_lenient": 0.9773635153129161
+   },
+   "lang/en/ACCOUNT": {
+    "precision": 0.9457013574660633,
+    "recall": 0.9631336405529954,
+    "f1": 0.9543378995433791,
+    "support": 217,
+    "f1_lenient": 0.9908675799086757
+   },
+   "lang/en/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/zh-Hans": {
+    "precision": 0.5325008005123278,
+    "recall": 0.47759908098793796,
+    "f1": 0.503557910673732,
+    "support": 3482,
+    "f1_lenient": 0.7730507191521574
+   },
+   "lang/zh-Hans/ADDRESS": {
+    "precision": 0.4492753623188406,
+    "recall": 0.3664302600472813,
+    "f1": 0.4036458333333333,
+    "support": 846,
+    "f1_lenient": 0.7317708333333331
+   },
+   "lang/zh-Hans/PERSON": {
+    "precision": 0.24570673712021135,
+    "recall": 0.20086393088552915,
+    "f1": 0.2210338680926916,
+    "support": 926,
+    "f1_lenient": 0.7058823529411765
+   },
+   "lang/zh-Hans/TIN": {
+    "precision": 0.8511904761904762,
+    "recall": 0.41329479768786126,
+    "f1": 0.556420233463035,
+    "support": 346,
+    "f1_lenient": 0.6070038910505837
+   },
+   "lang/zh-Hans/DOB": {
+    "precision": 0.6428571428571429,
+    "recall": 0.0703125,
+    "f1": 0.1267605633802817,
+    "support": 128,
+    "f1_lenient": 0.16901408450704225
+   },
+   "lang/zh-Hans/ACCOUNT": {
+    "precision": 0.5678733031674208,
+    "recall": 0.9766536964980544,
+    "f1": 0.7181688125894135,
+    "support": 257,
+    "f1_lenient": 0.7210300429184548
+   },
+   "lang/zh-Hans/PHONE": {
+    "precision": 0.8975501113585747,
+    "recall": 0.9527186761229315,
+    "f1": 0.9243119266055047,
+    "support": 423,
+    "f1_lenient": 0.9655963302752293
+   },
+   "lang/zh-Hans/EMAIL": {
+    "precision": 0.6006655574043261,
+    "recall": 0.6492805755395683,
+    "f1": 0.6240276577355228,
+    "support": 556,
+    "f1_lenient": 0.9611063094209161
+   },
+   "lang/zh-Hans/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/zh-Hant": {
+    "precision": 0.5459901800327333,
+    "recall": 0.479035037334865,
+    "f1": 0.510325837540156,
+    "support": 3482,
+    "f1_lenient": 0.7765029830197339
+   },
+   "lang/zh-Hant/ADDRESS": {
+    "precision": 0.5292353823088456,
+    "recall": 0.41725768321513,
+    "f1": 0.4666226040978189,
+    "support": 846,
+    "f1_lenient": 0.7640449438202247
+   },
+   "lang/zh-Hant/PERSON": {
+    "precision": 0.2451523545706371,
+    "recall": 0.19114470842332612,
+    "f1": 0.21480582524271846,
+    "support": 926,
+    "f1_lenient": 0.6978155339805826
+   },
+   "lang/zh-Hant/TIN": {
+    "precision": 0.8622754491017964,
+    "recall": 0.4161849710982659,
+    "f1": 0.5614035087719299,
+    "support": 346,
+    "f1_lenient": 0.5925925925925926
+   },
+   "lang/zh-Hant/DOB": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 128,
+    "f1_lenient": 0.04477611940298507
+   },
+   "lang/zh-Hant/ACCOUNT": {
+    "precision": 0.5665914221218962,
+    "recall": 0.9766536964980544,
+    "f1": 0.7171428571428572,
+    "support": 257,
+    "f1_lenient": 0.7228571428571428
+   },
+   "lang/zh-Hant/PHONE": {
+    "precision": 0.9248291571753986,
+    "recall": 0.9598108747044918,
+    "f1": 0.9419953596287703,
+    "support": 423,
+    "f1_lenient": 0.9767981438515081
+   },
+   "lang/zh-Hant/EMAIL": {
+    "precision": 0.5533661740558292,
+    "recall": 0.6061151079136691,
+    "f1": 0.5785407725321887,
+    "support": 556,
+    "f1_lenient": 0.9545064377682403
+   },
+   "lang/zh-Hant/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/ja": {
+    "precision": 0.4730864197530864,
+    "recall": 0.5237834882449426,
+    "f1": 0.497145822522055,
+    "support": 3658,
+    "f1_lenient": 0.7711468604047742
+   },
+   "lang/ja/ACCOUNT": {
+    "precision": 0.6913265306122449,
+    "recall": 0.9854545454545455,
+    "f1": 0.8125937031484258,
+    "support": 275,
+    "f1_lenient": 0.8215892053973014
+   },
+   "lang/ja/TIN": {
+    "precision": 0.5448577680525164,
+    "recall": 0.6587301587301587,
+    "f1": 0.5964071856287425,
+    "support": 378,
+    "f1_lenient": 0.6946107784431138
+   },
+   "lang/ja/EMAIL": {
+    "precision": 0.6694352159468439,
+    "recall": 0.6984402079722704,
+    "f1": 0.6836301950805768,
+    "support": 577,
+    "f1_lenient": 0.9787955894826124
+   },
+   "lang/ja/ADDRESS": {
+    "precision": 0.3218390804597701,
+    "recall": 0.25925925925925924,
+    "f1": 0.28717948717948716,
+    "support": 864,
+    "f1_lenient": 0.6346153846153846
+   },
+   "lang/ja/PERSON": {
+    "precision": 0.22777369581190302,
+    "recall": 0.3069306930693069,
+    "f1": 0.261493040911008,
+    "support": 1010,
+    "f1_lenient": 0.7254323070434416
+   },
+   "lang/ja/PHONE": {
+    "precision": 0.8934426229508197,
+    "recall": 0.9775784753363229,
+    "f1": 0.9336188436830835,
+    "support": 446,
+    "f1_lenient": 0.9464668094218415
+   },
+   "lang/ja/DOB": {
+    "precision": 0.5609756097560976,
+    "recall": 0.21296296296296297,
+    "f1": 0.3087248322147651,
+    "support": 108,
+    "f1_lenient": 0.45637583892617456
+   },
+   "lang/ja/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/ko": {
+    "precision": 0.6108748481166464,
+    "recall": 0.5967359050445104,
+    "f1": 0.6037226058240768,
+    "support": 3370,
+    "f1_lenient": 0.7988592014410087
+   },
+   "lang/ko/PERSON": {
+    "precision": 0.45493562231759654,
+    "recall": 0.44537815126050423,
+    "f1": 0.45010615711252655,
+    "support": 952,
+    "f1_lenient": 0.7887473460721868
+   },
+   "lang/ko/EMAIL": {
+    "precision": 0.9569471624266145,
+    "recall": 0.9683168316831683,
+    "f1": 0.9625984251968505,
+    "support": 505,
+    "f1_lenient": 0.9940944881889764
+   },
+   "lang/ko/ADDRESS": {
+    "precision": 0.3191881918819188,
+    "recall": 0.251088534107402,
+    "f1": 0.281072298943948,
+    "support": 689,
+    "f1_lenient": 0.6173842404549147
+   },
+   "lang/ko/DOB": {
+    "precision": 0.3333333333333333,
+    "recall": 0.01680672268907563,
+    "f1": 0.032,
+    "support": 119,
+    "f1_lenient": 0.064
+   },
+   "lang/ko/ACCOUNT": {
+    "precision": 0.8587570621468926,
+    "recall": 0.987012987012987,
+    "f1": 0.9184290030211479,
+    "support": 308,
+    "f1_lenient": 0.9274924471299093
+   },
+   "lang/ko/PHONE": {
+    "precision": 0.7176684881602914,
+    "recall": 0.9516908212560387,
+    "f1": 0.818276220145379,
+    "support": 414,
+    "f1_lenient": 0.8473520249221185
+   },
+   "lang/ko/TIN": {
+    "precision": 0.5813953488372093,
+    "recall": 0.587467362924282,
+    "f1": 0.5844155844155845,
+    "support": 383,
+    "f1_lenient": 0.8155844155844155
+   },
+   "lang/ko/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/vi": {
+    "precision": 0.5746249012898131,
+    "recall": 0.5710175255035312,
+    "f1": 0.5728155339805826,
+    "support": 3823,
+    "f1_lenient": 0.7793230123327212
+   },
+   "lang/vi/PERSON": {
+    "precision": 0.3578780680918448,
+    "recall": 0.45564516129032256,
+    "f1": 0.4008869179600887,
+    "support": 992,
+    "f1_lenient": 0.7662971175166297
+   },
+   "lang/vi/ADDRESS": {
+    "precision": 0.31887755102040816,
+    "recall": 0.2604166666666667,
+    "f1": 0.2866972477064221,
+    "support": 960,
+    "f1_lenient": 0.6238532110091742
+   },
+   "lang/vi/EMAIL": {
+    "precision": 0.9826689774696707,
+    "recall": 0.9912587412587412,
+    "f1": 0.9869451697127938,
+    "support": 572,
+    "f1_lenient": 0.9956483899042645
+   },
+   "lang/vi/PHONE": {
+    "precision": 0.9218106995884774,
+    "recall": 0.9718004338394793,
+    "f1": 0.9461457233368532,
+    "support": 461,
+    "f1_lenient": 0.9651531151003169
+   },
+   "lang/vi/TIN": {
+    "precision": 0.6677316293929713,
+    "recall": 0.5318066157760815,
+    "f1": 0.5920679886685554,
+    "support": 393,
+    "f1_lenient": 0.7762039660056658
+   },
+   "lang/vi/DOB": {
+    "precision": 0.8,
+    "recall": 0.021052631578947368,
+    "f1": 0.041025641025641026,
+    "support": 190,
+    "f1_lenient": 0.041025641025641026
+   },
+   "lang/vi/ACCOUNT": {
+    "precision": 0.71671388101983,
+    "recall": 0.9921568627450981,
+    "f1": 0.8322368421052632,
+    "support": 255,
+    "f1_lenient": 0.8388157894736842
+   },
+   "lang/vi/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/ms": {
+    "precision": 0.6661294036380382,
+    "recall": 0.7980689655172414,
+    "f1": 0.7261546184738955,
+    "support": 3625,
+    "f1_lenient": 0.8521586345381525
+   },
+   "lang/ms/ADDRESS": {
+    "precision": 0.6539833531510107,
+    "recall": 0.7087628865979382,
+    "f1": 0.6802721088435374,
+    "support": 776,
+    "f1_lenient": 0.8719851576994434
+   },
+   "lang/ms/PERSON": {
+    "precision": 0.4115566037735849,
+    "recall": 0.6628679962013295,
+    "f1": 0.5078210258275736,
+    "support": 1053,
+    "f1_lenient": 0.7319025100036378
+   },
+   "lang/ms/ACCOUNT": {
+    "precision": 0.9703389830508474,
+    "recall": 0.9786324786324786,
+    "f1": 0.9744680851063829,
+    "support": 234,
+    "f1_lenient": 0.9829787234042553
+   },
+   "lang/ms/EMAIL": {
+    "precision": 0.9844020797227037,
+    "recall": 0.9912739965095986,
+    "f1": 0.9878260869565217,
+    "support": 573,
+    "f1_lenient": 0.9965217391304347
+   },
+   "lang/ms/PHONE": {
+    "precision": 0.9302788844621513,
+    "recall": 0.9936170212765958,
+    "f1": 0.9609053497942387,
+    "support": 470,
+    "f1_lenient": 0.9670781893004115
+   },
+   "lang/ms/TIN": {
+    "precision": 0.8805970149253731,
+    "recall": 0.9030612244897959,
+    "f1": 0.8916876574307304,
+    "support": 392,
+    "f1_lenient": 0.959697732997481
+   },
+   "lang/ms/DOB": {
+    "precision": 0.8181818181818182,
+    "recall": 0.2125984251968504,
+    "f1": 0.3375,
+    "support": 127,
+    "f1_lenient": 0.36250000000000004
+   },
+   "lang/ms/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/id": {
+    "precision": 0.5696369636963696,
+    "recall": 0.7163807415605977,
+    "f1": 0.6346365976222578,
+    "support": 3614,
+    "f1_lenient": 0.7768108836867262
+   },
+   "lang/id/PERSON": {
+    "precision": 0.3291553133514986,
+    "recall": 0.592156862745098,
+    "f1": 0.4231173380035026,
+    "support": 1020,
+    "f1_lenient": 0.6654991243432573
+   },
+   "lang/id/EMAIL": {
+    "precision": 0.9757785467128027,
+    "recall": 0.9877408056042032,
+    "f1": 0.9817232375979111,
+    "support": 571,
+    "f1_lenient": 0.9939077458659704
+   },
+   "lang/id/PHONE": {
+    "precision": 0.9641148325358851,
+    "recall": 0.9757869249394673,
+    "f1": 0.9699157641395908,
+    "support": 413,
+    "f1_lenient": 0.9939831528279182
+   },
+   "lang/id/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/id/ADDRESS": {
+    "precision": 0.615539858728557,
+    "recall": 0.7043879907621247,
+    "f1": 0.6569736133548734,
+    "support": 866,
+    "f1_lenient": 0.8766828217555196
+   },
+   "lang/id/DOB": {
+    "precision": 0.8,
+    "recall": 0.11594202898550725,
+    "f1": 0.20253164556962025,
+    "support": 138,
+    "f1_lenient": 0.24050632911392408
+   },
+   "lang/id/ACCOUNT": {
+    "precision": 0.5292841648590022,
+    "recall": 0.9799196787148594,
+    "f1": 0.6873239436619718,
+    "support": 249,
+    "f1_lenient": 0.6873239436619718
+   },
+   "lang/id/TIN": {
+    "precision": 0.8809523809523809,
+    "recall": 0.41456582633053224,
+    "f1": 0.5638095238095238,
+    "support": 357,
+    "f1_lenient": 0.6019047619047619
+   },
+   "lang/tl": {
+    "precision": 0.611750694720127,
+    "recall": 0.8492697712868559,
+    "f1": 0.7112034152532596,
+    "support": 3629,
+    "f1_lenient": 0.7802007615091727
+   },
+   "lang/tl/PERSON": {
+    "precision": 0.4465875370919881,
+    "recall": 0.7838541666666666,
+    "f1": 0.5689981096408316,
+    "support": 1152,
+    "f1_lenient": 0.6880907372400755
+   },
+   "lang/tl/ADDRESS": {
+    "precision": 0.4529558701082431,
+    "recall": 0.801178203240059,
+    "f1": 0.5787234042553191,
+    "support": 679,
+    "f1_lenient": 0.6691489361702128
+   },
+   "lang/tl/PHONE": {
+    "precision": 0.8250460405156538,
+    "recall": 0.9824561403508771,
+    "f1": 0.8968968968968968,
+    "support": 456,
+    "f1_lenient": 0.908908908908909
+   },
+   "lang/tl/DOB": {
+    "precision": 0.8208955223880597,
+    "recall": 0.4824561403508772,
+    "f1": 0.6077348066298343,
+    "support": 114,
+    "f1_lenient": 0.6740331491712708
+   },
+   "lang/tl/TIN": {
+    "precision": 0.9251700680272109,
+    "recall": 0.7472527472527473,
+    "f1": 0.8267477203647416,
+    "support": 364,
+    "f1_lenient": 0.8601823708206687
+   },
+   "lang/tl/ACCOUNT": {
+    "precision": 0.9073482428115016,
+    "recall": 0.993006993006993,
+    "f1": 0.9482470784641068,
+    "support": 286,
+    "f1_lenient": 0.9482470784641068
+   },
+   "lang/tl/EMAIL": {
+    "precision": 0.9829351535836177,
+    "recall": 0.9965397923875432,
+    "f1": 0.9896907216494845,
+    "support": 578,
+    "f1_lenient": 0.993127147766323
+   },
+   "lang/tl/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/hi": {
+    "precision": 0.6177437020810514,
+    "recall": 0.7382198952879581,
+    "f1": 0.6726296958855099,
+    "support": 1528,
+    "f1_lenient": 0.8342277877161599
+   },
+   "lang/hi/PERSON": {
+    "precision": 0.5879864636209814,
+    "recall": 0.7465091299677766,
+    "f1": 0.6578324656885944,
+    "support": 931,
+    "f1_lenient": 0.8054898248935163
+   },
+   "lang/hi/ADDRESS": {
+    "precision": 0.459915611814346,
+    "recall": 0.5343137254901961,
+    "f1": 0.49433106575963714,
+    "support": 204,
+    "f1_lenient": 0.8027210884353742
+   },
+   "lang/hi/PHONE": {
+    "precision": 0.7740384615384616,
+    "recall": 0.817258883248731,
+    "f1": 0.7950617283950617,
+    "support": 197,
+    "f1_lenient": 0.9629629629629629
+   },
+   "lang/hi/EMAIL": {
+    "precision": 0.9327731092436975,
+    "recall": 0.9568965517241379,
+    "f1": 0.9446808510638298,
+    "support": 116,
+    "f1_lenient": 0.9872340425531915
+   },
+   "lang/hi/DOB": {
+    "precision": 0.5,
+    "recall": 0.09090909090909091,
+    "f1": 0.15384615384615385,
+    "support": 11,
+    "f1_lenient": 0.15384615384615385
+   },
+   "lang/hi/BUSINESS": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "support": 0,
+    "f1_lenient": 0.0
+   },
+   "lang/hi/TIN": {
+    "precision": 0.7209302325581395,
+    "recall": 0.6326530612244898,
+    "f1": 0.6739130434782609,
+    "support": 49,
+    "f1_lenient": 0.8478260869565216
+   },
+   "lang/hi/ACCOUNT": {
+    "precision": 0.7407407407407407,
+    "recall": 1.0,
+    "f1": 0.851063829787234,
+    "support": 20,
+    "f1_lenient": 0.851063829787234
+   }
+  },
+  "script_recall": {
+   "en/latin": {
+    "n": 3467,
+    "strict": 0.9809633689068359,
+    "lenient": 0.9936544563022787
+   },
+   "zh-Hans/nonlatin": {
+    "n": 1612,
+    "strict": 0.28846153846153844,
+    "lenient": 0.7375930521091811
+   },
+   "zh-Hans/latin": {
+    "n": 1870,
+    "strict": 0.6406417112299465,
+    "lenient": 0.7427807486631016
+   },
+   "zh-Hant/nonlatin": {
+    "n": 1612,
+    "strict": 0.271712158808933,
+    "lenient": 0.71712158808933
+   },
+   "zh-Hant/latin": {
+    "n": 1870,
+    "strict": 0.6577540106951871,
+    "lenient": 0.7502673796791444
+   },
+   "ja/latin": {
+    "n": 1893,
+    "strict": 0.6946645536185948,
+    "lenient": 0.8124669836238775
+   },
+   "ja/nonlatin": {
+    "n": 1765,
+    "strict": 0.34050991501416433,
+    "lenient": 0.8203966005665723
+   },
+   "ko/nonlatin": {
+    "n": 1649,
+    "strict": 0.4881746513038205,
+    "lenient": 0.7568223165554882
+   },
+   "ko/latin": {
+    "n": 1721,
+    "strict": 0.7007553747821035,
+    "lenient": 0.8309122603137711
+   },
+   "vi/latin": {
+    "n": 3823,
+    "strict": 0.5710175255035312,
+    "lenient": 0.7957101752550353
+   },
+   "ms/latin": {
+    "n": 3625,
+    "strict": 0.7980689655172414,
+    "lenient": 0.9503448275862069
+   },
+   "id/latin": {
+    "n": 3614,
+    "strict": 0.7163807415605977,
+    "lenient": 0.8865522966242391
+   },
+   "tl/latin": {
+    "n": 3629,
+    "strict": 0.8492697712868559,
+    "lenient": 0.9360705428492698
+   },
+   "hi/latin": {
+    "n": 1528,
+    "strict": 0.7382198952879581,
+    "lenient": 0.9168848167539267
+   }
+  },
+  "detection": {
+   "en/PERSON": 0.9949748743718593,
+   "en/ALL": 0.9948081915200462,
+   "en/DOB": 1.0,
+   "en/EMAIL": 1.0,
+   "en/PHONE": 1.0,
+   "en/ADDRESS": 0.9823269513991163,
+   "en/TIN": 0.997289972899729,
+   "en/ACCOUNT": 1.0,
+   "zh-Hans/PERSON": 0.6436285097192225,
+   "zh-Hans/ALL": 0.7995404939689833,
+   "zh-Hans/ADDRESS": 0.7080378250591016,
+   "zh-Hans/DOB": 0.09375,
+   "zh-Hans/TIN": 0.9855491329479769,
+   "zh-Hans/ACCOUNT": 1.0,
+   "zh-Hans/PHONE": 1.0,
+   "zh-Hans/EMAIL": 1.0,
+   "zh-Hant/PERSON": 0.6231101511879049,
+   "zh-Hant/ALL": 0.7923607122343481,
+   "zh-Hant/ADDRESS": 0.7092198581560284,
+   "zh-Hant/DOB": 0.0234375,
+   "zh-Hant/TIN": 0.9913294797687862,
+   "zh-Hant/ACCOUNT": 1.0,
+   "zh-Hant/PHONE": 1.0,
+   "zh-Hant/EMAIL": 1.0,
+   "ja/ACCOUNT": 1.0,
+   "ja/ALL": 0.8709677419354839,
+   "ja/TIN": 0.9867724867724867,
+   "ja/EMAIL": 1.0,
+   "ja/ADDRESS": 0.7175925925925926,
+   "ja/PERSON": 0.8524752475247525,
+   "ja/PHONE": 1.0,
+   "ja/DOB": 0.3148148148148148,
+   "ko/PERSON": 0.7815126050420168,
+   "ko/ALL": 0.8148367952522255,
+   "ko/EMAIL": 1.0,
+   "ko/DOB": 0.03361344537815126,
+   "ko/ADDRESS": 0.5776487663280117,
+   "ko/ACCOUNT": 1.0,
+   "ko/TIN": 0.9765013054830287,
+   "ko/PHONE": 0.9975845410628019,
+   "vi/PERSON": 0.8850806451612904,
+   "vi/ALL": 0.8236986659691342,
+   "vi/EMAIL": 1.0,
+   "vi/PHONE": 1.0,
+   "vi/TIN": 0.8625954198473282,
+   "vi/DOB": 0.021052631578947368,
+   "vi/ADDRESS": 0.6666666666666666,
+   "vi/ACCOUNT": 1.0,
+   "ms/ADDRESS": 0.9742268041237113,
+   "ms/ALL": 0.9558620689655173,
+   "ms/PERSON": 0.9620132953466287,
+   "ms/ACCOUNT": 1.0,
+   "ms/EMAIL": 1.0,
+   "ms/PHONE": 1.0,
+   "ms/TIN": 0.9923469387755102,
+   "ms/DOB": 0.23622047244094488,
+   "id/PERSON": 0.9509803921568627,
+   "id/ALL": 0.9488101826231322,
+   "id/EMAIL": 1.0,
+   "id/PHONE": 1.0,
+   "id/DOB": 0.14492753623188406,
+   "id/ADDRESS": 0.9815242494226328,
+   "id/ACCOUNT": 1.0,
+   "id/TIN": 0.9971988795518207,
+   "tl/PERSON": 0.9670138888888888,
+   "tl/ALL": 0.9650041333700744,
+   "tl/ADDRESS": 0.9499263622974963,
+   "tl/PHONE": 1.0,
+   "tl/DOB": 0.5350877192982456,
+   "tl/TIN": 0.9972527472527473,
+   "tl/ACCOUNT": 0.9965034965034965,
+   "tl/EMAIL": 1.0,
+   "hi/PERSON": 0.9237379162191193,
+   "hi/ALL": 0.9273560209424084,
+   "hi/ADDRESS": 0.8774509803921569,
+   "hi/PHONE": 0.9949238578680203,
+   "hi/EMAIL": 1.0,
+   "hi/DOB": 0.09090909090909091,
+   "hi/TIN": 0.9183673469387755,
+   "hi/ACCOUNT": 1.0
+  },
+  "confusion": {
+   "en/PERSON": {
+    "PERSON": 989,
+    "BUSINESS": 1,
+    "MISS": 5
+   },
+   "en/DOB": {
+    "DOB": 161
+   },
+   "en/EMAIL": {
+    "EMAIL": 597
+   },
+   "en/PHONE": {
+    "PHONE": 448,
+    "TIN": 1
+   },
+   "en/ADDRESS": {
+    "ADDRESS": 663,
+    "MISS": 12,
+    "PHONE": 1,
+    "TIN": 3
+   },
+   "en/TIN": {
+    "TIN": 367,
+    "ACCOUNT": 1,
+    "MISS": 1
+   },
+   "en/ACCOUNT": {
+    "ACCOUNT": 217
+   },
+   "zh-Hans/PERSON": {
+    "MISS": 330,
+    "PERSON": 594,
+    "ADDRESS": 2
+   },
+   "zh-Hans/ADDRESS": {
+    "ADDRESS": 587,
+    "MISS": 247,
+    "PHONE": 12
+   },
+   "zh-Hans/DOB": {
+    "MISS": 116,
+    "DOB": 12
+   },
+   "zh-Hans/TIN": {
+    "ACCOUNT": 188,
+    "TIN": 151,
+    "MISS": 5,
+    "PHONE": 2
+   },
+   "zh-Hans/ACCOUNT": {
+    "ACCOUNT": 252,
+    "TIN": 5
+   },
+   "zh-Hans/PHONE": {
+    "PHONE": 421,
+    "TIN": 2
+   },
+   "zh-Hans/EMAIL": {
+    "EMAIL": 556
+   },
+   "zh-Hant/PERSON": {
+    "MISS": 349,
+    "PERSON": 575,
+    "ADDRESS": 2
+   },
+   "zh-Hant/ADDRESS": {
+    "ADDRESS": 599,
+    "MISS": 246,
+    "PHONE": 1
+   },
+   "zh-Hant/DOB": {
+    "MISS": 125,
+    "DOB": 3
+   },
+   "zh-Hant/TIN": {
+    "ACCOUNT": 188,
+    "TIN": 148,
+    "MISS": 3,
+    "PHONE": 7
+   },
+   "zh-Hant/ACCOUNT": {
+    "ACCOUNT": 252,
+    "TIN": 4,
+    "PHONE": 1
+   },
+   "zh-Hant/PHONE": {
+    "PHONE": 420,
+    "TIN": 1,
+    "ADDRESS": 2
+   },
+   "zh-Hant/EMAIL": {
+    "EMAIL": 556
+   },
+   "ja/ACCOUNT": {
+    "ACCOUNT": 272,
+    "TIN": 3
+   },
+   "ja/TIN": {
+    "TIN": 278,
+    "ACCOUNT": 93,
+    "MISS": 5,
+    "PHONE": 2
+   },
+   "ja/EMAIL": {
+    "EMAIL": 577
+   },
+   "ja/ADDRESS": {
+    "ADDRESS": 478,
+    "TIN": 116,
+    "PHONE": 26,
+    "MISS": 244
+   },
+   "ja/PERSON": {
+    "PERSON": 859,
+    "MISS": 149,
+    "BUSINESS": 1,
+    "ADDRESS": 1
+   },
+   "ja/PHONE": {
+    "PHONE": 442,
+    "TIN": 4
+   },
+   "ja/DOB": {
+    "DOB": 34,
+    "MISS": 74
+   },
+   "ko/PERSON": {
+    "PERSON": 743,
+    "MISS": 208,
+    "ADDRESS": 1
+   },
+   "ko/EMAIL": {
+    "EMAIL": 505
+   },
+   "ko/DOB": {
+    "MISS": 115,
+    "DOB": 4
+   },
+   "ko/ADDRESS": {
+    "ADDRESS": 397,
+    "MISS": 291,
+    "PHONE": 1
+   },
+   "ko/ACCOUNT": {
+    "ACCOUNT": 306,
+    "TIN": 2
+   },
+   "ko/TIN": {
+    "ACCOUNT": 18,
+    "TIN": 280,
+    "PHONE": 76,
+    "MISS": 9
+   },
+   "ko/PHONE": {
+    "PHONE": 405,
+    "TIN": 8,
+    "MISS": 1
+   },
+   "vi/PERSON": {
+    "PERSON": 863,
+    "MISS": 114,
+    "ADDRESS": 4,
+    "BUSINESS": 11
+   },
+   "vi/EMAIL": {
+    "EMAIL": 572
+   },
+   "vi/PHONE": {
+    "PHONE": 454,
+    "ACCOUNT": 1,
+    "TIN": 5,
+    "ADDRESS": 1
+   },
+   "vi/TIN": {
+    "TIN": 257,
+    "MISS": 54,
+    "ACCOUNT": 73,
+    "PHONE": 9
+   },
+   "vi/DOB": {
+    "MISS": 186,
+    "DOB": 4
+   },
+   "vi/ADDRESS": {
+    "ADDRESS": 604,
+    "PHONE": 6,
+    "MISS": 320,
+    "PERSON": 30
+   },
+   "vi/ACCOUNT": {
+    "ACCOUNT": 254,
+    "TIN": 1
+   },
+   "ms/ADDRESS": {
+    "ADDRESS": 755,
+    "MISS": 20,
+    "PERSON": 1
+   },
+   "ms/PERSON": {
+    "PERSON": 1005,
+    "MISS": 40,
+    "ADDRESS": 7,
+    "BUSINESS": 1
+   },
+   "ms/ACCOUNT": {
+    "ACCOUNT": 230,
+    "TIN": 4
+   },
+   "ms/EMAIL": {
+    "EMAIL": 573
+   },
+   "ms/PHONE": {
+    "PHONE": 470
+   },
+   "ms/TIN": {
+    "TIN": 374,
+    "PHONE": 13,
+    "MISS": 3,
+    "ACCOUNT": 2
+   },
+   "ms/DOB": {
+    "MISS": 97,
+    "DOB": 29,
+    "ADDRESS": 1
+   },
+   "id/PERSON": {
+    "PERSON": 948,
+    "ADDRESS": 17,
+    "MISS": 50,
+    "BUSINESS": 5
+   },
+   "id/EMAIL": {
+    "EMAIL": 571
+   },
+   "id/PHONE": {
+    "PHONE": 413
+   },
+   "id/DOB": {
+    "MISS": 118,
+    "DOB": 19,
+    "ADDRESS": 1
+   },
+   "id/ADDRESS": {
+    "ADDRESS": 849,
+    "MISS": 16,
+    "PERSON": 1
+   },
+   "id/ACCOUNT": {
+    "ACCOUNT": 244,
+    "TIN": 5
+   },
+   "id/TIN": {
+    "ACCOUNT": 198,
+    "TIN": 156,
+    "PHONE": 2,
+    "MISS": 1
+   },
+   "tl/PERSON": {
+    "PERSON": 1090,
+    "MISS": 38,
+    "ADDRESS": 23,
+    "BUSINESS": 1
+   },
+   "tl/ADDRESS": {
+    "ADDRESS": 645,
+    "MISS": 34
+   },
+   "tl/PHONE": {
+    "PHONE": 454,
+    "ACCOUNT": 1,
+    "ADDRESS": 1
+   },
+   "tl/DOB": {
+    "DOB": 61,
+    "MISS": 53
+   },
+   "tl/TIN": {
+    "TIN": 279,
+    "ACCOUNT": 12,
+    "PHONE": 71,
+    "MISS": 1,
+    "ADDRESS": 1
+   },
+   "tl/ACCOUNT": {
+    "ACCOUNT": 284,
+    "TIN": 1,
+    "MISS": 1
+   },
+   "tl/EMAIL": {
+    "EMAIL": 578
+   },
+   "hi/PERSON": {
+    "PERSON": 851,
+    "MISS": 71,
+    "BUSINESS": 2,
+    "ADDRESS": 6,
+    "EMAIL": 1
+   },
+   "hi/ADDRESS": {
+    "ADDRESS": 179,
+    "MISS": 25
+   },
+   "hi/PHONE": {
+    "PHONE": 195,
+    "ACCOUNT": 1,
+    "MISS": 1
+   },
+   "hi/EMAIL": {
+    "EMAIL": 116
+   },
+   "hi/DOB": {
+    "MISS": 10,
+    "DOB": 1
+   },
+   "hi/TIN": {
+    "MISS": 4,
+    "TIN": 37,
+    "ACCOUNT": 2,
+    "PHONE": 5,
+    "ADDRESS": 1
+   },
+   "hi/ACCOUNT": {
+    "ACCOUNT": 20
+   }
+  },
+  "negatives": {
+   "en/date": {
+    "n": 744,
+    "flagged": 0.0013440860215053765,
+    "as": {
+     "DOB": 1
+    }
+   },
+   "en/place": {
+    "n": 262,
+    "flagged": 0.03816793893129771,
+    "as": {
+     "ADDRESS": 3,
+     "PERSON": 5,
+     "BUSINESS": 1,
+     "EMAIL": 1
+    }
+   },
+   "zh-Hans/date": {
+    "n": 751,
+    "flagged": 0.0,
+    "as": {}
+   },
+   "zh-Hans/place": {
+    "n": 400,
+    "flagged": 0.1625,
+    "as": {
+     "ADDRESS": 65
+    }
+   },
+   "zh-Hans/amount": {
+    "n": 3,
+    "flagged": 0.0,
+    "as": {}
+   },
+   "zh-Hant/date": {
+    "n": 751,
+    "flagged": 0.0,
+    "as": {}
+   },
+   "zh-Hant/place": {
+    "n": 400,
+    "flagged": 0.0775,
+    "as": {
+     "ADDRESS": 31
+    }
+   },
+   "zh-Hant/amount": {
+    "n": 3,
+    "flagged": 0.0,
+    "as": {}
+   },
+   "ja/date": {
+    "n": 778,
+    "flagged": 0.002570694087403599,
+    "as": {
+     "DOB": 2
+    }
+   },
+   "ja/place": {
+    "n": 468,
+    "flagged": 0.21794871794871795,
+    "as": {
+     "ADDRESS": 99,
+     "PERSON": 3
+    }
+   },
+   "ja/amount": {
+    "n": 1,
+    "flagged": 0.0,
+    "as": {}
+   },
+   "ko/place": {
+    "n": 353,
+    "flagged": 0.17280453257790368,
+    "as": {
+     "ADDRESS": 61
+    }
+   },
+   "ko/date": {
+    "n": 662,
+    "flagged": 0.0075528700906344415,
+    "as": {
+     "ADDRESS": 4,
+     "DOB": 1
+    }
+   },
+   "ko/amount": {
+    "n": 3,
+    "flagged": 0.3333333333333333,
+    "as": {
+     "TIN": 1
+    }
+   },
+   "vi/date": {
+    "n": 666,
+    "flagged": 0.0015015015015015015,
+    "as": {
+     "DOB": 1
+    }
+   },
+   "vi/place": {
+    "n": 284,
+    "flagged": 0.3767605633802817,
+    "as": {
+     "ADDRESS": 48,
+     "PERSON": 59
+    }
+   },
+   "ms/date": {
+    "n": 829,
+    "flagged": 0.006031363088057901,
+    "as": {
+     "DOB": 3,
+     "ADDRESS": 2
+    }
+   },
+   "ms/place": {
+    "n": 261,
+    "flagged": 0.11877394636015326,
+    "as": {
+     "ADDRESS": 29,
+     "BUSINESS": 2
+    }
+   },
+   "id/date": {
+    "n": 710,
+    "flagged": 0.0028169014084507044,
+    "as": {
+     "ADDRESS": 1,
+     "DOB": 1
+    }
+   },
+   "id/place": {
+    "n": 296,
+    "flagged": 0.24324324324324326,
+    "as": {
+     "ADDRESS": 72
+    }
+   },
+   "tl/date": {
+    "n": 753,
+    "flagged": 0.0199203187250996,
+    "as": {
+     "ADDRESS": 12,
+     "DOB": 3
+    }
+   },
+   "tl/place": {
+    "n": 317,
+    "flagged": 0.31545741324921134,
+    "as": {
+     "ADDRESS": 97,
+     "PERSON": 3
+    }
+   },
+   "tl/amount": {
+    "n": 2,
+    "flagged": 0.5,
+    "as": {
+     "ADDRESS": 1
+    }
+   },
+   "hi/date": {
+    "n": 85,
+    "flagged": 0.011764705882352941,
+    "as": {
+     "DOB": 1
+    }
+   },
+   "hi/place": {
+    "n": 106,
+    "flagged": 0.27358490566037735,
+    "as": {
+     "ADDRESS": 9,
+     "PERSON": 20
+    }
+   }
+  }
+ }
+}

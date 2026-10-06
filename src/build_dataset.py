@@ -65,17 +65,22 @@ STREET_TAIL = re.compile(r",[^\n.;|()]{1,80}")
 ADDRESS_TAIL_SOURCES = {"gretel"}
 
 
+def english_birth_cue(text: str, start: int, end: int) -> bool:
+    return has_birth_cue(text, start)
+
+
 def clean_spans(text: str, spans: list[dict], mapping: dict, stats: Counter,
                 negs: list | None = None, neg_groups: dict | None = None,
-                address_tail_ignore: bool = False) -> list[dict]:
+                address_tail_ignore: bool = False, birth_cue=english_birth_cue) -> list[dict]:
     """Map raw spans to target labels. Look-alike spans whose raw label is in `neg_groups`
-    (raw label -> group) are appended to `negs`; they stay O for training."""
+    (raw label -> group) are appended to `negs`; they stay O for training. `birth_cue(text, start, end)`
+    decides DATE_CUE spans."""
     mapped = []
     for s in spans:
         start, end = int(s["start"]), int(s["end"])
         target = mapping.get(s["label"])
         if target == DATE_CUE:
-            target = "DOB" if has_birth_cue(text, start) else None
+            target = "DOB" if birth_cue(text, start, end) else None
             stats["date_cue_dob" if target else "date_cue_o"] += 1
         if target is None:
             group = (neg_groups or {}).get(s["label"])
@@ -141,11 +146,11 @@ def clean_spans(text: str, spans: list[dict], mapping: dict, stats: Counter,
 
 def normalize(source: str, split, mapping: dict, stats: Counter, aug: dict | None = None,
               rng: random.Random | None = None, neg_groups: dict | None = None,
-              keep_negs: bool = False) -> list[dict]:
+              keep_negs: bool = False, lang_ok=is_english, birth_cue=english_birth_cue) -> list[dict]:
     text_col, span_col, _ = SOURCE_FIELDS[source]
     out = []
     for i, row in enumerate(split):
-        if not is_english(source, row):
+        if not lang_ok(source, row):
             continue
         text = row[text_col]
         if not text or not text.strip():
@@ -158,7 +163,7 @@ def normalize(source: str, split, mapping: dict, stats: Counter, aug: dict | Non
             text = new_text
         negs = [] if keep_negs else None
         spans = clean_spans(text, raw, mapping, stats, negs, neg_groups,
-                            address_tail_ignore=source in ADDRESS_TAIL_SOURCES)
+                            address_tail_ignore=source in ADDRESS_TAIL_SOURCES, birth_cue=birth_cue)
         rid = row.get("uid", row.get("index", i))
         rec = {"id": f"{source}-{rid}", "source": source, "text": text, "spans": spans}
         if keep_negs:
