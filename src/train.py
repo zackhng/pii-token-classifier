@@ -46,6 +46,7 @@ def main():
     ap.add_argument("--output_dir", help="override config output_dir")
     ap.add_argument("--model_name", help="override config model_name, e.g. a DAPT checkpoint dir")
     ap.add_argument("--eval_steps", type=int, help="override config eval/save steps")
+    ap.add_argument("--cpu", action="store_true", help="run on CPU without bf16 (smoke tests while the GPU is busy)")
     ap.add_argument("--config", default="train.yaml", help="configs/<name>: train.yaml (English DeBERTa) "
                     "or train_ml.yaml (multilingual)")
     args = ap.parse_args()
@@ -75,16 +76,34 @@ def main():
                       script_boundaries=tcfg.get("script_boundaries", False))
     print(f"train windows={len(train_ds)}  val windows={len(val_ds)}")
     window_langs = val_ds["lang"] if "lang" in val_ds.column_names else None
-    train_ds = train_ds.remove_columns([c for c in ["lang"] if c in train_ds.column_names])
-    val_ds = val_ds.remove_columns([c for c in ["lang"] if c in val_ds.column_names])
+    acfg = cfg.get("adapters")
+    if acfg:   # Model B: each window is routed to its language's adapter (gold language in training)
+        from adapters import LANG_IDS
+        to_ids = lambda b: {"lang_ids": [LANG_IDS[l] for l in b["lang"]]}
+        train_ds = train_ds.map(to_ids, batched=True, remove_columns=["lang"])
+        val_ds = val_ds.map(to_ids, batched=True, remove_columns=["lang"])
+    else:
+        train_ds = train_ds.remove_columns([c for c in ["lang"] if c in train_ds.column_names])
+        val_ds = val_ds.remove_columns([c for c in ["lang"] if c in val_ds.column_names])
 
     # transformers 5.x loads in the checkpoint dtype (fp16 for deberta-v3-xsmall); fp16 master
     # weights make AdamW diverge to NaN, so load fp32 and let bf16 autocast do mixed precision.
+    base_name = cfg["model_name"]
+    if acfg and acfg.get("init_from"):     # B': start from a fine-tuned encoder (Model A)
+        local = ROOT / acfg["init_from"]
+        base_name = str(local) if local.exists() else acfg["init_from"]
     model = AutoModelForTokenClassification.from_pretrained(
-        cfg["model_name"], num_labels=len(labels), id2label=id2label, label2id=label2id,
+        base_name, num_labels=len(labels), id2label=id2label, label2id=label2id,
         dtype=torch.float32)
     model.config.visible_breaks = tcfg["visible_breaks"]   # read by PIIPredictor
     model.config.script_boundaries = tcfg.get("script_boundaries", False)
+    if acfg:
+        from adapters import AdapterTokenClassifier
+        model = AdapterTokenClassifier(model, acfg["bottleneck"], freeze_base=acfg.get("freeze_base", True))
+        n_train = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        per = model.adapter_params()
+        print(f"adapters: bottleneck={acfg['bottleneck']}  trainable={n_train / 1e6:.2f}M  "
+              f"per language={next(iter(per.values())) / 1e6:.3f}M x {len(per)}")
 
     t = cfg["train"]
     targs = TrainingArguments(
@@ -97,7 +116,8 @@ def main():
         gradient_accumulation_steps=t["gradient_accumulation_steps"],
         warmup_steps=t["warmup_ratio"],  # transformers 5.x: float < 1 is a ratio
         weight_decay=t["weight_decay"],
-        bf16=t["bf16"],
+        bf16=t["bf16"] and not args.cpu,
+        use_cpu=args.cpu,
         eval_strategy="steps",
         eval_steps=args.eval_steps or t["eval_steps"],
         save_strategy="steps",
@@ -123,7 +143,16 @@ def main():
     )
     trainer.train()
     print(trainer.evaluate())
-    trainer.save_model(out_dir)
+    if acfg:
+        # frozen encoder: store only adapters + head and point at the base; else save everything
+        frozen = acfg.get("freeze_base", True)
+        model.save_pretrained(out_dir, base_dir=base_name if frozen else None)
+        router = ROOT / acfg.get("router", "outputs/router") / "router.pkl"
+        if router.exists():
+            import shutil
+            shutil.copy(router, out_dir)
+    else:
+        trainer.save_model(out_dir)
     tok.save_pretrained(out_dir)
     print(f"saved -> {out_dir}")
 

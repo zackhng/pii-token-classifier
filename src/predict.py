@@ -9,6 +9,7 @@ import json
 import torch
 from transformers import AutoModelForTokenClassification, AutoTokenizer
 
+from adapters import LANG_IDS, AdapterTokenClassifier, is_adapter_model
 from common import ROOT, load_yaml
 from tokenize_bio import fill_continuations, labels_to_spans, window_encode, word_starts
 
@@ -19,8 +20,16 @@ class PIIPredictor:
                  script_boundaries: bool | None = None):
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.tok = AutoTokenizer.from_pretrained(model_dir)
-        self.model = AutoModelForTokenClassification.from_pretrained(
-            model_dir, dtype=torch.float32).to(self.device).eval()
+        # Model B: language adapters on a shared encoder, routed per segment (router.py)
+        self.adapter = is_adapter_model(model_dir)
+        if self.adapter:
+            from router import ROUTER_NAME, Router
+            from pathlib import Path
+            self.model = AdapterTokenClassifier.from_pretrained(model_dir).to(self.device).eval()
+            self.router = Router.load(model_dir) if (Path(model_dir) / ROUTER_NAME).exists() else Router()
+        else:
+            self.model = AutoModelForTokenClassification.from_pretrained(
+                model_dir, dtype=torch.float32).to(self.device).eval()
         self.id2label = self.model.config.id2label
         # models trained with line/tab markers record it in their config (v2.1+)
         self.show_breaks = bool(getattr(self.model.config, "visible_breaks", False))
@@ -31,8 +40,20 @@ class PIIPredictor:
         self.label_all_tokens = label_all_tokens
         self.batch_windows = batch_windows
 
+    def predict(self, text: str, lang: str | None = None) -> list[dict]:
+        """PII spans in `text`. Adapter models route each segment to its language's adapter
+        (`lang` forces one language for the whole text, e.g. the gold language)."""
+        if not self.adapter:
+            return self._predict(text, None)
+        routed = [(0, len(text), lang)] if lang else self.router.route_segments(text)
+        spans = []
+        for s, e, seg_lang in routed:
+            for sp in self._predict(text[s:e], LANG_IDS[seg_lang]):
+                spans.append({**sp, "start": sp["start"] + s, "end": sp["end"] + s, "lang": seg_lang})
+        return spans
+
     @torch.no_grad()
-    def predict(self, text: str) -> list[dict]:
+    def _predict(self, text: str, lang_id: int | None) -> list[dict]:
         wins = window_encode(self.tok, text, self.max_length, self.stride, self.show_breaks,
                              blank_lone_space=self.script_boundaries)
         best: dict[tuple[int, int], tuple[float, int]] = {}
@@ -43,7 +64,8 @@ class PIIPredictor:
             ids = torch.tensor([w["input_ids"] + [pad] * (width - len(w["input_ids"])) for w in chunk])
             mask = torch.tensor([[1] * len(w["input_ids"]) + [0] * (width - len(w["input_ids"]))
                                  for w in chunk])
-            logits = self.model(input_ids=ids.to(self.device), attention_mask=mask.to(self.device)).logits
+            extra = {} if lang_id is None else {"lang_ids": torch.full((len(chunk),), lang_id, device=self.device)}
+            logits = self.model(input_ids=ids.to(self.device), attention_mask=mask.to(self.device), **extra).logits
             top_p, top_lab = logits.float().softmax(-1).max(-1)
             top_p, top_lab = top_p.tolist(), top_lab.tolist()
             # a token seen in several windows keeps its most confident prediction
