@@ -1,15 +1,25 @@
-# PII Token Classifier — DeBERTa-v3-xsmall
+# PII Token Classifier
 
-A BIO token-classification model for detecting personally identifiable information in English text,
-fine-tuned from [`microsoft/deberta-v3-xsmall`](https://huggingface.co/microsoft/deberta-v3-xsmall)
-following the [OpenMed](https://huggingface.co/OpenMed) PII recipe (Hugging Face Trainer, max length 384,
-first-sub-token labelling, seqeval F1).
+BIO token-classification models for detecting personally identifiable information in wealth-management
+text, following the [OpenMed](https://huggingface.co/OpenMed) PII recipe (Hugging Face Trainer, max
+length 384, first-sub-token labelling, seqeval F1):
+- **v4.x, multilingual:** 12 languages, [XLM-R base](https://huggingface.co/FacebookAI/xlm-roberta-base).
+  English, Simplified / Traditional Chinese, Japanese, Korean, Hindi, Arabic, Thai, Vietnamese, Malay,
+  Indonesian, Tagalog.
+- **v1–v3, English:** [`microsoft/deberta-v3-xsmall`](https://huggingface.co/microsoft/deberta-v3-xsmall).
+
+**Which model:**
+- **v4.1** for multilingual text.
+- **v3.0** for English-only text: more accurate on English, and 1.4× faster.
+- **v4.2** is the language-adapter research variant; see [`model_card/v4.md`](model_card/v4.md).
 
 ## Releases
 
 | Version | Weights | Highlights | Model card |
 |---|---|---|---|
-| **v3.0** (current) | [`deberta-v3-xsmall-pii-v3.zip`](../../releases/tag/v3.0) | v2.1's fine-tuning on top of **domain-adaptive pretraining** (178M tokens of public financial / regulatory / RM-communication text): stress F1 0.921 → 0.936, ADDRESS 0.792 → 0.848, multi-line addresses exact 59% → 70% | [`model_card/v3.md`](model_card/v3.md) |
+| **v4.1** (current, multilingual) | [`xlmr-base-pii-ml-v4.1.zip`](../../releases/tag/v4.1) | **12 languages**, XLM-R base fully fine-tuned on 337k docs from 14 public sources (+ generated data only where none exists). Multilingual real-data F1 0.675 → **0.942**, wealth-management docs 0.523 → **0.873** (v3 with the new CJK / Thai word boundaries); English stress 0.936 → 0.955, English test 0.925 → 0.910 | [`model_card/v4.md`](model_card/v4.md) |
+| v4.2 (adapters) | [`xlmr-base-pii-adapters-v4.2.zip`](../../releases/tag/v4.2) | Frozen XLM-R + one 1.2M-parameter adapter per language + language router (13.3M trained parameters). Within 0.4–1.2 F1 of v4.1 on public / mixed-language / Korean financial data, but 0.690 on unseen financial formats and 0.821 on English test | [`model_card/v4.md`](model_card/v4.md) |
+| **v3.0** (English) | [`deberta-v3-xsmall-pii-v3.zip`](../../releases/tag/v3.0) | v2.1's fine-tuning on top of **domain-adaptive pretraining** (178M tokens of public financial / regulatory / RM-communication text): stress F1 0.921 → 0.936, ADDRESS 0.792 → 0.848, multi-line addresses exact 59% → 70% | [`model_card/v3.md`](model_card/v3.md) |
 | v2.1 | [`deberta-v3-xsmall-pii-v2.1.zip`](../../releases/tag/v2.1) | ADDRESS: model sees line breaks / tabs (multi-line addresses), 20,848 real public addresses from SG, IN, UAE, UK, HK, ASEAN & Asia in letters / KYC forms / statements / signatures, bare place names no longer ADDRESS | [`model_card/v2.1.md`](model_card/v2.1.md) |
 | v2.0 | [`deberta-v3-xsmall-pii-v2.zip`](../../releases/tag/v2.0) | Rejects look-alikes: DOB vs ordinary dates, account numbers vs amounts / codes; label-map fixes; DOB format augmentation; form-style records | [`model_card/v2.md`](model_card/v2.md) |
 | v1.0 | [`deberta-v3-xsmall-pii.zip`](../../releases/tag/v1.0) | First release | [`model_card/v1.md`](model_card/v1.md) |
@@ -93,7 +103,7 @@ measured on real documents. Multi-line address boundaries are the weakest part (
 BUSINESS remains the weakest entity (0.833). UAE and East-Asian addresses are under-represented in the
 public data; Asian IDs (PAN, MyKad, NPWP) and company-name forms (Sdn Bhd, Pte Ltd) are rare.
 **Regression vs v2:** a hyphenated account number after a bare `A/C` cue in a very short input
-(`A/C 0123-456789-0`) can be missed or clipped; `Account No: …` and sentence contexts are fine. **English only**: zero-shot on 11 Asian / Middle-Eastern languages it scores 0.28–0.76 F1 and misses most native-script names, companies and addresses (Thai 0%); see [`model_card/multilingual_zero_shot.md`](model_card/multilingual_zero_shot.md).
+(`A/C 0123-456789-0`) can be missed or clipped; `Account No: …` and sentence contexts are fine. **v3 is English only**: zero-shot on 11 Asian / Middle-Eastern languages it scores 0.28–0.76 F1 and misses most native-script names, companies and addresses (Thai 0%); see [`model_card/multilingual_zero_shot.md`](model_card/multilingual_zero_shot.md). Use v4.1 for those languages.
 
 ## Quick start (inference only)
 
@@ -119,6 +129,19 @@ DOB 04/12/1987
 Account No: 0123-456789-0
 Balance: SGD 12,450.00"
 ```
+
+Multilingual (v4.1):
+
+```bash
+curl -L -o model.zip https://github.com/zackhng/pii-token-classifier/releases/download/v4.1/xlmr-base-pii-ml-v4.1.zip
+mkdir -p outputs/xlmr-base-pii-ml-v4.1 && unzip model.zip -d outputs/xlmr-base-pii-ml-v4.1
+cd src
+python predict.py --model_dir ../outputs/xlmr-base-pii-ml-v4.1 --text "尊敬的张伟先生：您的账户6222 0212 3456 7890 已更新。คุณสมชาย ใจดี เลขที่บัญชี 123-4-56789-0"
+```
+
+v4.2 unzips the same way into `outputs/xlmr-base-pii-adapters-v4.2`. It downloads `xlm-roberta-base`
+(1.1 GB) from the Hugging Face Hub on first use and routes each blank-line block of the input to that
+language's adapter (`predict(text, lang="th")` forces one).
 
 ## Usage
 

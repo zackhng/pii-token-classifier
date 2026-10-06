@@ -4,13 +4,13 @@ script_boundaries: True
 
 === decoding: default  (strict F1 = exact boundaries + label; lenient = any overlap)
 lang          P      R     F1  F1-len  detect  R-latin  R-nonlat  neg-FP  support
-ALL       0.492  0.537  0.514   0.655                                       20676
+ALL       0.501  0.546  0.523   0.656                                       20676
 en        0.976  0.987  0.982   0.986   1.000    0.987         -   0.033     1701
-zh-Hans   0.601  0.520  0.557   0.732   0.769    0.690     0.388   0.002     1718
-zh-Hant   0.586  0.485  0.531   0.700   0.718    0.634     0.361   0.006     1751
-ja        0.369  0.383  0.376   0.693   0.835    0.511     0.293   0.002     1695
-ko        0.543  0.544  0.543   0.717   0.854    0.608     0.490   0.002     1735
-hi        0.302  0.434  0.356   0.536   0.823    0.655     0.261   0.069     1763
+zh-Hans   0.630  0.547  0.586   0.734   0.772    0.690     0.437   0.002     1718
+zh-Hant   0.632  0.527  0.575   0.702   0.721    0.634     0.438   0.006     1751
+ja        0.408  0.425  0.417   0.695   0.838    0.511     0.365   0.002     1695
+ko        0.545  0.548  0.546   0.732   0.870    0.608     0.497   0.002     1735
+hi        0.303  0.434  0.357   0.536   0.823    0.655     0.262   0.069     1763
 ar        0.491  0.406  0.445   0.657   0.676    0.810     0.125   0.086     1718
 th        0.562  0.184  0.278   0.293   0.289    0.420     0.000   0.019     1677
 vi        0.544  0.563  0.554   0.702   0.849    0.563         -   0.060     1733
@@ -21,11 +21,11 @@ tl        0.571  0.857  0.685   0.753   0.983    0.857         -   0.148     167
 strict F1 per entity (default)
 lang       PERSON BUSINESS  ADDRESS      DOB  ACCOUNT    PHONE    EMAIL      TIN
 en          0.990    0.987    0.961    1.000    0.953    1.000    1.000    0.961
-zh-Hans     0.675    0.353    0.160    0.359    0.755    0.631    0.977    0.000
-zh-Hant     0.587    0.143    0.399    0.353    0.503    0.705    0.987    0.026
-ja          0.457    0.226    0.000    0.180    0.000    0.884    0.991    0.008
-ko          0.627    0.487    0.291    0.203    0.239    0.746    0.828    0.567
-hi          0.227    0.017    0.185    0.279    0.862    0.596    0.921    0.000
+zh-Hans     0.724    0.483    0.160    0.359    0.755    0.631    0.977    0.000
+zh-Hant     0.645    0.393    0.398    0.353    0.499    0.705    0.987    0.026
+ja          0.499    0.416    0.000    0.180    0.000    0.884    0.991    0.008
+ko          0.638    0.487    0.291    0.203    0.239    0.746    0.828    0.567
+hi          0.228    0.017    0.185    0.279    0.862    0.596    0.921    0.000
 ar          0.180    0.194    0.098    0.228    0.776    0.826    1.000    0.000
 th          0.000    0.000    0.000    0.000    0.000    0.610    0.948    0.000
 vi          0.500    0.278    0.477    0.448    0.689    0.791    1.000    0.189
@@ -35,12 +35,12 @@ tl          0.487    0.846    0.511    0.637    0.949    0.956    1.000    0.673
 
 === decoding: alltok  (strict F1 = exact boundaries + label; lenient = any overlap)
 lang          P      R     F1  F1-len  detect  R-latin  R-nonlat  neg-FP  support
-ALL       0.446  0.527  0.483   0.635                                       20676
+ALL       0.453  0.537  0.491   0.636                                       20676
 en        0.965  0.985  0.975   0.982   1.000    0.985         -   0.033     1701
-zh-Hans   0.567  0.515  0.540   0.720   0.773    0.680     0.388   0.002     1718
-zh-Hant   0.561  0.481  0.518   0.702   0.733    0.626     0.361   0.006     1751
-ja        0.345  0.377  0.360   0.676   0.850    0.495     0.293   0.002     1695
-ko        0.491  0.534  0.512   0.710   0.876    0.593     0.486   0.002     1735
+zh-Hans   0.595  0.542  0.567   0.722   0.776    0.680     0.437   0.002     1718
+zh-Hant   0.605  0.523  0.561   0.703   0.736    0.626     0.438   0.006     1751
+ja        0.382  0.419  0.400   0.678   0.853    0.495     0.365   0.002     1695
+ko        0.494  0.538  0.515   0.710   0.876    0.593     0.492   0.002     1735
 hi        0.272  0.425  0.332   0.519   0.827    0.640     0.258   0.069     1763
 ar        0.376  0.384  0.380   0.611   0.693    0.807     0.089   0.091     1718
 th        0.507  0.182  0.268   0.292   0.305    0.416     0.000   0.019     1677
@@ -52,10 +52,10 @@ tl        0.540  0.855  0.662   0.730   0.983    0.855         -   0.150     167
 strict F1 per entity (alltok)
 lang       PERSON BUSINESS  ADDRESS      DOB  ACCOUNT    PHONE    EMAIL      TIN
 en          0.990    0.972    0.961    1.000    0.931    1.000    1.000    0.940
-zh-Hans     0.675    0.353    0.156    0.359    0.688    0.582    0.977    0.000
-zh-Hant     0.587    0.143    0.399    0.353    0.460    0.688    0.979    0.022
-ja          0.457    0.226    0.000    0.180    0.000    0.837    0.909    0.000
-ko          0.590    0.475    0.280    0.203    0.172    0.680    0.828    0.519
+zh-Hans     0.724    0.483    0.156    0.359    0.688    0.582    0.977    0.000
+zh-Hant     0.645    0.393    0.398    0.353    0.456    0.688    0.979    0.022
+ja          0.499    0.416    0.000    0.180    0.000    0.837    0.909    0.000
+ko          0.603    0.475    0.280    0.203    0.172    0.680    0.828    0.519
 hi          0.214    0.016    0.175    0.279    0.801    0.508    0.883    0.000
 ar          0.091    0.120    0.081    0.228    0.752    0.784    1.000    0.000
 th          0.000    0.000    0.000    0.000    0.000    0.573    0.921    0.000
@@ -73,7 +73,7 @@ what the gold spans were predicted as (alltok, largest-overlap prediction)
   en       PHONE     n=  180  PHONE 100%
   en       EMAIL     n=  188  EMAIL 100%
   en       TIN       n=  110  TIN 100%
-  zh-Hans  PERSON    n=  478  PERSON 65%, MISS 34%, BUSINESS 0%, ADDRESS 0%
+  zh-Hans  PERSON    n=  478  PERSON 66%, MISS 33%, BUSINESS 0%, ADDRESS 0%
   zh-Hans  BUSINESS  n=  257  BUSINESS 52%, MISS 48%
   zh-Hans  ADDRESS   n=  189  ADDRESS 89%, MISS 11%
   zh-Hans  DOB       n=   87  MISS 70%, DOB 30%
@@ -81,15 +81,15 @@ what the gold spans were predicted as (alltok, largest-overlap prediction)
   zh-Hans  PHONE     n=  201  PHONE 61%, TIN 34%, MISS 5%, ACCOUNT 0%
   zh-Hans  EMAIL     n=  196  EMAIL 100%
   zh-Hans  TIN       n=   85  ACCOUNT 81%, MISS 14%, TIN 5%
-  zh-Hant  PERSON    n=  482  PERSON 60%, MISS 39%, ADDRESS 1%, BUSINESS 0%
-  zh-Hant  BUSINESS  n=  253  MISS 51%, BUSINESS 49%
+  zh-Hant  PERSON    n=  482  PERSON 60%, MISS 38%, ADDRESS 1%, BUSINESS 0%
+  zh-Hant  BUSINESS  n=  253  MISS 50%, BUSINESS 50%
   zh-Hant  ADDRESS   n=  173  ADDRESS 94%, MISS 6%
   zh-Hant  DOB       n=   92  MISS 74%, DOB 26%
-  zh-Hant  ACCOUNT   n=  245  PHONE 49%, ACCOUNT 40%, TIN 11%
+  zh-Hant  ACCOUNT   n=  245  PHONE 48%, ACCOUNT 41%, TIN 11%
   zh-Hant  PHONE     n=  214  PHONE 100%
   zh-Hant  EMAIL     n=  189  EMAIL 100%
   zh-Hant  TIN       n=  103  MISS 71%, TIN 23%, ACCOUNT 6%
-  ja       PERSON    n=  458  PERSON 95%, MISS 5%
+  ja       PERSON    n=  458  PERSON 96%, MISS 4%
   ja       BUSINESS  n=  262  BUSINESS 79%, MISS 21%, PERSON 0%
   ja       ADDRESS   n=  197  ADDRESS 91%, MISS 7%, TIN 2%
   ja       DOB       n=   96  MISS 86%, DOB 14%
