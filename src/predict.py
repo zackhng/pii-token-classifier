@@ -33,7 +33,8 @@ class PIIPredictor:
 
     @torch.no_grad()
     def predict(self, text: str) -> list[dict]:
-        wins = window_encode(self.tok, text, self.max_length, self.stride, self.show_breaks)
+        wins = window_encode(self.tok, text, self.max_length, self.stride, self.show_breaks,
+                             blank_lone_space=self.script_boundaries)
         best: dict[tuple[int, int], tuple[float, int]] = {}
         for b in range(0, len(wins), self.batch_windows):
             chunk = wins[b:b + self.batch_windows]

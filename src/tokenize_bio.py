@@ -134,7 +134,7 @@ def visible_breaks(text: str) -> tuple[str, list[int]]:
 
 
 def window_encode(tokenizer, text: str, max_length: int, stride: int,
-                  show_breaks: bool = True) -> list[dict]:
+                  show_breaks: bool = True, blank_lone_space: bool = False) -> list[dict]:
     """Tokenize the whole text once, then cut overlapping windows of `max_length`
     (incl. [CLS]/[SEP]); consecutive windows share `stride` tokens. Offsets refer to `text`.
     `show_breaks`: line/tab markers (v2.1+ models); False reproduces v1/v2 tokenization.
@@ -147,6 +147,14 @@ def window_encode(tokenizer, text: str, max_length: int, stride: int,
     ids = enc["input_ids"]
     offs = [(back[s], back[e - 1] + 1) if e > s else (back[s] if s < len(back) else len(text),) * 2
             for s, e in enc["offset_mapping"]]
+    if blank_lone_space:
+        # A lone "▁" (SentencePiece space before CJK / Thai / digits) gets the offset of the NEXT
+        # character from the fast tokenizer ("▁"(0,1) + "电话"(0,2)), so it would be read as the
+        # first character of an entity. Point it at the real preceding space, or make it empty.
+        for i, tok in enumerate(tokenizer.convert_ids_to_tokens(ids)):
+            s, e = offs[i]
+            if tok == "▁" and e > s and not text[s].isspace():
+                offs[i] = (s - 1, s) if s > 0 and text[s - 1].isspace() else (s, s)
     body = max_length - 2
     step = max(1, body - stride)
     windows, start = [], 0
@@ -166,15 +174,20 @@ def window_encode(tokenizer, text: str, max_length: int, stride: int,
 def make_tokenize_fn(tokenizer, label2id: dict, max_length: int, stride: int,
                      label_all_tokens: bool = False, show_breaks: bool = True,
                      script_boundaries: bool = False):
-    """Batched map fn: {text, spans} -> windowed input_ids/attention_mask/labels."""
+    """Batched map fn: {text, spans} -> windowed input_ids/attention_mask/labels (+ "lang" per
+    window when the rows have one). `script_boundaries` (multilingual models) also enables
+    `blank_lone_space` in window_encode."""
     id2name = {v: k for k, v in label2id.items()}
 
     def fn(batch):
         out = {"input_ids": [], "attention_mask": [], "labels": []}
+        langs = batch.get("lang")
+        if langs:
+            out["lang"] = []
         partials = batch.get("partial") or [None] * len(batch["text"])
-        for text, spans, partial in zip(batch["text"], batch["spans"], partials):
+        for row_i, (text, spans, partial) in enumerate(zip(batch["text"], batch["spans"], partials)):
             spans = sorted(spans, key=lambda s: s["start"])
-            for win in window_encode(tokenizer, text, max_length, stride, show_breaks):
+            for win in window_encode(tokenizer, text, max_length, stride, show_breaks, script_boundaries):
                 labs = token_labels(text, win["offset_mapping"], spans, label2id,
                                     win["special_tokens_mask"], label_all_tokens, script_boundaries,
                                     partial or None)
@@ -188,6 +201,8 @@ def make_tokenize_fn(tokenizer, label2id: dict, max_length: int, stride: int,
                 out["input_ids"].append(win["input_ids"])
                 out["attention_mask"].append([1] * len(win["input_ids"]))
                 out["labels"].append(labs)
+                if langs:
+                    out["lang"].append(langs[row_i])
         return out
 
     return fn
