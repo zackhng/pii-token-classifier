@@ -1,0 +1,33 @@
+# Model A on a small encoder: Multilingual-MiniLM-L12-H384 (21.5M transformer params, XLM-R vocab) fully fine-tuned on the multilingual data (build_ml_train.py), one shared
+# token-classification head. python train.py --config train_ml_minilm.yaml
+seed: 42
+model_name: microsoft/Multilingual-MiniLM-L12-H384
+output_dir: outputs/minilm-pii-ml-A
+
+data:
+  multilingual: true
+  processed_dir: data/processed
+  train_split: ml_train
+  val_split: ml_val
+
+tokenize:
+  max_length: 384
+  stride: 96
+  label_all_tokens: false
+  visible_breaks: true
+  script_boundaries: true      # CJK / Thai word boundaries + lone-"▁" offset fix (Phase 0)
+
+train:
+  learning_rate: 5.0e-5          # small encoder (as DeBERTa-v3-xsmall in v1-v3)
+  num_train_epochs: 3
+  per_device_train_batch_size: 32
+  per_device_eval_batch_size: 64
+  gradient_accumulation_steps: 1
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  bf16: true
+  eval_steps: 4000
+  save_steps: 4000
+  logging_steps: 200
+  save_total_limit: 2
+  metric_for_best_model: macro_f1   # mean F1 over the 12 languages of ml_val
