@@ -3,14 +3,17 @@
 BIO token-classification models for detecting personally identifiable information in wealth-management
 text, following the [OpenMed](https://huggingface.co/OpenMed) PII recipe (Hugging Face Trainer, max
 length 384, first-sub-token labelling, seqeval F1):
-- **v4.x, multilingual:** 12 languages, [XLM-R base](https://huggingface.co/FacebookAI/xlm-roberta-base).
+- **v4.x, multilingual:** 12 languages, [XLM-R base](https://huggingface.co/FacebookAI/xlm-roberta-base)
+  (v4.1, v4.2) or [Multilingual-MiniLM](https://huggingface.co/microsoft/Multilingual-MiniLM-L12-H384) (v4.3).
   English, Simplified / Traditional Chinese, Japanese, Korean, Hindi, Arabic, Thai, Vietnamese, Malay,
   Indonesian, Tagalog.
 - **v1–v3, English:** [`microsoft/deberta-v3-xsmall`](https://huggingface.co/microsoft/deberta-v3-xsmall).
 
 **Which model:**
-- **v4.1** for multilingual text.
-- **v3.0** for English-only text: more accurate on English, and 1.4× faster.
+- **v4.1** for multilingual text, most accurate.
+- **v4.3** for multilingual text when speed matters: within ~1 point of v4.1, 2.3× faster on GPU and
+  3× on CPU (faster than v3 too).
+- **v3.0** for English-only text: more accurate on English.
 - **v4.2** is the language-adapter research variant; see [`model_card/v4.md`](model_card/v4.md).
 
 ## Releases
@@ -18,6 +21,7 @@ length 384, first-sub-token labelling, seqeval F1):
 | Version | Weights | Highlights | Model card |
 |---|---|---|---|
 | **v4.1** (current, multilingual) | [`xlmr-base-pii-ml-v4.1.zip`](../../releases/tag/v4.1) | **12 languages**, XLM-R base fully fine-tuned on 337k docs from 14 public sources (+ generated data only where none exists). Multilingual real-data F1 0.675 → **0.942**, wealth-management docs 0.523 → **0.873** (v3 with the new CJK / Thai word boundaries); English stress 0.936 → 0.955, English test 0.925 → 0.910 | [`model_card/v4.md`](model_card/v4.md) |
+| v4.3 (fast, multilingual) | [`minilm-pii-ml-v4.3.zip`](../../releases/tag/v4.3) | v4.1's recipe on Multilingual-MiniLM-L12-H384 (21.5M transformer parameters, 117.5M total). Multilingual real-data F1 0.939, wealth-management docs 0.860, English test 0.903. 100k-character document in **0.38 s on GPU / 6.7 s on CPU** (v4.1 0.87 s / 19.8 s, v3 0.60 s / 9.3 s) | [`model_card/v4.md`](model_card/v4.md) |
 | v4.2 (adapters) | [`xlmr-base-pii-adapters-v4.2.zip`](../../releases/tag/v4.2) | Frozen XLM-R + one 1.2M-parameter adapter per language + language router (13.3M trained parameters). Within 0.4–1.2 F1 of v4.1 on public / mixed-language / Korean financial data, but 0.690 on unseen financial formats and 0.821 on English test | [`model_card/v4.md`](model_card/v4.md) |
 | **v3.0** (English) | [`deberta-v3-xsmall-pii-v3.zip`](../../releases/tag/v3.0) | v2.1's fine-tuning on top of **domain-adaptive pretraining** (178M tokens of public financial / regulatory / RM-communication text): stress F1 0.921 → 0.936, ADDRESS 0.792 → 0.848, multi-line addresses exact 59% → 70% | [`model_card/v3.md`](model_card/v3.md) |
 | v2.1 | [`deberta-v3-xsmall-pii-v2.1.zip`](../../releases/tag/v2.1) | ADDRESS: model sees line breaks / tabs (multi-line addresses), 20,848 real public addresses from SG, IN, UAE, UK, HK, ASEAN & Asia in letters / KYC forms / statements / signatures, bare place names no longer ADDRESS | [`model_card/v2.1.md`](model_card/v2.1.md) |
@@ -139,6 +143,7 @@ cd src
 python predict.py --model_dir ../outputs/xlmr-base-pii-ml-v4.1 --text "尊敬的张伟先生：您的账户6222 0212 3456 7890 已更新。คุณสมชาย ใจดี เลขที่บัญชี 123-4-56789-0"
 ```
 
+v4.3 (`minilm-pii-ml-v4.3.zip`) unzips and loads the same way as v4.1.
 v4.2 unzips the same way into `outputs/xlmr-base-pii-adapters-v4.2`. It downloads `xlm-roberta-base`
 (1.1 GB) from the Hugging Face Hub on first use and routes each blank-line block of the input to that
 language's adapter (`predict(text, lang="th")` forces one).
