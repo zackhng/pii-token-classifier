@@ -53,6 +53,8 @@ def main():
     ap.add_argument("--split", default="test", help="processed split to score (test / stress)")
     ap.add_argument("--limit", type=int)
     ap.add_argument("--out", help="write metrics json here")
+    ap.add_argument("--merge_address_gold", action="store_true",
+                    help="v5 label definition: merge fragmented gold ADDRESS spans (address_merge.py) before scoring")
     args = ap.parse_args()
 
     t = cfg["tokenize"]
@@ -61,7 +63,11 @@ def main():
     strict = defaultdict(lambda: defaultdict(int))
     lenient = defaultdict(lambda: defaultdict(int))
 
+    if args.merge_address_gold:
+        from address_merge import merge_address_spans
     for row in tqdm(ds, desc="eval"):
+        if args.merge_address_gold:
+            row = {**row, "spans": merge_address_spans(row["text"], row["spans"])[0]}
         ignore = [s for s in row["spans"] if s["label"] == IGNORE]
         gold = [s for s in row["spans"] if s["label"] != IGNORE]
         pred = [p for p in predictor.predict(row["text"])

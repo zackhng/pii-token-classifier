@@ -162,6 +162,7 @@ def main():
     ap.add_argument("--gold_lang", action="store_true",
                     help="adapter models: route by the gold language (segment_langs for ml_mixed) "
                          "instead of the router, to separate routing errors")
+    ap.add_argument("--group", help="also report per value of this row field, e.g. slice (ml_struct)")
     ap.add_argument("--script_boundaries", choices=["model", "on", "off"], default="model",
                     help="word boundaries in unspaced scripts: as the model config says, or forced")
     args = ap.parse_args()
@@ -186,6 +187,11 @@ def main():
     res = {mode: evaluate_mode(rows, preds[mode]) for mode in MODES}
     txt = (f"model: {args.model_dir}\nsplit: {args.split} ({len(rows)} docs)\n"
            f"script_boundaries: {predictor.script_boundaries}\n" + report(res, langs, entities))
+    if args.group:                       # same predictions, grouped by e.g. slice instead of language
+        grouped = [{**r, "lang": str(r.get(args.group))} for r in rows]
+        groups = sorted({r["lang"] for r in grouped})
+        res[f"by_{args.group}"] = {mode: evaluate_mode(grouped, preds[mode]) for mode in MODES}
+        txt += f"\n\n##### by {args.group}\n" + report(res[f"by_{args.group}"], groups, entities)
     print(txt)
     if args.out:
         with open(args.out + ".json", "w", encoding="utf-8") as f:
