@@ -3,16 +3,19 @@
 BIO token-classification models for detecting personally identifiable information in wealth-management
 text, following the [OpenMed](https://huggingface.co/OpenMed) PII recipe (Hugging Face Trainer, max
 length 384, first-sub-token labelling, seqeval F1):
-- **v4.x, multilingual:** 12 languages, [XLM-R base](https://huggingface.co/FacebookAI/xlm-roberta-base)
-  (v4.1, v4.2) or [Multilingual-MiniLM](https://huggingface.co/microsoft/Multilingual-MiniLM-L12-H384) (v4.3).
+- **v5.0 / v4.x, multilingual:** 12 languages, [XLM-R base](https://huggingface.co/FacebookAI/xlm-roberta-base)
+  (v5.0, v4.1, v4.2) or [Multilingual-MiniLM](https://huggingface.co/microsoft/Multilingual-MiniLM-L12-H384) (v4.3).
   English, Simplified / Traditional Chinese, Japanese, Korean, Hindi, Arabic, Thai, Vietnamese, Malay,
   Indonesian, Tagalog.
 - **v1–v3, English:** [`microsoft/deberta-v3-xsmall`](https://huggingface.co/microsoft/deberta-v3-xsmall).
 
 **Which model:**
-- **v4.1** for multilingual text, most accurate.
-- **v4.3** for multilingual text when speed matters: within ~1 point of v4.1, 2.3× faster on GPU and
-  3× on CPU (faster than v3 too).
+- **v5.0** for multilingual text, most accurate, and robust to sentence structures and document
+  formats it has not seen (code-switched English + X, lists, brackets, tables, transcripts). It
+  labels a whole address as one span.
+- **v4.3** for multilingual text when speed matters: 2.3× faster on GPU and 3× on CPU than v4.1 / v5.0
+  (faster than v3 too), but trained on v4's data.
+- **v4.1** if you need v4's fragment-style ADDRESS spans (street, number and postcode separately).
 - **v3.0** for English-only text: more accurate on English.
 - **v4.2** is the language-adapter research variant; see [`model_card/v4.md`](model_card/v4.md).
 
@@ -20,7 +23,8 @@ length 384, first-sub-token labelling, seqeval F1):
 
 | Version | Weights | Highlights | Model card |
 |---|---|---|---|
-| **v4.1** (current, multilingual) | [`xlmr-base-pii-ml-v4.1.zip`](../../releases/tag/v4.1) | **12 languages**, XLM-R base fully fine-tuned on 337k docs from 14 public sources (+ generated data only where none exists). Multilingual real-data F1 0.675 → **0.942**, wealth-management docs 0.523 → **0.873** (v3 with the new CJK / Thai word boundaries); English stress 0.936 → 0.955, English test 0.925 → 0.910 | [`model_card/v4.md`](model_card/v4.md) |
+| **v5.0** (current, multilingual) | [`xlmr-base-pii-ml-v5.0.zip`](../../releases/tag/v5.0) | v4.1's model and recipe on new training data built for **unseen sentence structures**: hand-written and generated wealth-management frames in 12 languages and English + X code-switching, real bank / custodian / broker account formats, look-alike contrasts, whole-address labels. Held-out unseen-structure tests **0.557 → 0.873** and **0.725 → 0.939** (strict F1); accounts no longer read as tax IDs (account recall 0.54 → 0.94); look-alikes tagged as PII 24.8% → 0.8%; public data unchanged when scored on the same gold | [`model_card/v5.md`](model_card/v5.md) |
+| v4.1 (multilingual) | [`xlmr-base-pii-ml-v4.1.zip`](../../releases/tag/v4.1) | **12 languages**, XLM-R base fully fine-tuned on 337k docs from 14 public sources (+ generated data only where none exists). Multilingual real-data F1 0.675 → **0.942**, wealth-management docs 0.523 → **0.873** (v3 with the new CJK / Thai word boundaries); English stress 0.936 → 0.955, English test 0.925 → 0.910 | [`model_card/v4.md`](model_card/v4.md) |
 | v4.3 (fast, multilingual) | [`minilm-pii-ml-v4.3.zip`](../../releases/tag/v4.3) | v4.1's recipe on Multilingual-MiniLM-L12-H384 (21.5M transformer parameters, 117.5M total). Multilingual real-data F1 0.939, wealth-management docs 0.860, English test 0.903. 100k-character document in **0.38 s on GPU / 6.7 s on CPU** (v4.1 0.87 s / 19.8 s, v3 0.60 s / 9.3 s) | [`model_card/v4.md`](model_card/v4.md) |
 | v4.2 (adapters) | [`xlmr-base-pii-adapters-v4.2.zip`](../../releases/tag/v4.2) | Frozen XLM-R + one 1.2M-parameter adapter per language + language router (13.3M trained parameters). Within 0.4–1.2 F1 of v4.1 on public / mixed-language / Korean financial data, but 0.690 on unseen financial formats and 0.821 on English test | [`model_card/v4.md`](model_card/v4.md) |
 | **v3.0** (English) | [`deberta-v3-xsmall-pii-v3.zip`](../../releases/tag/v3.0) | v2.1's fine-tuning on top of **domain-adaptive pretraining** (178M tokens of public financial / regulatory / RM-communication text): stress F1 0.921 → 0.936, ADDRESS 0.792 → 0.848, multi-line addresses exact 59% → 70% | [`model_card/v3.md`](model_card/v3.md) |
@@ -134,16 +138,18 @@ Account No: 0123-456789-0
 Balance: SGD 12,450.00"
 ```
 
-Multilingual (v4.1):
+Multilingual (v5.0):
 
 ```bash
-curl -L -o model.zip https://github.com/zackhng/pii-token-classifier/releases/download/v4.1/xlmr-base-pii-ml-v4.1.zip
-mkdir -p outputs/xlmr-base-pii-ml-v4.1 && unzip model.zip -d outputs/xlmr-base-pii-ml-v4.1
+curl -L -o model.zip https://github.com/zackhng/pii-token-classifier/releases/download/v5.0/xlmr-base-pii-ml-v5.0.zip
+mkdir -p outputs/xlmr-base-pii-ml-v5.0 && unzip model.zip -d outputs/xlmr-base-pii-ml-v5.0
 cd src
-python predict.py --model_dir ../outputs/xlmr-base-pii-ml-v4.1 --text "尊敬的张伟先生：您的账户6222 0212 3456 7890 已更新。คุณสมชาย ใจดี เลขที่บัญชี 123-4-56789-0"
+python predict.py --model_dir ../outputs/xlmr-base-pii-ml-v5.0 --text "Hi Tan Wei Ming (陈伟明), 已经 transfer SGD 25,000 到 account 123-456789-001, ref TT240918。คุณสมชาย ใจดี เลขที่บัญชี 123-4-56789-0"
+# -> PERSON 'Tan Wei Ming', PERSON '陈伟明', ACCOUNT '123-456789-001', PERSON 'สมชาย ใจดี', ACCOUNT '123-4-56789-0'
+#    (the amount and the reference stay unlabelled)
 ```
 
-v4.3 (`minilm-pii-ml-v4.3.zip`) unzips and loads the same way as v4.1.
+v4.1 (`xlmr-base-pii-ml-v4.1.zip`) and v4.3 (`minilm-pii-ml-v4.3.zip`) unzip and load the same way.
 v4.2 unzips the same way into `outputs/xlmr-base-pii-adapters-v4.2`. It downloads `xlm-roberta-base`
 (1.1 GB) from the Hugging Face Hub on first use and routes each blank-line block of the input to that
 language's adapter (`predict(text, lang="th")` forces one).
