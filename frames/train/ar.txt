@@ -1,0 +1,40 @@
+#lang: ar
+# v5 training frames, Arabic (Gulf banking usage, Modern Standard Arabic; IBAN-style accounts).
+
+## register: chat
+ممكن تتأكد إذا وصل المبلغ لحساب {ACCOUNT} اليوم؟
+تم التحويل، {AMOUNT} إلى الحساب {ACCOUNT}، الرقم المرجعي {REF}
+تم التحويل، {AMOUNT}، الرقم المرجعي {REF}، يصل غداً
+تاريخ ميلاد العميل {DOB} وليس التاريخ المكتوب في النموذج
+العميل أعطانا الرمز البريدي {POSTCODE} فقط
+رقم جواله الجديد {PHONE}
+الحساب {ACCOUNT} أو {ACCOUNT}؟
+العنوان الجديد: {ADDRESS}
+
+## register: letter
+السيد/ة {PERSON} المحترم/ة،\nنود إعلامكم بأنه تم إيداع مبلغ {AMOUNT} في حسابكم رقم {ACCOUNT} بتاريخ {DATE}.\nمع التحية،\n{PERSON2}
+السيد/ة {PERSON} المحترم/ة،\nنود إعلامكم بأنه تم تنفيذ تحويل مبلغ {AMOUNT} بتاريخ {DATE}، الرقم المرجعي {REF}.\nمع التحية،\n{PERSON2}
+تم تحديث عنوان العميل {PERSON} (تاريخ الميلاد {DOB}) ليصبح {ADDRESS}.
+يرجى إيداع أرباح {BUSINESS} في حساب {BANK} رقم {ACCOUNT}.
+المستفيد: {BUSINESS}، البنك: {BANK}، رقم الحساب: {ACCOUNT}، رمز السويفت: {CODE}
+المبلغ: {AMOUNT}، تاريخ القيمة: {DATE}، رمز السويفت: {CODE}
+رقم التسجيل الضريبي للعميل {PERSON} هو {TIN}.
+
+## register: kyc_note
+الاسم: {PERSON}، تاريخ الميلاد: {DOB}، العنوان: {ADDRESS}، الرقم الضريبي: {TIN}
+{PERSON} (مواليد {DOB}) هو المدير الوحيد لشركة {BUSINESS}، وتتعامل الشركة مع {BANK}.
+مصدر الثروة: بيع أسهم {BUSINESS} ({TICKER}) وإيداع {AMOUNT} في {ACCT}.
+مصدر الثروة: بيع أسهم بقيمة {AMOUNT} بتاريخ {DATE}، رمز الأوراق المالية {ISIN}.
+حسابات أخرى مصرح بها: {ACCOUNTS}
+
+## register: instruction
+يرجى تحويل {AMOUNT} من {ACCT} إلى {PERSON}، الحساب {ACCOUNT} لدى {BANK}.
+يرجى تحويل {AMOUNT} بتاريخ {DATE} مع ذكر المرجع {REF}.
+بيع 500 سهم من {TICKER} وإيداع العائد في الحساب رقم {ACCOUNT}.
+المستفيد: {BUSINESS}\nالبنك: {BANK}\nالحساب - {ACCOUNT}\nالمبلغ - {AMOUNT}
+
+## register: statement
+{BANK} | رقم الحساب {ACCOUNT} | الرصيد الافتتاحي {AMOUNT}
+{DATE}  تحويل إلى {ACCOUNT}  -{AMOUNT}
+{DATE}  تحويل مرجع {REF}  -{AMOUNT}
+صاحب الحساب: {PERSON}  رقم الحساب: {ACCOUNT}  تاريخ الكشف: {DATE}

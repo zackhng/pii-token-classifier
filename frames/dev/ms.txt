@@ -1,0 +1,34 @@
+#lang: ms
+# ml_struct_dev frames, Malay. NEVER trained on.
+
+## register: form
+## slice: acct_cue
+Akaun{ACCOUNT} (simpanan)
+{ACCOUNT} ialah akaun penerima yang didaftarkan.
+Akaun {ACCOUNT} yang diberikan telah ditutup, sila berikan akaun lain.
+
+## slice: acct_list
+Keluarga mempunyai tiga akaun: {ACCOUNT} (bersama), {ACCOUNT} (amanah) dan {ACCOUNT} (jagaan).
+Antara {ACCOUNT} dan {ACCOUNT}, yang mana akaun USD?
+
+## slice: acct_bracket
+Sewa ditolak setiap bulan daripada akaun semasanya ({ACCOUNT}).
+
+## slice: crosscat_number
+Poskod {POSTCODE}; akaun {ACCOUNT}; jumlah {AMOUNT}.
+No. rujukan {REF} ialah bayaran keluar dari {ACCOUNT}, bukan nombor akaun.
+
+## register: kyc_review
+## slice: dob
+Pelanggan lahir pada {DOB} dan berpindah ke Singapura pada 2004.
+Tarikh lahir {PERSON} direkodkan sebagai {DOB}.
+
+## slice: crosscat_date
+Tarikh buka akaun {DATE}; tarikh lahir {DOB}; semakan terakhir {DATE}.
+
+## slice: business_ticker
+Pegangan terbesar ialah {TICKER}, diikuti {TICKER}.
+
+## slice: address_struct
+Alamat surat-menyurat  {ADDRESS}
+Pejabat berdaftar:\n{ADDRESS_ML}

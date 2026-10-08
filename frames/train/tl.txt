@@ -1,0 +1,41 @@
+#lang: tl
+# v5 training frames, Tagalog / Filipino. Philippine banking text mixes English terms into Tagalog
+# naturally (Taglish); English-matrix code-switching lives in en+tl.txt.
+
+## register: chat
+Pa-check naman po kung pumasok na yung pera sa account {ACCOUNT} ngayon
+Na-transfer ko na po, {AMOUNT} sa account {ACCOUNT}, reference no. {REF}
+Na-transfer ko na po, {AMOUNT}, reference no. {REF}, bukas papasok
+Ang birthday ng kliyente ay {DOB}, hindi yung petsa sa form
+Zip code lang po ang binigay, {POSTCODE}, wala pang buong address
+Nagpalit siya ng numero, {PHONE} na po
+Account {ACCOUNT} ba o {ACCOUNT}?
+Bagong address: {ADDRESS}
+
+## register: letter
+Mahal na {PERSON},\nIkinalulugod naming ipaalam na naideposito na ang halagang {AMOUNT} sa inyong account {ACCOUNT} noong {DATE}.\nLubos na gumagalang,\n{PERSON2}
+Mahal na {PERSON},\nNatapos na ang paglilipat ng {AMOUNT} noong {DATE}, reference number {REF}.\nLubos na gumagalang,\n{PERSON2}
+Na-update na ang address ni {PERSON} (kapanganakan {DOB}) sa {ADDRESS}.
+Pakideposito ang dibidendo ng {BUSINESS} sa {BANK} account {ACCOUNT}.
+Benepisyaryo: {BUSINESS}, Bangko: {BANK}, Numero ng account: {ACCOUNT}, SWIFT: {CODE}
+Halaga: {AMOUNT}, Petsa: {DATE}, SWIFT: {CODE}
+Ang TIN ni G. {PERSON} ay {TIN}.
+
+## register: kyc_note
+Pangalan: {PERSON}; Petsa ng kapanganakan: {DOB}; Tirahan: {ADDRESS}; TIN: {TIN}
+Si {PERSON} (ipinanganak noong {DOB}) ay direktor ng {BUSINESS}; may account ang kumpanya sa {BANK}.
+Pinagmulan ng yaman: pagbenta ng shares ng {BUSINESS} ({TICKER}), {AMOUNT} ang pumasok sa {ACCT}.
+Pinagmulan ng yaman: pagbenta ng shares, {AMOUNT} natanggap noong {DATE}, ISIN {ISIN}.
+Iba pang account na idineklara: {ACCOUNTS}
+
+## register: instruction
+Pakilipat ang {AMOUNT} mula sa {ACCT} kay {PERSON}, account {ACCOUNT} sa {BANK}.
+Pakilipat ang {AMOUNT} sa {DATE}, reference {REF}.
+Ibenta ang 1,000 shares ng {TICKER} at ideposito sa account no. {ACCOUNT}.
+Tatanggap: {BUSINESS}\nBangko: {BANK}\nAccount - {ACCOUNT}\nHalaga - {AMOUNT}
+
+## register: statement
+{BANK} | Account No. {ACCOUNT} | Panimulang balanse {AMOUNT}
+{DATE}  Transfer sa {ACCOUNT}  -{AMOUNT}
+{DATE}  Transfer ref {REF}  -{AMOUNT}
+May-ari ng account: {PERSON}  Account No.: {ACCOUNT}  Petsa: {DATE}

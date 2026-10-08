@@ -1,0 +1,127 @@
+# ml_wm spec, Malay (Malaysian private-banking usage). Lists split index % 3.
+lang: ms
+field_seps: [": ", ": ", " : ", " - ", ": ", "\t"]
+and: " dan "
+comma: ", "
+period: "."
+sentence_join: ". "
+speakers: {rm: RM, client: Pelanggan}
+table_headers: [[Perkara, Butiran], [Medan, Maklumat], [Perkara, Keterangan], [Medan, Butiran], [Perkara, Catatan], [Medan, Nilai]]
+table_note: [Catatan, Nota, Butiran, Catatan, Status, Tambahan]
+
+cues:
+  PERSON: [Nama pelanggan, Nama penuh, Pemegang akaun, Pemilik benefisial, Pemegang akaun bersama, Pemohon, Nama akaun, Pelanggan, Pemegang utama]
+  BUSINESS: [Majikan, Nama syarikat, Pihak berlawanan, Penerbit, Tempat kerja, Nama entiti, Syarikat induk, Syarikat pelaburan, Perniagaan]
+  ADDRESS: [Alamat, Alamat surat-menyurat, Alamat kediaman, Alamat untuk dihubungi, Alamat berdaftar, Alamat tetap, Alamat rumah, Alamat pejabat, Alamat pos]
+  DOB: [Tarikh lahir, Tarikh lahir (pasport), Tarikh lahir (MyKad), Tarikh kelahiran, TL, Tarikh lahir berdaftar, Lahir pada, Tarikh lahir dalam rekod, Hari lahir]
+  ACCOUNT: [Nombor akaun, No. akaun, Akaun jagaan, Akaun penyelesaian, Akaun sekuriti, No. portfolio, Akaun bank, Akaun pelaburan, Akaun penerima]
+  PHONE: [Telefon bimbit, Telefon, Nombor untuk dihubungi, No. telefon bimbit, Telefon pejabat, Hubungan, Telefon rumah, No. telefon, Nombor kecemasan]
+  EMAIL: [E-mel, Alamat e-mel, E-mel untuk dihubungi, Emel, Mel, E-mel peribadi, E-mel kerja, E-mel berdaftar, E-mel penyata]
+  TIN: [Nombor cukai pendapatan, No. cukai, Nombor pengenalan cukai, TIN (CRS), No. pendaftaran syarikat, Nombor rujukan cukai, No. fail cukai, Nombor pembayar cukai, TIN berdaftar]
+  AMOUNT: [Jumlah, Aset di bawah pengurusan, Jumlah langganan, Baki, Nilai nominal, Hasil, Jumlah pelaburan, Jumlah aset, Jumlah minimum]
+  DATE: [Tarikh semakan, Tarikh nilai, Tarikh dagangan, Tarikh mesyuarat, Tarikh matang, Semakan seterusnya, Tarikh penyelesaian, Tarikh buka akaun, Setakat]
+  REF: [Nombor rujukan, ID transaksi, Rujukan, No. kes, No. tiket, No. pesanan, No. rujukan, ID urus niaga, No. pengesahan]
+  POSTCODE: [Poskod, Poskod (surat-menyurat), Poskod berdaftar, Kod pos, Poskod rumah, Poskod sahaja, Poskod semasa, Kod kawasan pos, Poskod pejabat]
+  CODE: [Kod SWIFT, Kod bank, Kod cawangan, SWIFT, Kod BIC, No. cawangan, Kod pengenalan bank, Kod bank penerima, Kod penghalaan]
+  ISIN: [ISIN, Kod sekuriti, Kod bon, Kod produk, ISIN nota, Kod dana, Nombor ISIN, Kod saham, No. produk]
+plural:
+  PERSON: [Pemegang akaun, Penandatangan yang diberi kuasa, Pengarah, Benefisiari, Pemegang bersama, Penandatangan, Pemegang saham, Pemilik akaun, Ahli keluarga]
+  BUSINESS: [Syarikat, Pihak berlawanan, Majikan terdahulu, Pegangan, Syarikat bersekutu, Syarikat pelaburan, Syarikat kumpulan, Penerbit, Entiti berkaitan]
+  ADDRESS: [Alamat, Alamat terdahulu, Alamat berdaftar, Alamat yang diketahui, Hartanah, Alamat lama, Tempat tinggal, Lokasi hartanah, Alamat untuk dihubungi]
+  DOB: [Tarikh lahir, Tarikh lahir anak-anak, Tarikh lahir keluarga, Tarikh lahir tanggungan, Tarikh lahir benefisiari, Tarikh lahir setiap orang, Tarikh kelahiran, Hari lahir ahli keluarga, Hari lahir]
+  ACCOUNT: [Akaun, Nombor akaun, Akaun berkaitan, Akaun untuk ditutup, Akaun lain, Akaun dipegang, Akaun yang berkaitan, Akaun diisytiharkan, Akaun berdaftar]
+  PHONE: [Nombor telefon, Nombor untuk dihubungi, Nombor berdaftar, Nombor telefon bimbit, Nombor alternatif, Saluran hubungan, Telefon bimbit, Nombor, Telefon]
+  EMAIL: [E-mel, E-mel berdaftar, E-mel untuk dihubungi, E-mel penyata, Alamat e-mel, Mel, E-mel yang digunakan, E-mel alternatif, E-mel utama]
+  TIN: [Nombor cukai, TIN mengikut negara, Nombor pengenalan cukai, Rujukan cukai, TIN, No. pendaftaran syarikat, Nombor berdaftar, No. fail cukai, Semua nombor cukai]
+
+patterns:
+  before:
+    - "{c} pelanggan ialah {v}"
+    - "{c} telah dikemas kini kepada {v}"
+    - "sila tukar {c} kepada {v}"
+    - "setelah disahkan, {c} ialah {v}"
+    - "{c} yang diberikan pelanggan ialah {v}"
+    - "{c} baharu ialah {v}, harap maklum"
+    - "sila sahkan {c} {v} dengan pelanggan"
+    - "bulan lepas {c} bertukar kepada {v}"
+    - "dalam dokumen, {c} tertera {v}"
+  after:
+    - "{v} ialah {c} dalam rekod kami"
+    - "{v} ({c})"
+    - "{v} diberikan sebagai {c}"
+    - "{v}, iaitu {c} dalam sistem"
+    - "{v} - {c}, disahkan"
+    - "{v} kekal sebagai {c} buat masa ini"
+    - "{v} didaftarkan sebagai {c}"
+    - "{v} [{c}]"
+    - "gunakan {v} sebagai {c}"
+  list:
+    - "{c}: {vs}"
+    - "{c} dalam rekod ialah {vs}"
+    - "pelanggan mengisytiharkan {c} {vs}"
+    - "{c} - {vs}"
+    - "kami memegang {c} {vs}"
+    - "{c} yang disemak: {vs}"
+    - "{c} ({vs})"
+    - "{c} termasuk {vs}"
+    - "{c} masing-masing ialah {vs}"
+  bracket:
+    - "{a} ({c}: {v})"
+    - "{a} - {c} {v}"
+    - "{a} [{c} {v}]"
+    - "{a}, {c} {v},"
+    - "{a} (dengan {c} {v})"
+    - "{a} / {c} {v}"
+    - "{a} ({c} {v})"
+    - "{a}; {c}: {v}"
+    - "{a} - {c}: {v}"
+  spoken:
+    - "{c} saya ialah {v}"
+    - "ya, {v}"
+    - "{c}? {v}"
+    - "guna {v}, itu {c} saya"
+    - "sepatutnya {v}"
+    - "erm, rasanya {v}"
+    - "{v}, yang itu"
+    - "tahun lepas saya tukar ke {v}"
+    - "tolong catat {v} sebagai {c} saya"
+ask:
+  - "Boleh sahkan {c} encik/puan?"
+  - "Dan {c}, ya?"
+  - "{c} yang mana kita guna?"
+  - "Boleh saya dapatkan {c}?"
+  - "Apakah {c} sekarang?"
+  - "Saya semak {c} dahulu."
+  - "Berapa {c}?"
+  - "Adakah {c} masih sama?"
+  - "Untuk pengesahan, apakah {c} anda?"
+
+narrative:
+  PERSON: ["{v} menelefon pagi tadi tentang penebusan.", "Kami berjumpa {v} di cawangan untuk membincangkan mandat.", "{v} akan menandatangani dokumen minggu depan.", "Pejabat keluarga diuruskan oleh {v}.", "{v} meminta kami menyemak semula yuran.", "Diperkenalkan oleh pelanggan lama, {v}."]
+  BUSINESS: ["Beliau bekerja di {v} selama dua belas tahun sebelum bersara.", "Dividen datang daripada {v}.", "Sebahagian besar kekayaan berada dalam {v}.", "Pelanggan menjual pegangan dalam {v} tahun lepas.", "Kini beliau menjadi perunding kepada {v}.", "Jaminan dikeluarkan oleh {v}."]
+  ADDRESS: ["Kami melawat pelanggan di {v}.", "Penyata akan dihantar ke {v} mulai bulan depan.", "Hartanah di {v} dijual pada 2021.", "Beliau tinggal di {v} sejak 2015.", "Dokumen dihantar ke {v}.", "Beliau akan berpindah ke {v} pada bulan Mac."]
+  DOB: ["Beliau lahir pada {v} di Pulau Pinang.", "Lahir pada {v}, beliau hampir enam puluh tahun.", "Pelanggan lahir {v} dan kini bersara.", "Pasport menunjukkan tarikh lahir {v}.", "Pelanggan yang lahir pada {v} ialah warganegara Malaysia.", "Menurut pasport, hari lahirnya {v}."]
+  ACCOUNT: ["Sila kreditkan kupon ke {v}.", "Hasil penebusan dibayar ke {v}.", "Tutup {v} selepas pemindahan selesai.", "Panggilan margin direkodkan pada {v}.", "Dana keluar dari {v} pada hari Jumaat.", "Dividen dipindahkan ke {v} setiap suku tahun."]
+  PHONE: ["Hubungi beliau semula di {v} selepas makan tengah hari.", "Beliau boleh dihubungi di {v}.", "SMS datang daripada {v}.", "Jika talian pejabat sibuk, hubungi {v}.", "Pelanggan menelefon dari {v}.", "Telefon bimbit baharunya {v}."]
+  EMAIL: ["Hantar cadangan ke {v}.", "Penyata dihantar ke {v}.", "Permintaan datang daripada {v}.", "Salinan helaian terma kepada {v}.", "Beliau menulis dari {v}.", "Balas kepada {v} sebelum Jumaat."]
+  TIN: ["Laporan CRS di bawah {v}.", "Borang W-8BEN memuatkan {v}.", "Pemfailan cukai dibuat di bawah {v}.", "Pengakuan sendiri menyatakan {v}.", "Pegangan cukai terpakai kepada {v}.", "Gunakan {v} pada baucar cukai."]
+
+titles:
+  kyc: [Rekod KYC, Usaha wajar pelanggan, Kemas kini KYC, Pengesahan pelanggan, Senarai semak KYC, Ringkasan CDD]
+  sow: [Sumber kekayaan, Penilaian sumber kekayaan, Sumber dana, Nota asal-usul kekayaan, Pengesahan sumber kekayaan, Ringkasan sumber kekayaan]
+  rm_note: [Nota mesyuarat RM, Nota panggilan, Laporan lawatan, Minit mesyuarat, Nota RM, Semakan hubungan]
+  call: [Transkrip panggilan, Panggilan dirakam, Log telefon, Rekod panggilan, Arahan telefon, Nota panggilan]
+  email: ["Re: Kemas kini akaun", "Fwd: Dokumen KYC", "Re: Semakan portfolio", "Re: Arahan pemindahan", "Fwd: Butiran pelanggan", "Re: Pembukaan akaun"]
+  consult: [Perundingan pelaburan, Penilaian kesesuaian, Cadangan portfolio, Nota nasihat, Semakan pelaburan, Profil risiko]
+  background: [Semakan latar belakang, Laporan saringan, Semakan berita buruk, Laporan usaha wajar, Semakan rujukan, Saringan nama]
+  review: [Semakan berkala, Semakan tahunan, Semakan KYC berkala, Semakan akaun, Semakan pelanggan, Semakan hubungan]
+
+fillers:
+  kyc: ["Penarafan risiko: sederhana, saringan terakhir {DATE}.", "Rujukan saringan {REF}.", "Deposit awal dijangka {AMOUNT}.", "Hanya poskod {POSTCODE} yang boleh dibaca pada bil.", "Disemak pada {DATE}.", "Kes {REF} ditutup."]
+  sow: ["Jumlah kekayaan cair kira-kira {AMOUNT}.", "Penyelesaian berlaku pada {DATE}.", "Rujukan escrow {REF}.", "Hasil {AMOUNT} dilabur semula.", "Bon {ISIN} matang pada {DATE}.", "Dividen {AMOUNT} diterima."]
+  rm_note: ["Nilai portfolio {AMOUNT} setakat {DATE}.", "Tiket susulan {REF}.", "Mesyuarat seterusnya {DATE}.", "Membincangkan nota {ISIN}.", "Penimbal tunai {AMOUNT} dipersetujui.", "Rujukan rebat yuran {REF}."]
+  call: ["Panggilan dirakam di bawah {REF}.", "Jumlahnya {AMOUNT}.", "Tarikh nilai {DATE}.", "SWIFT ialah {CODE}.", "Rujukan {REF}, dicatat.", "Tarikh dagangan {DATE}."]
+  email: ["Dilampirkan: penyata setakat {DATE}.", "{AMOUNT} telah dihantar, rujukan {REF}.", "SWIFT bank penerima {CODE}.", "Sila selesaikan sebelum {DATE}.", "Invois {REF} sebanyak {AMOUNT}.", "Poskod {POSTCODE} sahaja."]
+  consult: ["Jumlah dicadangkan {AMOUNT}.", "Nota {ISIN}, tempoh 3 tahun.", "Semak semula pada {DATE}.", "Sasaran hasil 4.8% atas {AMOUNT}.", "Rujukan cadangan {REF}.", "Tarikh kupon {DATE}."]
+  background: ["Carian dibuat pada {DATE}, rujukan {REF}.", "Tiada padanan melebihi {AMOUNT}.", "Laporan {REF} diarkibkan.", "Cabutan daftar bertarikh {DATE}.", "Yuran {AMOUNT}.", "Kes {REF}."]
+  review: ["Aset {AMOUNT} pada tarikh semakan {DATE}.", "Semakan seterusnya {DATE}.", "Tiket semakan {REF}.", "Yuran tahunan {AMOUNT}.", "Pegangan {ISIN} tidak berubah.", "Diluluskan pada {DATE}."]

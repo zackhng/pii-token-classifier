@@ -1,0 +1,34 @@
+#lang: ar
+# ml_struct_dev frames, Arabic. NEVER trained on.
+
+## register: form
+## slice: acct_cue
+حساب رقم{ACCOUNT} (توفير)
+{ACCOUNT} هو الحساب المسجل لدينا باسمكم.
+الحساب {ACCOUNT} الذي زودتمونا به مغلق، يرجى تزويدنا بحساب آخر.
+
+## slice: acct_list
+لدى العائلة ثلاثة حسابات: {ACCOUNT} (مشترك) و{ACCOUNT} (ائتماني) و{ACCOUNT} (حفظ أمين).
+أي الحسابين {ACCOUNT} أو {ACCOUNT} هو حساب الدولار؟
+
+## slice: acct_bracket
+يُخصم الإيجار شهرياً من حسابها الجاري ({ACCOUNT}).
+
+## slice: crosscat_number
+الرمز البريدي {POSTCODE}؛ الحساب {ACCOUNT}؛ المبلغ {AMOUNT}.
+الرقم المرجعي {REF} يخص دفعة من الحساب {ACCOUNT} وليس رقم الحساب نفسه.
+
+## register: kyc_review
+## slice: dob
+وُلد العميل في {DOB} وانتقل إلى دبي عام 2004.
+تاريخ ميلاد {PERSON} المسجل هو {DOB}.
+
+## slice: crosscat_date
+تاريخ فتح الحساب {DATE}؛ تاريخ الميلاد {DOB}؛ آخر مراجعة {DATE}.
+
+## slice: business_ticker
+أكبر استثمارات العميل في {TICKER} ثم {TICKER}.
+
+## slice: address_struct
+عنوان المراسلة  {ADDRESS}
+المقر المسجل:\n{ADDRESS_ML}

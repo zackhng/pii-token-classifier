@@ -1,0 +1,128 @@
+# ml_wm spec, Tagalog / Filipino (Philippine banking usage; English loanwords as used locally).
+# Lists split index % 3.
+lang: tl
+field_seps: [": ", ": ", " : ", " - ", ": ", "\t"]
+and: " at "
+comma: ", "
+period: "."
+sentence_join: ". "
+speakers: {rm: RM, client: Kliyente}
+table_headers: [[Detalye, Impormasyon], [Field, Halaga], [Item, Detalye], [Field, Detalye], [Item, Tala], [Field, Impormasyon]]
+table_note: [Tala, Paalala, Detalye, Tala, Katayuan, Dagdag]
+
+cues:
+  PERSON: [Pangalan ng kliyente, Buong pangalan, May-ari ng account, Tunay na may-ari, Kasamang may-ari ng account, Aplikante, Pangalan sa account, Kliyente, Pangunahing may-ari]
+  BUSINESS: [Pinapasukan, Pangalan ng kumpanya, Counterparty, Nag-isyu, Employer, Pangalan ng entidad, Holding company, Kumpanyang pinamuhunanan, Negosyo]
+  ADDRESS: [Tirahan, Address para sa sulat, Kasalukuyang tirahan, Address na makokontak, Rehistradong address, Permanenteng tirahan, Address ng bahay, Address ng opisina, Mailing address]
+  DOB: [Petsa ng kapanganakan, Kaarawan, Petsa ng kapanganakan (pasaporte), Petsa ng kapanganakan (ID), Ipinanganak noong, Araw ng kapanganakan, Rehistradong petsa ng kapanganakan, Petsa ng kapanganakan sa rekord, Birthday]
+  ACCOUNT: [Numero ng account, Account no., Custody account, Settlement account, Securities account, Portfolio no., Bank account, Investment account, Account na tatanggap]
+  PHONE: [Cellphone, Telepono, Numerong makokontak, Cellphone no., Telepono sa opisina, Kontak, Telepono sa bahay, Numero ng telepono, Emergency contact]
+  EMAIL: [Email, Email address, Email para sa kontak, Personal na email, Work email, E-mail, Rehistradong email, Email para sa statement, Pangunahing email]
+  TIN: [TIN, Taxpayer Identification Number, TIN (CRS), Numero ng buwis, Tax ID, TIN ng kumpanya, Rehistradong TIN, Tax reference no., BIR TIN]
+  AMOUNT: [Halaga, AUM, Halaga ng subscription, Balanse, Notional, Nalikom, Halagang namuhunan, Kabuuang ari-arian, Minimum na halaga]
+  DATE: [Petsa ng review, Value date, Petsa ng transaksyon, Petsa ng pulong, Petsa ng maturity, Susunod na review, Petsa ng settlement, Petsa ng pagbukas, Hanggang petsa]
+  REF: [Reference number, Transaction ID, Reference, Case no., Ticket no., Order no., Ref no., Deal ID, Confirmation no.]
+  POSTCODE: [Zip code, Zip code (sulat), Rehistradong zip code, Postal code, Zip code ng bahay, Zip code lamang, Kasalukuyang zip code, Postal area code, Zip code ng opisina]
+  CODE: [SWIFT code, Bank code, Branch code, SWIFT, BIC code, Branch no., Bank identifier code, Code ng bangkong tatanggap, Routing code]
+  ISIN: [ISIN, Security code, Bond code, Product code, ISIN ng note, Fund code, ISIN number, Stock code, Product no.]
+plural:
+  PERSON: [Mga may-ari ng account, Awtorisadong pumirma, Mga direktor, Mga benepisyaryo, Mga kasamang may-ari, Mga pumirma, Mga shareholder, Mga account holder, Mga kapamilya]
+  BUSINESS: [Mga kumpanya, Mga counterparty, Mga dating pinapasukan, Mga hawak, Mga kaanib na kumpanya, Mga kumpanyang pinamuhunanan, Mga kumpanya sa grupo, Mga nag-isyu, Mga kaugnay na entidad]
+  ADDRESS: [Mga address, Mga dating address, Mga rehistradong address, Mga kilalang address, Mga ari-arian, Mga lumang address, Mga tirahan, Lokasyon ng mga ari-arian, Mga address na makokontak]
+  DOB: [Mga petsa ng kapanganakan, Kaarawan ng mga anak, Kaarawan ng pamilya, Kaarawan ng mga dependent, Kaarawan ng mga benepisyaryo, Kaarawan ng bawat isa, Mga birthday, Kaarawan ng kapamilya, Mga kaarawan]
+  ACCOUNT: [Mga account, Mga numero ng account, Mga kaugnay na account, Mga account na isasara, Ibang account, Mga hawak na account, Mga konektadong account, Mga idineklarang account, Mga rehistradong account]
+  PHONE: [Mga numero ng telepono, Mga numerong makokontak, Mga rehistradong numero, Mga cellphone no., Alternatibong numero, Mga paraan ng kontak, Mga cellphone, Mga numero, Mga telepono]
+  EMAIL: [Mga email, Mga rehistradong email, Mga email para sa kontak, Email para sa ulat, Mga email address, Mga e-mail, Mga ginagamit na email, Alternatibong email, Pangunahing email]
+  TIN: [Mga TIN, TIN bawat bansa, Mga Tax ID, Mga numero ng buwis, TIN, Mga TIN ng kumpanya, Mga rehistradong numero, Mga tax reference, Lahat ng TIN]
+
+patterns:
+  before:
+    - "ang {c} ng kliyente ay {v}"
+    - "na-update na ang {c} sa {v}"
+    - "pakipalitan ang {c} ng {v}"
+    - "matapos i-verify, ang {c} ay {v}"
+    - "ang {c} na ibinigay ng kliyente ay {v}"
+    - "bagong {c} ay {v}, pakitandaan"
+    - "pakikumpirma ang {c} na {v} sa kliyente"
+    - "noong isang buwan napalitan ang {c} ng {v}"
+    - "sa dokumento, ang {c} ay {v}"
+  after:
+    - "{v} ang {c} sa aming rekord"
+    - "{v} ({c})"
+    - "{v} ang ibinigay bilang {c}"
+    - "{v}, ang {c} sa sistema"
+    - "{v} - {c}, verified"
+    - "{v} pa rin ang {c} sa ngayon"
+    - "{v} ay nakarehistro bilang {c}"
+    - "{v} [{c}]"
+    - "gamitin ang {v} bilang {c}"
+  list:
+    - "{c}: {vs}"
+    - "ang {c} sa rekord ay {vs}"
+    - "idineklara ng kliyente ang {c} na {vs}"
+    - "{c} - {vs}"
+    - "hawak namin ang {c} na {vs}"
+    - "{c} na sinuri: {vs}"
+    - "{c} ({vs})"
+    - "kasama sa {c} ang {vs}"
+    - "ang {c} ay {vs}"
+  bracket:
+    - "{a} ({c}: {v})"
+    - "{a} - {c} {v}"
+    - "{a} [{c} {v}]"
+    - "{a}, {c} {v},"
+    - "{a} (may {c} na {v})"
+    - "{a} / {c} {v}"
+    - "{a} ({c} {v})"
+    - "{a}; {c}: {v}"
+    - "{a} - {c}: {v}"
+  spoken:
+    - "ang {c} ko ay {v}"
+    - "opo, {v}"
+    - "{c}? {v} po"
+    - "gamitin n'yo po ang {v}, 'yan ang {c} ko"
+    - "dapat {v} po"
+    - "ah, {v} yata"
+    - "{v}, 'yon po"
+    - "pinalitan ko na ng {v} noong isang taon"
+    - "pakilista po ang {v} bilang {c} ko"
+ask:
+  - "Pakikumpirma po ang inyong {c}?"
+  - "At ang {c} po?"
+  - "Aling {c} po ang gagamitin?"
+  - "Puwede ko po bang makuha ang {c}?"
+  - "Ano po ang kasalukuyang {c}?"
+  - "Titingnan ko po muna ang {c}."
+  - "Magkano po ang {c}?"
+  - "Pareho pa rin po ba ang {c}?"
+  - "Para sa beripikasyon, ano po ang inyong {c}?"
+
+narrative:
+  PERSON: ["Tumawag si {v} kaninang umaga tungkol sa redemption.", "Nakipagkita kami kay {v} sa branch para pag-usapan ang mandato.", "Pipirma si {v} ng mga dokumento sa susunod na linggo.", "Si {v} ang namamahala sa family office.", "Hiniling ni {v} na suriin ang mga bayarin.", "Ipinakilala ng matagal nang kliyente na si {v}."]
+  BUSINESS: ["Nagtrabaho siya sa {v} nang labindalawang taon bago nagretiro.", "Galing sa {v} ang dibidendo.", "Karamihan ng yaman ay nasa {v}.", "Ibinenta ng kliyente ang hawak niya sa {v} noong isang taon.", "Consultant na siya ngayon ng {v}.", "Inisyu ng {v} ang garantiya."]
+  ADDRESS: ["Binisita namin ang kliyente sa {v}.", "Ipapadala ang mga statement sa {v} simula sa susunod na buwan.", "Naibenta noong 2021 ang ari-arian sa {v}.", "Nakatira siya sa {v} mula 2015.", "Ipinadala ang mga dokumento sa {v}.", "Lilipat siya sa {v} sa Marso."]
+  DOB: ["Ipinanganak siya noong {v} sa Cebu.", "Ipinanganak noong {v}, malapit na siyang mag-animnapu.", "Ang kliyente, ipinanganak noong {v}, ay retirado na.", "Nakasaad sa pasaporte ang {v} bilang kapanganakan.", "Ang kliyenteng ipinanganak noong {v} ay Pilipino.", "Ayon sa pasaporte, ang kaarawan niya ay {v}."]
+  ACCOUNT: ["Paki-credit ang coupon sa {v}.", "Naibayad sa {v} ang redemption.", "Isara ang {v} pagkatapos ng transfer.", "Naitala sa {v} ang margin call.", "Lumabas ang pondo sa {v} noong Biyernes.", "Inililipat sa {v} ang dibidendo kada quarter."]
+  PHONE: ["Tawagan siya sa {v} pagkatapos ng tanghalian.", "Makokontak siya sa {v}.", "Galing sa {v} ang mga text.", "Kung busy ang linya ng opisina, tawagan ang {v}.", "Tumawag ang kliyente mula sa {v}.", "Ang bagong cellphone niya ay {v}."]
+  EMAIL: ["Ipadala ang proposal sa {v}.", "Pumupunta sa {v} ang mga statement.", "Galing sa {v} ang request.", "I-cc ang {v} sa term sheet.", "Sumusulat siya mula sa {v}.", "Sumagot sa {v} bago mag-Biyernes."]
+  TIN: ["Iniuulat ang CRS sa ilalim ng {v}.", "Nakasaad sa W-8BEN ang {v}.", "Inihahain ang buwis sa ilalim ng {v}.", "Nakalista sa self-certification ang {v}.", "Ang withholding ay para sa {v}.", "Gamitin ang {v} sa tax certificate."]
+
+titles:
+  kyc: [Rekord ng KYC, Customer due diligence, Pag-update ng KYC, Beripikasyon ng kliyente, KYC checklist, Buod ng CDD]
+  sow: [Pinagmulan ng yaman, Pagsusuri ng pinagmulan ng yaman, Pinagmulan ng pondo, Tala sa pinagmulan ng yaman, Patunay ng pinagmulan ng yaman, Buod ng pinagmulan ng yaman]
+  rm_note: [Tala ng pulong ng RM, Tala ng tawag, Ulat ng pagbisita, Minutes ng pulong, Mga tala ng RM, Pagsusuri ng relasyon]
+  call: [Transcript ng tawag, Na-record na tawag, Log ng telepono, Rekord ng tawag, Utos sa telepono, Tala ng tawag]
+  email: ["Re: Update ng account", "Fwd: Mga dokumento ng KYC", "Re: Review ng portfolio", "Re: Utos ng paglilipat", "Fwd: Detalye ng kliyente", "Re: Pagbubukas ng account"]
+  consult: [Konsultasyon sa pamumuhunan, Pagsusuri ng kaangkupan, Panukala sa portfolio, Tala ng payo, Review ng pamumuhunan, Risk profiling]
+  background: [Background check, Ulat ng screening, Pagsusuri ng negatibong balita, Ulat ng due diligence, Reference check, Name screening]
+  review: [Periodic review, Taunang review, Periodic review ng KYC, Review ng account, Review ng kliyente, Review ng relasyon]
+
+fillers:
+  kyc: ["Antas ng panganib: katamtaman, huling screening {DATE}.", "Screening reference {REF}.", "Inaasahang unang deposito {AMOUNT}.", "Zip code {POSTCODE} lang ang nababasa sa bill.", "Na-review noong {DATE}.", "Sarado na ang case {REF}."]
+  sow: ["Kabuuang likidong yaman humigit-kumulang {AMOUNT}.", "Natapos ang bentahan noong {DATE}.", "Escrow reference {REF}.", "Ininvest muli ang {AMOUNT}.", "Nag-mature ang bond {ISIN} noong {DATE}.", "Natanggap ang dibidendong {AMOUNT}."]
+  rm_note: ["Halaga ng portfolio {AMOUNT} hanggang {DATE}.", "Follow-up ticket {REF}.", "Susunod na pulong {DATE}.", "Pinag-usapan ang note na {ISIN}.", "Napagkasunduang cash buffer {AMOUNT}.", "Fee rebate ref {REF}."]
+  call: ["Na-record ang tawag sa ilalim ng {REF}.", "Ang halaga ay {AMOUNT}.", "Value date {DATE}.", "Ang SWIFT ay {CODE}.", "Reference {REF}, naitala.", "Petsa ng transaksyon {DATE}."]
+  email: ["Kalakip: statement hanggang {DATE}.", "Naipadala ang {AMOUNT}, ref {REF}.", "SWIFT ng bangkong tatanggap {CODE}.", "Pakibayaran bago ang {DATE}.", "Invoice {REF} na {AMOUNT}.", "Zip code {POSTCODE} lamang."]
+  consult: ["Iminumungkahing halaga {AMOUNT}.", "Note {ISIN}, tatlong taon.", "Muling i-review sa {DATE}.", "Target na kita 4.8% sa {AMOUNT}.", "Proposal ref {REF}.", "Petsa ng coupon {DATE}."]
+  background: ["Hinanap noong {DATE}, ref {REF}.", "Walang tugma na higit sa {AMOUNT}.", "Na-archive ang ulat {REF}.", "Kopya ng rehistro may petsang {DATE}.", "Bayad {AMOUNT}.", "Case {REF}."]
+  review: ["Ari-arian {AMOUNT} sa petsa ng review {DATE}.", "Susunod na review {DATE}.", "Review ticket {REF}.", "Taunang bayad {AMOUNT}.", "Walang pagbabago sa hawak na {ISIN}.", "Inaprubahan noong {DATE}."]

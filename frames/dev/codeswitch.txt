@@ -1,0 +1,86 @@
+# ml_struct_dev frames, code-switched English + one language, both directions. NEVER trained on.
+# Structures absent from frames/train (value-first, tables, questions, brackets).
+
+## register: chat
+## slice: codeswitch
+
+#lang: en
+#cs: zh-Hans
+{ACCOUNT} 这个是 her main account, 别用 {ACCOUNT}
+holder 是 {ALIAS@zh-Hans}, born {DOB}, 邮编 {POSTCODE@zh-Hans} only
+| 户名 | {PERSON@zh-Hans} | account | {ACCOUNT} |
+is {AMOUNT@zh-Hans} 已经到 {ACCOUNT} 了吗?
+#lang: zh-Hans
+#cs: en
+{ACCOUNT} 是她的 main account，不要用 {ACCOUNT}
+这笔 {AMOUNT} 是从 {ACCOUNT}（{BANK@en}）出的，reference {REF}
+#lang: en
+#cs: zh-Hant
+{ACCOUNT} 係佢個 main account, 唔好用 {ACCOUNT}
+holder {ALIAS@zh-Hant}, 出生日期 {DOB@zh-Hant}
+#lang: zh-Hant
+#cs: en
+呢筆 {AMOUNT} 係由 {ACCOUNT}（{BANK@en}）過數，reference {REF}
+#lang: en
+#cs: ja
+{ACCOUNT} が main の口座, not {ACCOUNT}
+holder {ALIAS@ja}, 生年月日 {DOB@ja}
+#lang: ja
+#cs: en
+この {AMOUNT} は {ACCOUNT}（{BANK@en}）から出金、reference {REF}
+#lang: en
+#cs: ko
+{ACCOUNT}이 main account, {ACCOUNT} 말고
+holder {ALIAS@ko}, 생년월일 {DOB@ko}
+#lang: ko
+#cs: en
+이 {AMOUNT}은 {ACCOUNT}({BANK@en})에서 출금, reference {REF}
+#lang: en
+#cs: hi
+{ACCOUNT} उनका main account है, not {ACCOUNT}
+holder {PERSON@hi}, जन्मतिथि {DOB@hi}
+#lang: hi
+#cs: en
+यह {AMOUNT} {ACCOUNT} ({BANK@en}) से निकला, reference {REF}
+#lang: en
+#cs: ar
+{ACCOUNT} هو الـ main account, not {ACCOUNT}
+holder {PERSON@ar}, تاريخ الميلاد {DOB@ar}
+#lang: ar
+#cs: en
+هذا الـ {AMOUNT} خرج من {ACCOUNT} ({BANK@en})، reference {REF}
+#lang: en
+#cs: th
+{ACCOUNT} คือ main account, not {ACCOUNT}
+holder คุณ{PERSON@th}, วันเกิด {DOB@th}
+#lang: th
+#cs: en
+ยอด {AMOUNT} นี้ออกจาก {ACCOUNT} ({BANK@en}) reference {REF}
+#lang: en
+#cs: vi
+{ACCOUNT} là main account, not {ACCOUNT}
+holder {PERSON@vi}, ngày sinh {DOB@vi}
+#lang: vi
+#cs: en
+Khoản {AMOUNT} này đi từ {ACCOUNT} ({BANK@en}), reference {REF}
+#lang: en
+#cs: ms
+{ACCOUNT} tu main account dia, bukan {ACCOUNT}
+holder {PERSON@ms}, tarikh lahir {DOB@ms}
+#lang: ms
+#cs: en
+{AMOUNT} ni keluar dari {ACCOUNT} ({BANK@en}), reference {REF}
+#lang: en
+#cs: id
+{ACCOUNT} itu main account-nya, bukan {ACCOUNT}
+holder {PERSON@id}, tanggal lahir {DOB@id}
+#lang: id
+#cs: en
+{AMOUNT} ini keluar dari {ACCOUNT} ({BANK@en}), reference {REF}
+#lang: en
+#cs: tl
+{ACCOUNT} yung main account niya, hindi {ACCOUNT}
+holder {PERSON@tl}, kapanganakan {DOB@tl}
+#lang: tl
+#cs: en
+Ang {AMOUNT} na ito ay galing sa {ACCOUNT} ({BANK@en}), reference {REF}

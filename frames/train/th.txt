@@ -1,0 +1,40 @@
+#lang: th
+# v5 training frames, Thai (polite business style with ค่ะ/ครับ; Buddhist-era dates via date_value).
+
+## register: chat
+รบกวนเช็กบัญชี {ACCOUNT} ให้หน่อยค่ะ วันนี้เงินเข้าหรือยัง
+โอนแล้วครับ {AMOUNT} เข้าบัญชี {ACCOUNT} เลขอ้างอิง {REF}
+โอนแล้วครับ {AMOUNT} เลขอ้างอิง {REF} พรุ่งนี้เงินเข้า
+วันเกิดลูกค้าคือ {DOB} ไม่ใช่วันที่ในแบบฟอร์มนะคะ
+ลูกค้าให้มาแค่รหัสไปรษณีย์ {POSTCODE} ที่อยู่เต็มยังไม่ได้
+ลูกค้าเปลี่ยนเบอร์มือถือเป็น {PHONE} แล้วค่ะ
+บัญชี {ACCOUNT} หรือ {ACCOUNT} คะ
+ที่อยู่ใหม่: {ADDRESS}
+
+## register: letter
+เรียน คุณ{PERSON}\nธนาคารได้โอนเงินจำนวน {AMOUNT} เข้าบัญชีเลขที่ {ACCOUNT} ของท่านเมื่อวันที่ {DATE} เรียบร้อยแล้ว\nขอแสดงความนับถือ\n{PERSON2}
+เรียน คุณ{PERSON}\nรายการโอนเงินจำนวน {AMOUNT} เมื่อวันที่ {DATE} ดำเนินการเรียบร้อยแล้ว เลขที่อ้างอิง {REF}\nขอแสดงความนับถือ\n{PERSON2}
+ลูกค้า {PERSON} (เกิดวันที่ {DOB}) แจ้งเปลี่ยนที่อยู่เป็น {ADDRESS}
+กรุณาโอนเงินปันผลของ {BUSINESS} เข้าบัญชี {BANK} เลขที่ {ACCOUNT}
+ผู้รับเงิน: {BUSINESS} ธนาคาร: {BANK} เลขที่บัญชี: {ACCOUNT} รหัส SWIFT: {CODE}
+จำนวนเงิน: {AMOUNT} วันที่มีผล: {DATE} รหัส SWIFT: {CODE}
+เลขประจำตัวผู้เสียภาษีของคุณ{PERSON} คือ {TIN}
+
+## register: kyc_note
+ชื่อ: {PERSON}  วันเกิด: {DOB}  ที่อยู่: {ADDRESS}  เลขประจำตัวผู้เสียภาษี: {TIN}
+คุณ{PERSON} (เกิด {DOB}) เป็นกรรมการของ {BUSINESS} บริษัทมีบัญชีกับ {BANK}
+แหล่งที่มาของเงิน: ขายหุ้น {BUSINESS} ({TICKER}) ได้เงิน {AMOUNT} เข้า {ACCT}
+แหล่งที่มาของเงิน: ขายหุ้นได้ {AMOUNT} เมื่อวันที่ {DATE} รหัสหลักทรัพย์ {ISIN}
+บัญชีอื่นที่แจ้งไว้: {ACCOUNTS}
+
+## register: instruction
+กรุณาโอน {AMOUNT} จาก {ACCT} ไปยังคุณ{PERSON} บัญชี {ACCOUNT} ({BANK})
+กรุณาโอน {AMOUNT} วันที่ {DATE} อ้างอิง {REF}
+ขายหุ้น {TICKER} 1,000 หุ้น แล้วโอนเงินเข้าบัญชีเลขที่ {ACCOUNT}
+ผู้รับ: {BUSINESS}\nธนาคาร: {BANK}\nบัญชี - {ACCOUNT}\nจำนวน - {AMOUNT}
+
+## register: statement
+{BANK} | เลขที่บัญชี {ACCOUNT} | ยอดยกมา {AMOUNT}
+{DATE}  โอนไป {ACCOUNT}  -{AMOUNT}
+{DATE}  โอน อ้างอิง {REF}  -{AMOUNT}
+ชื่อบัญชี: {PERSON}  เลขที่บัญชี: {ACCOUNT}  วันที่ออกรายงาน: {DATE}

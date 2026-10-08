@@ -1,0 +1,34 @@
+#lang: hi
+# ml_struct_dev frames, Hindi. NEVER trained on.
+
+## register: form
+## slice: acct_cue
+खाता नं.{ACCOUNT} (बचत)
+{ACCOUNT} हमारे रिकॉर्ड में दर्ज आपका खाता है।
+आपके द्वारा दिया गया {ACCOUNT} बंद हो चुका है, कृपया दूसरा खाता दें।
+
+## slice: acct_list
+परिवार के नाम पर तीन खाते हैं: {ACCOUNT} (संयुक्त), {ACCOUNT} (ट्रस्ट) और {ACCOUNT} (कस्टडी)।
+{ACCOUNT} और {ACCOUNT} में से डॉलर वाला खाता कौन-सा है?
+
+## slice: acct_bracket
+किराया हर महीने उनके बचत खाते ({ACCOUNT}) से कटता है।
+
+## slice: crosscat_number
+पिन कोड {POSTCODE}; खाता {ACCOUNT}; राशि {AMOUNT}।
+संदर्भ संख्या {REF} खाता {ACCOUNT} से हुए भुगतान की है, खाता संख्या नहीं।
+
+## register: kyc_review
+## slice: dob
+{DOB} को जन्मे ग्राहक 2004 में सिंगापुर चले गए।
+{PERSON} की जन्मतिथि {DOB} दर्ज है।
+
+## slice: crosscat_date
+खाता खुलने की तिथि {DATE}; जन्मतिथि {DOB}; पिछली समीक्षा {DATE}।
+
+## slice: business_ticker
+सबसे बड़ा निवेश {TICKER} में है, उसके बाद {TICKER}।
+
+## slice: address_struct
+पत्राचार का पता  {ADDRESS}
+पंजीकृत कार्यालय:\n{ADDRESS_ML}

@@ -1,0 +1,178 @@
+# ml_wm spec, English (src/wm_gen.py). Every list is split by position: index % 3 = 0 train, 1 dev,
+# 2 test - keep lists at multiples of 3 so each split gets its own cue words and patterns.
+# Placeholders: {c} cue, {v} value, {vs} several values, {a} anchor entity (bracket context).
+lang: en
+field_seps: [": ", " - ", ":\t", " : ", " = ", ": "]
+and: " and "
+comma: ", "
+period: "."
+sentence_join: "; "
+speakers: {rm: RM, client: Client}
+table_headers: [[Field, Value], [Item, Details], [Particular, Information], [Field, Detail], [Attribute, Value], [Item, Value]]
+table_note: [Note, Remarks, Comment, Detail, Observation, Note]
+
+cues:
+  PERSON: [Client name, Name, Account holder, Full name, Beneficial owner, Customer, Primary holder, Applicant, Joint holder]
+  BUSINESS: [Employer, Company, Counterparty, Issuer, Employer name, Entity, Business, Holding company, Investee company]
+  ADDRESS: [Residential address, Address, Mailing address, Home address, Correspondence address, Registered address, Permanent address, Office address, Service address]
+  DOB: [Date of birth, DOB, Birth date, D.O.B., Date of Birth, Birth date (passport), Birthdate, DOB on file, Date born]
+  ACCOUNT: [Account number, Account no., A/C, Custody account, Settlement account, Portfolio no., "Acct #", Brokerage account, A/C no.]
+  PHONE: [Mobile, Phone, Tel, Contact number, Mobile no., Office line, Handphone, Telephone, Contact no.]
+  EMAIL: [Email, E-mail, Email address, Contact email, E-mail address, Mail, Personal email, Work email, Email ID]
+  TIN: [TIN, Tax ID, Tax identification number, NRIC / TIN, Tax reference, Tax file number, TIN (CRS), Taxpayer ID, Tax no.]
+  AMOUNT: [Amount, AUM, Subscription amount, Balance, Notional, Proceeds, Invested amount, Total assets, Ticket size]
+  DATE: [Review date, Value date, Trade date, Meeting date, Expiry date, Next review, Settlement date, Date opened, As of]
+  REF: [Reference, Ref no., Transaction ID, Case ID, Ticket no., Order no., Ref., Deal ID, Confirmation no.]
+  POSTCODE: [Postal code, Postcode, ZIP, Post code, Postal, Zip code, Postal code on file, PIN code, Mailing postcode]
+  CODE: [SWIFT, BIC, SWIFT code, Bank code, SWIFT/BIC, Branch code, SWIFT BIC, Routing code, BIC code]
+  ISIN: [ISIN, Security ID, ISIN code, Bond ISIN, Product ISIN, Instrument, Note ISIN, Fund ISIN, Security]
+plural:
+  PERSON: [Holders, Names, Authorised signatories, Directors, Beneficiaries, Joint holders, Signatories, Account holders, Shareholders]
+  BUSINESS: [Companies, Counterparties, Previous employers, Holdings, Entities, Investee companies, Group companies, Issuers, Related companies]
+  ADDRESS: [Addresses, Previous addresses, Addresses on file, Known addresses, Former addresses, Properties, Addresses held, Prior addresses, Residences]
+  DOB: [Dates of birth, DOBs, Birth dates, Children's DOBs, Dependants' DOBs, Birthdates, DOBs on file, Family DOBs, Dates of birth (family)]
+  ACCOUNT: [Accounts, Account numbers, Linked accounts, Accounts to close, Other accounts, A/Cs, Related accounts, Accounts held, Accounts on file]
+  PHONE: [Phone numbers, Contact numbers, Numbers on file, Phones, Alternate numbers, Mobiles, Contact lines, Numbers, Tel nos.]
+  EMAIL: [Emails, Email addresses, E-mails on file, Contact emails, Addresses for statements, Emails registered, E-mail addresses, Mail IDs, Emails used]
+  TIN: [TINs, Tax IDs, Tax numbers, TINs by jurisdiction, Tax references, Taxpayer IDs, TINs on file, Tax IDs held, Tax nos.]
+
+patterns:
+  before:
+    - "the client's {c} is {v}"
+    - "{c} on file: {v}"
+    - "please update the {c} to {v}"
+    - "we verified the {c} as {v}"
+    - "{c} provided was {v}"
+    - "kindly note the new {c}, {v}"
+    - "confirm {c} {v} with the client"
+    - "her {c} changed to {v} last month"
+    - "{c} reads {v} on the document"
+  after:
+    - "{v} is the {c} we hold"
+    - "{v} ({c})"
+    - "{v} was given as the {c}"
+    - "{v}, which is the {c} on file"
+    - "{v} - {c}, verified"
+    - "{v} remains the {c} for now"
+    - "{v} is listed as his {c}"
+    - "{v} [{c}]"
+    - "{v} should be used as the {c}"
+  list:
+    - "{c}: {vs}"
+    - "{c} on record are {vs}"
+    - "the client disclosed {c} {vs}"
+    - "{c} - {vs}"
+    - "we hold {c} {vs}"
+    - "{c} reviewed: {vs}"
+    - "{c} ({vs})"
+    - "{c} include {vs}"
+    - "{c} are {vs}"
+  bracket:
+    - "{a} ({c}: {v})"
+    - "{a} - {c} {v}"
+    - "{a} [{c} {v}]"
+    - "{a}, {c} {v},"
+    - "{a} (with {c} {v})"
+    - "{a} / {c} {v}"
+    - "{a} ({c} {v})"
+    - "{a}; {c}: {v}"
+    - "{a} - {c}: {v}"
+  spoken:
+    - "my {c} is {v}"
+    - "yes, it's {v}"
+    - "the {c}? {v}"
+    - "you can use {v}, that's my {c}"
+    - "it should be {v}"
+    - "uh, {v} I think"
+    - "{v}, that's the one"
+    - "I changed it to {v} last year"
+    - "please note {v} as my {c}"
+
+ask:
+  - "Could you confirm your {c}?"
+  - "And your {c}, please?"
+  - "What {c} should we use?"
+  - "Can I have the {c}?"
+  - "Which {c} is it now?"
+  - "Let me check the {c} we have."
+  - "What is the {c}?"
+  - "Is the {c} still the same?"
+  - "For verification, your {c}?"
+
+narrative:
+  PERSON:
+    - "{v} called this morning about the redemption."
+    - "We met {v} at the branch to discuss the mandate."
+    - "{v} will sign the documents next week."
+    - "The family office is run by {v}."
+    - "{v} asked us to review the fees."
+    - "Introduced by {v}, a long-standing client."
+  BUSINESS:
+    - "She spent twelve years at {v} before retiring."
+    - "The dividend came from {v}."
+    - "Most of the wealth is tied up in {v}."
+    - "The client sold his stake in {v} last year."
+    - "He now consults for {v}."
+    - "The guarantee is issued by {v}."
+  ADDRESS:
+    - "We visited the client at {v}."
+    - "Statements will go to {v} from next month."
+    - "The property at {v} was sold in 2021."
+    - "He has lived at {v} since 2015."
+    - "Documents were couriered to {v}."
+    - "She is moving to {v} in March."
+  DOB:
+    - "She was born on {v} in Penang."
+    - "He turns sixty soon, having been born {v}."
+    - "Born {v}, the client is now retired."
+    - "The passport shows {v} as the birth date."
+    - "The client, born on {v}, is a Singapore citizen."
+    - "Her birthday is {v}, per the passport."
+  ACCOUNT:
+    - "Please credit {v} with the coupon."
+    - "The redemption was paid into {v}."
+    - "Close {v} after the transfer settles."
+    - "Margin calls are booked against {v}."
+    - "Funds left {v} on Friday."
+    - "The dividend is swept into {v} every quarter."
+  PHONE:
+    - "Call her back on {v} after lunch."
+    - "He can be reached on {v}."
+    - "Texts come from {v}."
+    - "Ring {v} if the office line is busy."
+    - "The client called from {v}."
+    - "Her new mobile is reachable as {v}."
+  EMAIL:
+    - "Send the proposal to {v}."
+    - "Statements go to {v}."
+    - "The request came from {v}."
+    - "Copy {v} on the term sheet."
+    - "He writes from {v}."
+    - "Reply to {v} by Friday."
+  TIN:
+    - "Report income under {v} for CRS."
+    - "The W-8BEN carries {v}."
+    - "Tax filings are made under {v}."
+    - "The self-certification lists {v}."
+    - "Withholding applies to {v}."
+    - "Use {v} on the tax voucher."
+
+titles:
+  kyc: [KYC record, Customer due diligence, KYC refresh, Client verification, KYC checklist, CDD summary]
+  sow: [Source of wealth, SOW assessment, Source of funds, Wealth origin note, SOW corroboration, Source of wealth summary]
+  rm_note: [RM meeting note, Client call note, Visit report, Meeting minutes, RM notes, Relationship review]
+  call: [Call transcript, Recorded call, Phone call log, Call record, Telephone instruction, Call notes (verbatim)]
+  email: ["Re: account update", "Fwd: KYC documents", "Re: portfolio review", "Re: transfer instruction", "Fwd: client details", "Re: onboarding"]
+  consult: [Investment consultation, Suitability assessment, Portfolio proposal, Advisory note, Investment review, Risk profiling]
+  background: [Background check, Screening report, Adverse media check, Due diligence report, Reference check, Name screening]
+  review: [Periodic review, Annual review, KYC periodic review, Account review, Client review, Relationship review]
+
+fillers:
+  kyc: ["Risk rating: medium, last screened {DATE}.", "Screening reference {REF}.", "Initial funding of {AMOUNT} expected.", "Only the postcode {POSTCODE} was legible.", "Reviewed on {DATE}.", "Case {REF} closed."]
+  sow: ["Total liquid wealth approx. {AMOUNT}.", "Completion took place on {DATE}.", "Escrow reference {REF}.", "Proceeds of {AMOUNT} were reinvested.", "Bond {ISIN} matured on {DATE}.", "Dividend of {AMOUNT} received."]
+  rm_note: ["Portfolio value {AMOUNT} as of {DATE}.", "Follow-up ticket {REF}.", "Next meeting {DATE}.", "Discussed the {ISIN} note.", "Cash buffer of {AMOUNT} agreed.", "Fee rebate ref {REF}."]
+  call: ["Call recorded under {REF}.", "The amount is {AMOUNT}.", "Value date {DATE}.", "The SWIFT is {CODE}.", "Reference {REF}, noted.", "Trade date {DATE}."]
+  email: ["Attached: statement as of {DATE}.", "Wire of {AMOUNT} sent, ref {REF}.", "Beneficiary bank SWIFT {CODE}.", "Please settle by {DATE}.", "Invoice {REF} for {AMOUNT}.", "Postcode {POSTCODE} only."]
+  consult: ["Proposed ticket {AMOUNT}.", "Note {ISIN}, tenor 3 years.", "Review again on {DATE}.", "Target yield 4.8% on {AMOUNT}.", "Proposal ref {REF}.", "Coupon date {DATE}."]
+  background: ["Search run on {DATE}, ref {REF}.", "No hits for amounts above {AMOUNT}.", "Report {REF} archived.", "Registry extract dated {DATE}.", "Fee {AMOUNT} charged.", "Case {REF}."]
+  review: ["AUM {AMOUNT} at review date {DATE}.", "Next review {DATE}.", "Review ticket {REF}.", "Fees of {AMOUNT} for the year.", "Holding {ISIN} unchanged.", "Approved on {DATE}."]

@@ -1,0 +1,41 @@
+#lang: id
+# v5 training frames, Indonesian (banking letters, chat).
+
+## register: chat
+Tolong cek rekening {ACCOUNT} ya, dananya sudah masuk hari ini belum?
+Sudah ditransfer, {AMOUNT} ke rekening {ACCOUNT}, no. referensi {REF}
+Sudah ditransfer, {AMOUNT}, no. referensi {REF}, besok masuk
+Tanggal lahir nasabah {DOB}, bukan tanggal di formulir
+Nasabah cuma kasih kode pos {POSTCODE}, alamat lengkapnya belum
+Nomor HP-nya ganti jadi {PHONE}
+Rekening {ACCOUNT} atau {ACCOUNT}?
+Alamat baru: {ADDRESS}
+
+## register: letter
+Yth. Bapak/Ibu {PERSON},\nDengan ini kami informasikan bahwa dana sebesar {AMOUNT} telah dikreditkan ke rekening Anda {ACCOUNT} pada {DATE}.\nHormat kami,\n{PERSON2}
+Yth. Bapak/Ibu {PERSON},\nTransfer sebesar {AMOUNT} pada {DATE} telah selesai diproses, nomor referensi {REF}.\nHormat kami,\n{PERSON2}
+Alamat nasabah {PERSON} (tanggal lahir {DOB}) telah diperbarui menjadi {ADDRESS}.
+Mohon dividen {BUSINESS} dikreditkan ke rekening {BANK} nomor {ACCOUNT}.
+Penerima: {BUSINESS}, Bank: {BANK}, No. Rekening: {ACCOUNT}, Kode SWIFT: {CODE}
+Jumlah: {AMOUNT}, Tanggal valuta: {DATE}, Kode SWIFT: {CODE}
+NPWP Bapak {PERSON} adalah {TIN}.
+
+## register: kyc_note
+Nama: {PERSON}; Tanggal lahir: {DOB}; Alamat: {ADDRESS}; NPWP: {TIN}
+{PERSON} (lahir {DOB}) adalah direktur {BUSINESS}; perusahaan memiliki rekening di {BANK}.
+Sumber dana: penjualan saham {BUSINESS} ({TICKER}), hasil {AMOUNT} masuk ke {ACCT}.
+Sumber dana: penjualan saham {AMOUNT} diterima {DATE}, ISIN {ISIN}.
+Rekening lain yang dilaporkan: {ACCOUNTS}
+Rekening efek {ACCOUNT} atas nama {PERSON} di {BANK}.
+
+## register: instruction
+Mohon transfer {AMOUNT} dari {ACCT} ke {PERSON}, rekening {ACCOUNT} di {BANK}.
+Mohon transfer {AMOUNT} pada {DATE}, berita {REF}.
+Jual 10 lot {TICKER} dan kreditkan hasilnya ke no. rek. {ACCOUNT}.
+Penerima: {BUSINESS}\nBank: {BANK}\nRekening - {ACCOUNT}\nJumlah - {AMOUNT}
+
+## register: statement
+{BANK} | No. Rekening {ACCOUNT} | Saldo Awal {AMOUNT}
+{DATE}  Transfer ke {ACCOUNT}  -{AMOUNT}
+{DATE}  Transfer ref {REF}  -{AMOUNT}
+Pemilik rekening: {PERSON}  No. rekening: {ACCOUNT}  Tanggal: {DATE}

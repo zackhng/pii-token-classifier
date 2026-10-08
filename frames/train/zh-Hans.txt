@@ -1,0 +1,64 @@
+#lang: zh-Hans
+# v5 training frames, Simplified Chinese (mainland / SG / MY usage). Native phrasing, not translated.
+
+## register: chat
+麻烦帮我查一下 {ACCOUNT} 这个账户今天有没有入账
+钱已经转过去了，{AMOUNT}，转到 {ACCOUNT}，流水号 {REF}
+钱已经转过去了，{AMOUNT}，流水号 {REF}，明天到账
+客户的生日是 {DOB}，不是表格上写的那个
+客户的邮编是 {POSTCODE}，具体地址还没给我们
+她说手机号换了，新号码 {PHONE}
+{PERSON} 那边说 {ACCT} 被扣了两次手续费
+是 {ACCOUNT} 还是 {ACCOUNT}？我这边看到两个
+是 {DATE} 还是 {DATE}？客户自己也记不清
+新地址：{ADDRESS}
+邮件发到 {EMAIL} 被退回来了
+{PERSON} 想把 {TICKER} 的股票转到 {ACCT}
+这三个账户 {ACCOUNTS} 余额都是零，要不要销户？
+
+## register: email
+{PERSON} 您好：\n您于 {DATE} 申请的赎回款 {AMOUNT} 已转入您账号为 {ACCOUNT} 的账户，请查收。\n{PERSON2} 敬上
+{PERSON} 您好：\n您于 {DATE} 申请的赎回款 {AMOUNT} 已处理完毕，业务编号 {REF}。\n{PERSON2} 敬上
+各位同事：客户 {PERSON}（出生日期 {DOB}）的身份证明文件已更新，居住地址变更为 {ADDRESS}。
+各位同事：客户 {PERSON} 的证件于 {DATE} 到期，请提醒客户尽快更新。
+请将 {BUSINESS} 的分红款打入 {BANK} 账号 {ACCOUNT}，不要打到旧账户。
+关于 {BUSINESS} 的认购：收款人 {BUSINESS}，开户行 {BANK}，账号：{ACCOUNT}，SWIFT：{CODE}。
+关于认购：金额 {AMOUNT}，起息日 {DATE}，SWIFT：{CODE}。
+{PERSON} 先生的纳税人识别号为 {TIN}，税务居民身份为中国。
+您好，我是 {PERSON2}，这周由我接替 {PERSON} 跟进您的账户，电话 {PHONE}，邮箱 {EMAIL}。
+
+## register: kyc_note
+客户姓名：{PERSON}　出生日期：{DOB}　住址：{ADDRESS}　税号：{TIN}
+{PERSON}（{DOB}出生）为 {BUSINESS} 的唯一董事，公司开户行为 {BANK}。
+财富来源：2019 年出售 {BUSINESS}（{TICKER}）股份，所得 {AMOUNT} 存入 {ACCT}。
+财富来源：2019 年出售股份，所得 {AMOUNT} 于 {DATE} 到账，债券代码 {ISIN}。
+经视频核实 {PERSON} 身份，水电费账单显示地址为 {ADDRESS}。
+配偶：{PERSON2}，出生日期 {DOB}，无单独账户。
+客户提供的地址只有邮编 {POSTCODE}，缺少街道门牌，暂无法核实。
+客户另披露账户：{ACCOUNTS}，均在 {BANK} 开立。
+{PERSON}，{DOB}，{ADDRESS}，手机 {PHONE}，邮箱 {EMAIL}。
+
+## register: instruction
+请从 {ACCT} 转出 {AMOUNT} 至 {PERSON}，收款账号 {ACCOUNT}，收款银行 {BANK}。
+请于 {DATE} 转出 {AMOUNT}，附言注明 {REF}。
+本人 {PERSON} 授权贵行从账户 {ACCOUNT} 扣款 {AMOUNT}。
+卖出 {TICKER} 500 股，所得款项划入账号 {ACCOUNT}。
+卖出 {TICKER} 500 股，交收日 {DATE}，成交编号 {REF}。
+收款单位：{BUSINESS}\n开户银行：{BANK}\n账号 - {ACCOUNT}\n金额 - {AMOUNT}
+收款单位：{BUSINESS}\n开户银行：{BANK}\n参考号 - {REF}\n金额 - {AMOUNT}
+请注销账户 {ACCOUNTS}，余额全部转入 {ACCOUNT}。
+支票簿请寄到 {ADDRESS}，不要寄到网点。
+
+## register: statement
+{BANK}｜账号 {ACCOUNT}｜期初余额 {AMOUNT}
+{DATE}　转账至 {ACCOUNT}　-{AMOUNT}
+{DATE}　转账 流水号 {REF}　-{AMOUNT}
+户名：{PERSON}　账号：{ACCOUNT}　对账日期：{DATE}
+{PERSON}\n{ADDRESS_ML}\n\n投资组合编号 {ACCOUNT}
+股息 {TICKER}　{AMOUNT}　已入账 {ACCOUNT}
+
+## register: call_note
+上午与 {PERSON} 通话，客户确认出生日期为 {DOB}，要求注销 {BANK} 的账户 {ACCOUNT}。
+上午与 {PERSON} 通话，客户确认 {DATE} 支付了 {AMOUNT}，要求提供凭证号 {REF}。
+来电号码 {PHONE}，自称 {PERSON}，但无法核对出生日期，已上报。
+客户对对账单寄到 {ADDRESS} 不满，要求以后发到 {EMAIL}。

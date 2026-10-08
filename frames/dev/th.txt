@@ -1,0 +1,34 @@
+#lang: th
+# ml_struct_dev frames, Thai. NEVER trained on.
+
+## register: form
+## slice: acct_cue
+บัญชี{ACCOUNT} (ออมทรัพย์)
+{ACCOUNT} คือบัญชีรับเงินที่ลงทะเบียนไว้
+บัญชี {ACCOUNT} ที่แจ้งมาปิดไปแล้ว กรุณาแจ้งบัญชีอื่น
+
+## slice: acct_list
+ครอบครัวมีบัญชีสามบัญชี ได้แก่ {ACCOUNT} (บัญชีร่วม) {ACCOUNT} (ทรัสต์) และ {ACCOUNT} (รับฝาก)
+ระหว่าง {ACCOUNT} กับ {ACCOUNT} บัญชีไหนเป็นบัญชีดอลลาร์คะ
+
+## slice: acct_bracket
+ค่าเช่าหักจากบัญชีออมทรัพย์ ({ACCOUNT}) ทุกเดือน
+
+## slice: crosscat_number
+รหัสไปรษณีย์ {POSTCODE} บัญชี {ACCOUNT} จำนวนเงิน {AMOUNT}
+เลขอ้างอิง {REF} เป็นรายการโอนออกจาก {ACCOUNT} ไม่ใช่เลขบัญชี
+
+## register: kyc_review
+## slice: dob
+ลูกค้าเกิดเมื่อ {DOB} ย้ายไปสิงคโปร์ในปี 2547
+วันเกิดของคุณ{PERSON} ที่บันทึกไว้คือ {DOB}
+
+## slice: crosscat_date
+วันที่เปิดบัญชี {DATE} วันเกิด {DOB} ทบทวนล่าสุด {DATE}
+
+## slice: business_ticker
+หุ้นที่ถือมากที่สุดคือ {TICKER} รองลงมาคือ {TICKER}
+
+## slice: address_struct
+ที่อยู่สำหรับส่งเอกสาร  {ADDRESS}
+ที่ตั้งสำนักงานจดทะเบียน:\n{ADDRESS_ML}

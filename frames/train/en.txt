@@ -1,0 +1,95 @@
+#lang: en
+# v5 training frames, English. Written to vary structure, slot position and cue punctuation, with
+# matched contrasts (same frame shape, look-alike slot that must stay O). See src/frames.py.
+
+## register: email
+Hi {PERSON}, quick one - can you confirm the sweep from account {ACCOUNT} went through this morning?
+Dear {PERSON},\nFurther to our call, we have credited {AMOUNT} to your account {ACCOUNT}. The reference for this transfer is {REF}.\nKind regards,\n{PERSON2}
+Dear {PERSON},\nFurther to our call, the reference for this transfer is {REF} and the amount was {AMOUNT}.\nKind regards,\n{PERSON2}
+{PERSON}, the custodian ({BANK}) still shows the old address on file: {ADDRESS}. Could you send proof of the new one?
+Following up on the KYC refresh for {PERSON} - DOB on the passport reads {DOB}, but the form says otherwise. Please check.
+Following up on the KYC refresh for {PERSON} - the passport was issued on {DATE} and expires in 2031. Please check.
+Please note our new office address: {ADDRESS}. Correspondence for {BUSINESS} should go there from next month.
+Can we move the {TICKER} position out of {ACCT} and into the joint account before the ex-date?
+Apologies for the delay. The two accounts in question are {ACCOUNTS}; both are held with {BANK}.
+Team - redemption proceeds of {AMOUNT} are to be paid to {PERSON} (a/c {ACCOUNT}), not to the corporate account.
+Team - redemption proceeds of {AMOUNT} are to be paid by {DATE} under ref. {REF}, not to the corporate account.
+Hello {PERSON}, I'm covering for {PERSON2} this week. You can reach me on {PHONE} or at {EMAIL}.
+FYI {PERSON2}: client called from {PHONE} asking why {ACCT} was debited twice.
+Mr {PERSON} has asked us to update his tax residency. His TIN is {TIN} and he now lives at {ADDRESS}.
+Mr {PERSON} has asked us to update his tax residency; the effective date is {DATE} and the fee is {AMOUNT}.
+Re: {BUSINESS} subscription - wire instructions attached. Beneficiary: {BUSINESS}, account: {ACCOUNT}, SWIFT {CODE}.
+Re: subscription - wire instructions attached. Amount: {AMOUNT}, value date: {DATE}, SWIFT {CODE}.
+
+## register: chat
+pls send to {ACCOUNT} not the old one
+ok done, {AMOUNT} to {ACCOUNT}, ref {REF}
+ok done, {AMOUNT} sent, ref {REF}
+is {ACCOUNT} the {BANK} one or the brokerage?
+client's dob {DOB} btw, not the date on the form
+client's postcode is {POSTCODE} btw, the rest of the address is on file
+his number changed to {PHONE}
+she wants the {TICKER} shares moved into {ACCT}
+can you check {ACCOUNTS}? all three show zero
+which account - {ACCOUNT} or {ACCOUNT}?
+which date - {DATE} or {DATE}?
+born {DOB}, so turns 60 next year - pension drawdown applies
+new addr: {ADDRESS}
+mail went to {EMAIL} but bounced
+{PERSON} again re {ACCT} 🙄
+call {PERSON} back on {PHONE} after 3
+
+## register: kyc_note
+Client: {PERSON}. Date of birth: {DOB}. Residential address: {ADDRESS}. TIN: {TIN}.
+{PERSON} (born {DOB}) is the sole director of {BUSINESS}; the company banks with {BANK}.
+Source of wealth: sale of shares in {BUSINESS} ({TICKER}) in 2019; proceeds of {AMOUNT} deposited to {ACCT}.
+Source of wealth: sale of shares in 2019; proceeds of {AMOUNT} received on {DATE}, ISIN {ISIN}.
+Verified identity of {PERSON} via video call; utility bill shows {ADDRESS_ML}
+Beneficial owner {PERSON} holds 40% of {BUSINESS}. Other accounts disclosed: {ACCOUNTS}.
+Spouse: {PERSON2}, DOB {DOB}, no separate accounts.
+Address on file differs from ID - ID shows {ADDRESS}; client says she moved.
+The client's address (postal code {POSTCODE}) could not be verified; the street name is missing.
+PEP screening clear for {PERSON}. Linked custody account {ACCOUNT} at {BANK}.
+Tax ID ({TIN}) matches the W-8BEN on file for {PERSON}.
+Client {PERSON}, {DOB}, {ADDRESS}, mobile {PHONE}, email {EMAIL}.
+
+## register: instruction
+Please transfer {AMOUNT} from {ACCT} to {PERSON}, account {ACCOUNT} at {BANK}.
+Please transfer {AMOUNT} on {DATE}, quoting reference {REF}, from the operating account.
+I, {PERSON}, authorise you to debit {ACCOUNT} for the amount of {AMOUNT}.
+Sell 500 {TICKER} and credit the proceeds to account no. {ACCOUNT}.
+Sell 500 {TICKER} at market; settlement date {DATE}, contract note {REF}.
+Pay to: {BUSINESS}\nBank: {BANK}\nAccount - {ACCOUNT}\nAmount - {AMOUNT}
+Pay to: {BUSINESS}\nBank: {BANK}\nReference - {REF}\nAmount - {AMOUNT}
+Close accounts {ACCOUNTS} and sweep remaining balances to {ACCOUNT}.
+Deliver the bonds (ISIN {ISIN}) free of payment to {BANK}, custody account {ACCOUNT}.
+Send the cheque book to {ADDRESS} and not to the branch.
+Change of correspondence address for {PERSON}: from {ADDRESS} to {ADDRESS}.
+
+## register: statement
+{BANK} | {ACCOUNT} | Opening balance {AMOUNT}
+{DATE}  Transfer to {ACCOUNT}  -{AMOUNT}
+{DATE}  Transfer ref {REF}  -{AMOUNT}
+Account holder: {PERSON}    Account number: {ACCOUNT}    Statement date: {DATE}
+{PERSON}\n{ADDRESS_ML}\n\nPortfolio {ACCOUNT}
+Holdings: {TICKER} 1,200 sh; {TICKER} 300 sh. Custodian: {BANK}.
+Dividend {TICKER}  {AMOUNT}  credited to {ACCOUNT}
+Dividend {TICKER}  {AMOUNT}  pay date {DATE}
+
+## register: call_note
+Spoke to {PERSON} at 10:15. She confirmed her DOB as {DOB} and asked for the {BANK} account ({ACCOUNT}) to be closed.
+Spoke to {PERSON} at 10:15. She confirmed the payment of {AMOUNT} on {DATE} and asked for reference {REF}.
+{PERSON} rang about the margin call on {ACCT}; promised to top up {AMOUNT} by Friday.
+Client unhappy that the statement went to {ADDRESS}; asked us to use {EMAIL} instead.
+Call from {PHONE} - caller claimed to be {PERSON} but could not confirm date of birth. Escalated.
+Discussed rebalancing out of {TICKER}; client wants proceeds parked in {ACCOUNT} for now.
+
+## register: bilingual_alias
+{ALIAS@zh-Hans} has asked us to add her Chinese name to account {ACCOUNT}.
+Account name: {ALIAS@zh-Hant}
+Joint holders: {ALIAS@zh-Hans} and {PERSON}
+Client {ALIAS@ja} - mailing address {ADDRESS@ja}
+Please note the client's Korean name: {ALIAS@ko}. Passport and bank records use the romanised form.
+Beneficiary: {ALIAS@zh-Hant}, {BANK}, account {ACCOUNT}
+{BUSINESS} ({BUSINESS@zh-Hans}) - custody account {ACCOUNT} at {BANK}.
+Signed for and on behalf of {BUSINESS@ja} by {ALIAS@ja}

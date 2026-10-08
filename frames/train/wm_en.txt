@@ -1,0 +1,77 @@
+#lang: en
+# v5 training frames, English: wealth-management firm workflows (user requirement 2026-10-08).
+# Entities sit among the numbers these documents are full of (AUM, %, ISINs, dates), so the
+# context has to decide what is PII.
+
+## register: source_of_wealth
+Source of wealth: {PERSON} built {BUSINESS} over 22 years and sold a 60% stake to {BUSINESS} in 2021 for {AMOUNT}. Sale proceeds were received into {ACCT}.
+SOW corroboration - share purchase agreement dated {DATE}, completion statement showing {AMOUNT} paid to the client's account {ACCOUNT} at {BANK}.
+Inherited wealth: the client received {AMOUNT} from the estate of her father, {PERSON2}, probate granted {DATE}.
+Client's wealth derives from employment as CFO of {BUSINESS} (listed as {TICKER}); vested RSUs worth approx. {AMOUNT} are held in brokerage account {ACCOUNT}.
+Source of funds for the initial subscription of {AMOUNT}: transfer from {PERSON}'s personal account {ACCOUNT} ({BANK}), ref {REF}.
+SOW narrative accepted. Supporting docs: audited accounts of {BUSINESS} FY2023, dividend vouchers, and bank statements for a/c {ACCOUNT}.
+The rental portfolio (3 units, incl. {ADDRESS}) generates c. {AMOUNT} p.a., paid into {ACCOUNT}.
+Founder liquidity event: {BUSINESS} acquired by {TICKER}; client's share {AMOUNT}, escrow released {DATE}.
+
+## register: rm_meeting_note
+Met {PERSON} and spouse {PERSON2} at their home ({ADDRESS}). Discussed education funding for their two children and the upcoming liquidity from {BUSINESS}.
+Lunch with {PERSON}. He is unhappy with the drawdown on {TICKER} and wants to cut it to 5% of the portfolio. Will send a proposal to {EMAIL}.
+Call with {PERSON} re: renewal of the Lombard facility; collateral account {ACCOUNT}, LTV currently 38%.
+Client {PERSON} mentioned he will move to {ADDRESS} in March; update correspondence address after he confirms.
+{PERSON}'s daughter ({PERSON2}, DOB {DOB}) will be added as a joint holder on account {ACCOUNT}.
+Follow-ups: (1) send term sheet for the {ISIN} note; (2) chase W-8BEN; (3) confirm new mobile {PHONE}.
+Introduced by {PERSON2} of {BUSINESS}. Prospect {PERSON} holds approx. {AMOUNT} with {BANK} and is looking for a second booking centre.
+
+## register: kyc_check
+KYC check - {PERSON}\nID: passport, expiry {DATE}\nDOB: {DOB}\nResidential address: {ADDRESS}\nTax residency / TIN: {TIN}\nResult: verified
+Name screening for {PERSON} (DOB {DOB}) returned 2 hits; both discounted (different DOB and nationality).
+Address verification failed: the utility bill shows {ADDRESS} but the application form says {ADDRESS}.
+Corporate KYC: {BUSINESS}, registered office {ADDRESS}, UBO {PERSON} (100%). Company account {ACCOUNT}.
+Document checklist for {PERSON}: passport ✔, proof of address ✔, bank reference from {BANK} ✔ (account {ACCOUNT} held since 2012).
+TIN {TIN} confirmed against the CRS self-certification; client is tax resident in Singapore only.
+Discrepancy: client stated DOB {DOB} at onboarding, but the passport copy reads a different year. Request a certified copy.
+
+## register: edd_aml
+EDD triggered: inbound wire of {AMOUNT} into {ACCOUNT} from {BUSINESS}, a counterparty not previously seen.
+Enhanced due diligence on {PERSON} (PEP - spouse of a former minister). Source of wealth verified via sale of {BUSINESS}.
+Unusual pattern: 14 transfers below {AMOUNT} into {ACCOUNT} within 10 days, refs {REF} and {REF}. Escalated to MLRO.
+Adverse media check on {BUSINESS}: no relevant hits. Director {PERSON} cleared.
+STR not filed; activity explained by the client's sale of property at {ADDRESS} (completion {DATE}).
+
+## register: periodic_review
+Annual review - {PERSON}\nRisk profile: balanced (unchanged)\nAUM: {AMOUNT}\nAccounts reviewed: {ACCOUNTS}\nNext review: {DATE}
+Periodic KYC refresh due for {PERSON}: proof of address older than 3 years ({ADDRESS}); request updated document.
+Review notes: client's employer changed from {BUSINESS} to {BUSINESS}; income now c. {AMOUNT}. Update the CRM.
+High-risk client review: no change in the source of wealth; custody account {ACCOUNT} activity consistent with the profile.
+Review completed {DATE}. Contact details confirmed: {PHONE}, {EMAIL}. No change to address.
+Dormant account {ACCOUNT} - no activity since {DATE}; propose closing and sweeping the balance of {AMOUNT} to {ACCOUNT}.
+
+## register: investment_consultation
+Discussed with {PERSON} a switch from cash into a 3-year laddered bond portfolio; target yield 4.6%, initial ticket {AMOUNT}.
+Suitability: the client (born {DOB}, retired) has a moderate risk tolerance; we do not recommend the leveraged note {ISIN}.
+Proposal for {PERSON}: 40% global equities, 35% investment-grade bonds, 15% alternatives, 10% cash, booked in {ACCT}.
+The client asked whether to hedge the USD exposure in account {ACCOUNT}; we suggested a 6-month forward for {AMOUNT}.
+Investment objective: capital preservation. Horizon: 5 years. Liquidity need: {AMOUNT} by {DATE} for the purchase of {ADDRESS}.
+Risk disclosure for structured products sent to {EMAIL}; client acknowledged on {DATE}.
+
+## register: stock_pitch
+Idea of the week: {TICKER}. Strong order book, net cash of {AMOUNT}, trading at 14x forward earnings. Suggested allocation 3%.
+For {PERSON}: we like {TICKER} over {TICKER} - better margins and lower leverage. Can execute in {ACCOUNT} at your go-ahead.
+Earnings preview: {TICKER} reports on {DATE}; consensus EPS growth 12%. We would add on weakness below the 200-day average.
+Pitch to {PERSON2} (family office of {PERSON}): accumulate {TICKER} via a 6-month accumulator, ISIN {ISIN}, notional {AMOUNT}.
+Sector call: overweight Asian banks. Top picks {TICKER} and {TICKER}; avoid {TICKER} given its property exposure.
+{BUSINESS} IPO: indicative price range announced; client {PERSON} wants an allocation of {AMOUNT} through account {ACCOUNT}.
+
+## register: onboarding
+Account opening - {PERSON}\nType: individual, advisory\nMailing address: {ADDRESS_ML}\nSettlement account: {ACCOUNT} ({BANK})\nInitial funding: {AMOUNT}
+Welcome pack sent to {PERSON} at {EMAIL}. Portfolio number {ACCOUNT} activated on {DATE}.
+Joint account for {PERSON} and {PERSON2}; either-to-sign. Linked accounts: {ACCOUNTS}.
+New corporate client {BUSINESS} (UEN {TIN}) - authorised signatories {PERSON} and {PERSON2}.
+The client prefers phone contact on {PHONE} after 6 pm; statements by e-mail only.
+
+## register: trade_instruction
+Buy {AMOUNT} of {ISIN} for {PERSON}, debit {ACCT}, settle {DATE}.
+Sell 2,000 {TICKER} at limit, proceeds to {ACCOUNT}. Client confirmed by phone from {PHONE}.
+Rebalance per the agreed model: reduce {TICKER} by {AMOUNT}, add to the bond sleeve; custody account {ACCOUNT}.
+Subscribe {AMOUNT} into the {BUSINESS} private credit fund; capital call ref {REF}, paid from {ACCOUNT}.
+Transfer in-kind: 5,000 {TICKER} from {BANK} account {ACCOUNT} to our custody account {ACCOUNT}.

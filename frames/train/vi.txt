@@ -1,0 +1,40 @@
+#lang: vi
+# v5 training frames, Vietnamese (banking letters, Zalo-style chat).
+
+## register: chat
+Anh kiểm tra giúp em tài khoản {ACCOUNT} hôm nay đã nhận tiền chưa ạ
+Em chuyển rồi nhé, {AMOUNT} vào STK {ACCOUNT}, mã giao dịch {REF}
+Em chuyển rồi nhé, {AMOUNT}, mã giao dịch {REF}, mai tiền về
+Ngày sinh của khách là {DOB}, không phải ngày ghi trên đơn
+Khách mới cho mã bưu điện {POSTCODE}, chưa có địa chỉ đầy đủ
+Khách đổi số điện thoại sang {PHONE} rồi
+Tài khoản {ACCOUNT} hay {ACCOUNT} vậy chị?
+Địa chỉ mới: {ADDRESS}
+
+## register: letter
+Kính gửi Quý khách {PERSON},\nNgân hàng đã ghi có số tiền {AMOUNT} vào tài khoản số {ACCOUNT} của Quý khách vào ngày {DATE}.\nTrân trọng,\n{PERSON2}
+Kính gửi Quý khách {PERSON},\nGiao dịch chuyển {AMOUNT} ngày {DATE} đã hoàn tất, mã tham chiếu {REF}.\nTrân trọng,\n{PERSON2}
+Khách hàng {PERSON} (ngày sinh {DOB}) đã cập nhật địa chỉ thành {ADDRESS}.
+Đề nghị chuyển cổ tức của {BUSINESS} vào tài khoản {ACCOUNT} tại {BANK}.
+Người thụ hưởng: {BUSINESS}, Ngân hàng: {BANK}, Số tài khoản: {ACCOUNT}, Mã SWIFT: {CODE}
+Số tiền: {AMOUNT}, Ngày hiệu lực: {DATE}, Mã SWIFT: {CODE}
+Mã số thuế của ông {PERSON} là {TIN}.
+
+## register: kyc_note
+Họ tên: {PERSON} - Ngày sinh: {DOB} - Địa chỉ: {ADDRESS} - MST: {TIN}
+Ông {PERSON} (sinh ngày {DOB}) là giám đốc {BUSINESS}; công ty mở tài khoản tại {BANK}.
+Nguồn tiền: bán cổ phiếu {BUSINESS} ({TICKER}), thu về {AMOUNT} vào {ACCT}.
+Nguồn tiền: bán cổ phiếu được {AMOUNT} ngày {DATE}, mã chứng khoán {ISIN}.
+Các tài khoản khác đã kê khai: {ACCOUNTS}
+
+## register: instruction
+Đề nghị chuyển {AMOUNT} từ {ACCT} cho {PERSON}, số tài khoản {ACCOUNT} tại {BANK}.
+Đề nghị chuyển {AMOUNT} ngày {DATE}, nội dung {REF}.
+Bán 1.000 cổ phiếu {TICKER} và chuyển tiền về tài khoản số {ACCOUNT}.
+Người nhận: {BUSINESS}\nNgân hàng: {BANK}\nSTK - {ACCOUNT}\nSố tiền - {AMOUNT}
+
+## register: statement
+{BANK} | Số tài khoản {ACCOUNT} | Số dư đầu kỳ {AMOUNT}
+{DATE}  Chuyển khoản đến {ACCOUNT}  -{AMOUNT}
+{DATE}  Chuyển khoản mã {REF}  -{AMOUNT}
+Chủ tài khoản: {PERSON}  Số tài khoản: {ACCOUNT}  Ngày sao kê: {DATE}

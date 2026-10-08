@@ -1,0 +1,40 @@
+#lang: ms
+# v5 training frames, Malay (Malaysian banking Malay, WhatsApp-style chat).
+
+## register: chat
+Boleh tolong semak akaun {ACCOUNT}, duit dah masuk ke belum hari ni?
+Dah transfer, {AMOUNT} ke akaun {ACCOUNT}, no. rujukan {REF}
+Dah transfer, {AMOUNT}, no. rujukan {REF}, esok masuk
+Tarikh lahir pelanggan {DOB}, bukan tarikh dalam borang tu
+Pelanggan bagi poskod {POSTCODE} je, alamat penuh belum
+Nombor telefon dia dah tukar ke {PHONE}
+Akaun {ACCOUNT} ke {ACCOUNT}?
+Alamat baru: {ADDRESS}
+
+## register: letter
+Tuan/Puan {PERSON},\nSukacita dimaklumkan bahawa sejumlah {AMOUNT} telah dikreditkan ke akaun anda {ACCOUNT} pada {DATE}.\nYang benar,\n{PERSON2}
+Tuan/Puan {PERSON},\nPemindahan sebanyak {AMOUNT} pada {DATE} telah selesai, nombor rujukan {REF}.\nYang benar,\n{PERSON2}
+Alamat pelanggan {PERSON} (tarikh lahir {DOB}) telah dikemas kini kepada {ADDRESS}.
+Sila kreditkan dividen {BUSINESS} ke akaun {BANK} nombor {ACCOUNT}.
+Penerima: {BUSINESS}, Bank: {BANK}, No. Akaun: {ACCOUNT}, Kod SWIFT: {CODE}
+Jumlah: {AMOUNT}, Tarikh nilai: {DATE}, Kod SWIFT: {CODE}
+Nombor cukai pendapatan {PERSON} ialah {TIN}.
+
+## register: kyc_note
+Nama: {PERSON}; Tarikh lahir: {DOB}; Alamat: {ADDRESS}; No. cukai: {TIN}
+{PERSON} (lahir {DOB}) ialah pengarah tunggal {BUSINESS}; syarikat berurusan dengan {BANK}.
+Sumber kekayaan: jualan saham {BUSINESS} ({TICKER}), hasil {AMOUNT} dimasukkan ke {ACCT}.
+Sumber kekayaan: jualan saham {AMOUNT} diterima pada {DATE}, ISIN {ISIN}.
+Akaun lain yang diisytiharkan: {ACCOUNTS}
+
+## register: instruction
+Sila pindahkan {AMOUNT} dari {ACCT} kepada {PERSON}, akaun {ACCOUNT} di {BANK}.
+Sila pindahkan {AMOUNT} pada {DATE}, rujukan {REF}.
+Jual 1,000 unit saham {TICKER} dan masukkan hasil ke no. akaun {ACCOUNT}.
+Penerima: {BUSINESS}\nBank: {BANK}\nAkaun - {ACCOUNT}\nJumlah - {AMOUNT}
+
+## register: statement
+{BANK} | No. Akaun {ACCOUNT} | Baki Awal {AMOUNT}
+{DATE}  Pindahan ke {ACCOUNT}  -{AMOUNT}
+{DATE}  Pindahan rujukan {REF}  -{AMOUNT}
+Pemegang akaun: {PERSON}  No. akaun: {ACCOUNT}  Tarikh penyata: {DATE}

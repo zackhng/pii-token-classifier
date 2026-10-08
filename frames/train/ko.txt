@@ -1,0 +1,46 @@
+#lang: ko
+# v5 training frames, Korean. 존댓말 business style, form labels, KakaoTalk-style chat.
+
+## register: chat
+{ACCOUNT} 계좌 오늘 입금됐는지 확인 좀 부탁드려요
+이체 완료했습니다. {AMOUNT}, {ACCOUNT}로 보냈고 거래번호는 {REF}입니다
+이체 완료했습니다. {AMOUNT}, 거래번호 {REF}, 내일 입금 예정이에요
+고객님 생년월일은 {DOB}입니다. 신청서 날짜랑 달라요
+우편번호 {POSTCODE}만 받았고 상세 주소는 아직이에요
+휴대폰 번호가 {PHONE}으로 바뀌었다고 하십니다
+{ACCOUNT} 계좌인가요 {ACCOUNT} 계좌인가요?
+{PERSON} 고객님이 {TICKER} 주식을 {ACCT}로 옮기고 싶어 하세요
+새 주소: {ADDRESS}
+
+## register: email
+{PERSON} 고객님께,\n{DATE}에 신청하신 환매 대금 {AMOUNT}을 계좌번호 {ACCOUNT}로 입금해 드렸습니다.\n{PERSON2} 드림
+{PERSON} 고객님께,\n{DATE}에 신청하신 환매 대금 {AMOUNT} 처리가 완료되었습니다. 접수번호: {REF}\n{PERSON2} 드림
+{PERSON} 고객님(생년월일 {DOB})의 주소가 {ADDRESS}(으)로 변경되었습니다.
+{BUSINESS} 배당금은 {BANK} 계좌 {ACCOUNT}로 입금해 주시기 바랍니다.
+입금 계좌: {BANK} {ACCOUNT} (예금주: {BUSINESS}), SWIFT 코드: {CODE}
+입금 금액: {AMOUNT}, 입금일: {DATE}, SWIFT 코드: {CODE}
+이번 주는 {PERSON2}가 {PERSON} 대신 담당합니다. 연락처 {PHONE}, 이메일 {EMAIL}.
+사업자등록번호 {TIN} 확인했습니다.
+
+## register: kyc_note
+성명: {PERSON} / 생년월일: {DOB} / 주소: {ADDRESS} / 사업자등록번호: {TIN}
+{PERSON}({DOB}생)은 {BUSINESS}의 대표이사이며 주거래 은행은 {BANK}이다.
+자금 출처: {BUSINESS}({TICKER}) 주식 매도 대금 {AMOUNT}을 {ACCT}에 입금.
+자금 출처: 주식 매도 대금 {AMOUNT}을 {DATE}에 수령, 종목코드 {ISIN}.
+기타 보유 계좌: {ACCOUNTS} (모두 {BANK}).
+주소는 우편번호 {POSTCODE}만 기재되어 있어 확인 불가.
+{ALIAS@ko}, {DOB}, {ADDRESS}, {PHONE}
+
+## register: instruction
+{ACCT}에서 {AMOUNT}을 {PERSON}님 계좌 {ACCOUNT}({BANK})로 이체해 주세요.
+{DATE}에 {AMOUNT} 이체, 거래번호 {REF}.
+{TICKER} 500주 매도 후 대금은 계좌번호 {ACCOUNT}로 입금해 주세요.
+{TICKER} 500주 매도, 결제일 {DATE}, 주문번호 {REF}.
+받는 분: {BUSINESS}\n은행: {BANK}\n계좌 - {ACCOUNT}\n금액 - {AMOUNT}
+계좌 {ACCOUNTS} 해지 후 잔액은 {ACCOUNT}로 옮겨 주세요.
+
+## register: statement
+{BANK} | 계좌번호 {ACCOUNT} | 전월 잔액 {AMOUNT}
+{DATE}  이체 {ACCOUNT}  -{AMOUNT}
+{DATE}  이체 거래번호 {REF}  -{AMOUNT}
+예금주: {PERSON}  계좌번호: {ACCOUNT}  발행일: {DATE}

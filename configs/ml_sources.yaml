@@ -128,3 +128,11 @@ val_per_lang: 500
 # dataset in these languages labels SWIFT / branch codes, PIN, CVV, OTP, expiry, amounts as not-PII
 lookalikes_per_lang: 1500
 min_spans: 1000     # per language x entity type in train; build fails below this unless --allow_gaps
+
+# v5 (build_ml_train.py --v5): hand-written sentence frames (frames/train, src/frames.py), packed
+# 1..max_per_doc per document. share = fraction of the final training docs; a data hyper-parameter
+# chosen by the 10 / 25 / 40% pilot (plan 4e), then frozen for every v5 model.
+frames:
+  share: 0.25          # chosen by pilot round 2 (run_v5_queue.sh)
+  max_per_doc: 4
+  wm_share: 0.5        # half of the frame docs come from the wealth-management grid generator (wm_gen.py)

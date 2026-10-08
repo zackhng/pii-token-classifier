@@ -1,0 +1,26 @@
+#lang: zh-Hans
+#cs: en
+# Code-switched, Chinese matrix sentence with English insertions (English + one language).
+
+## register: chat
+你好 {PERSON},客户的 account number 是 {ACCOUNT},麻烦 double check 一下
+刚刚 {AMOUNT} 已经 credit 到 {ACCOUNT} 了,reference 是 {REF}
+刚刚 {AMOUNT} 已经付了,reference 是 {REF},value date {DATE}
+客户新地址: {ADDRESS@en},以后 statement 寄这里
+客户新地址的 postcode 是 {POSTCODE@en},详细地址等他 email 过来
+她的 DOB 是 {DOB},跟 passport 一致
+{PERSON@en} 的 mobile 换成 {PHONE@en} 了
+把 {TICKER@en} 全部卖掉,proceeds 放到 {ACCT@en}
+那两个 accounts ({ACCOUNTS}) 都是 {BANK@en} 的
+
+## register: email
+{PERSON}您好:\n关于您在 {BANK@en} 的 custody account {ACCOUNT},我们已于今天完成 KYC review。\n{PERSON2}
+{PERSON}您好:\n您申请的 transfer {AMOUNT} 已于 {DATE} 完成,reference {REF}。\n{PERSON2}
+客户 {ALIAS@zh-Hans} 的 tax ID {TIN} 需要更新到 CRM。
+请把 {BUSINESS@en} 的 dividend 打到 {ACCOUNT},不要打到 {ACCOUNT}。
+请把 {BUSINESS@en} 的 dividend 在 {DATE} 前处理, amount 是 {AMOUNT}。
+
+## register: kyc_note
+客户: {ALIAS@zh-Hans},DOB: {DOB@en},address: {ADDRESS@en}。
+客户 {PERSON} 是 {BUSINESS@en} 的 director,公司 account 在 {BANK@en}。
+联系方式: {PHONE},email {EMAIL}。

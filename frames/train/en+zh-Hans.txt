@@ -1,0 +1,38 @@
+#lang: en
+#cs: zh-Hans
+# Code-switched English + Simplified Chinese (user rule: code-switching = English + one language).
+# Both directions: English sentence with Chinese insertions here; Chinese matrix in zh-Hans+en.txt.
+
+## register: chat
+{PERSON@zh-Hans} 的 account {ACCOUNT} 还没到账, can you check?
+ok 已经 transfer {AMOUNT@zh-Hans} 到 {ACCOUNT}, ref {REF}
+ok 已经 transfer {AMOUNT@zh-Hans} 了, ref {REF}, 明天 settle
+pls update 地址 to {ADDRESS@zh-Hans}, client 刚搬家
+client 生日 {DOB@zh-Hans}, not 护照上的 date
+client 邮编 {POSTCODE@zh-Hans}, 其他 address 我们 file 里有
+call {PERSON@zh-Hans} 先生 on {PHONE@zh-Hans} after lunch
+她要把 {TICKER@zh-Hans} 的 shares 转到 {ACCT}
+{BANK@zh-Hans} 那个 account {ACCOUNT} close 了吗?
+which one - {ACCOUNT} 还是 {ACCOUNT}?
+{PERSON@zh-Hans} 说 email 改成 {EMAIL} 了
+
+## register: email
+Hi {PERSON}, 关于 {PERSON@zh-Hans} 的 KYC: DOB is {DOB}, 地址 {ADDRESS@zh-Hans}. Please update the CRM.
+Dear {PERSON@zh-Hans} 女士,\nThe redemption of {AMOUNT} has been paid to your account {ACCOUNT} ({BANK}).\n谢谢,\n{PERSON2}
+Dear {PERSON@zh-Hans} 女士,\nThe redemption of {AMOUNT} was paid on {DATE}, 参考号 {REF}.\n谢谢,\n{PERSON2}
+Team, 客户 {ALIAS@zh-Hans} wants to open a joint account with her husband {PERSON2@zh-Hans}.
+{BUSINESS@zh-Hans} ({BUSINESS}) - 托管账户 {ACCOUNT} at {BANK}, please confirm the SWIFT {CODE}.
+The client's 税号 is {TIN@zh-Hans}; he is tax resident in China and Singapore.
+
+## register: kyc_note
+Client name: {ALIAS@zh-Hans}. 出生日期: {DOB}. Address: {ADDRESS}.
+Source of wealth: 出售 {BUSINESS@zh-Hans} 股份 ({TICKER@zh-Hans}), proceeds {AMOUNT@zh-Hans} into {ACCT}.
+Source of wealth: 出售股份, proceeds {AMOUNT@zh-Hans} 于 {DATE@zh-Hans} 收到, ISIN {ISIN}.
+Spouse {PERSON2@zh-Hans}, 生于 {DOB@zh-Hans}, no separate accounts with us.
+Mailing address 通讯地址: {ADDRESS@zh-Hans} (postal code 邮编 included).
+
+## register: instruction
+Please transfer {AMOUNT} from 账户 {ACCOUNT} to {PERSON@zh-Hans}, 收款银行 {BANK@zh-Hans}.
+Please transfer {AMOUNT} on {DATE}, 附言 {REF}, from the operating account.
+卖出 1,000 股 {TICKER} and credit {ACCT}.
+Close accounts {ACCOUNTS} 并把余额转到 {ACCOUNT}.

@@ -1,0 +1,41 @@
+#lang: hi
+# v5 training frames, Hindi (Devanagari; bank Hindi as used in Indian banking letters and chat).
+
+## register: chat
+कृपया देख लीजिए, खाता {ACCOUNT} में आज पैसा आया या नहीं
+पैसे भेज दिए हैं, {AMOUNT}, खाता {ACCOUNT} में, संदर्भ संख्या {REF}
+पैसे भेज दिए हैं, {AMOUNT}, संदर्भ संख्या {REF}, कल तक आ जाएंगे
+ग्राहक की जन्मतिथि {DOB} है, फ़ॉर्म वाली तारीख़ नहीं
+ग्राहक का पिन कोड {POSTCODE} है, पूरा पता अभी नहीं मिला
+उनका मोबाइल नंबर बदलकर {PHONE} हो गया है
+खाता {ACCOUNT} या {ACCOUNT}, कौन-सा?
+नया पता: {ADDRESS}
+
+## register: letter
+प्रिय {PERSON},\nआपके द्वारा {DATE} को अनुरोधित {AMOUNT} की राशि आपके खाता संख्या {ACCOUNT} में जमा कर दी गई है।\nभवदीय,\n{PERSON2}
+प्रिय {PERSON},\nआपके द्वारा {DATE} को अनुरोधित {AMOUNT} का भुगतान संदर्भ संख्या {REF} के तहत पूरा हो गया है।\nभवदीय,\n{PERSON2}
+ग्राहक {PERSON} (जन्मतिथि {DOB}) का पता बदलकर {ADDRESS} कर दिया गया है।
+{BUSINESS} का लाभांश {BANK} के खाता {ACCOUNT} में जमा करें।
+लाभार्थी: {BUSINESS}, बैंक: {BANK}, खाता संख्या: {ACCOUNT}, स्विफ्ट कोड: {CODE}
+राशि: {AMOUNT}, मूल्य तिथि: {DATE}, स्विफ्ट कोड: {CODE}
+{PERSON} का पैन {TIN} है और वे भारत के कर निवासी हैं।
+
+## register: kyc_note
+नाम: {PERSON}　जन्मतिथि: {DOB}　पता: {ADDRESS}　पैन: {TIN}
+{PERSON} ({DOB} को जन्म) {BUSINESS} के निदेशक हैं; कंपनी का खाता {BANK} में है।
+धन का स्रोत: {BUSINESS} ({TICKER}) के शेयर बेचकर प्राप्त {AMOUNT} {ACCT} में जमा।
+धन का स्रोत: शेयर बिक्री से {AMOUNT}, {DATE} को प्राप्त, आईएसआईएन {ISIN}।
+अन्य घोषित खाते: {ACCOUNTS}
+डीमैट खाता {ACCOUNT} ({BANK}) ग्राहक के नाम पर है।
+
+## register: instruction
+कृपया {ACCT} से {AMOUNT} {PERSON} के खाता {ACCOUNT} ({BANK}) में अंतरित करें।
+कृपया {DATE} को {AMOUNT} अंतरित करें, संदर्भ {REF}।
+{TICKER} के 500 शेयर बेचकर राशि खाता संख्या {ACCOUNT} में जमा करें।
+प्राप्तकर्ता: {BUSINESS}\nबैंक: {BANK}\nखाता - {ACCOUNT}\nराशि - {AMOUNT}
+
+## register: statement
+{BANK} | खाता संख्या {ACCOUNT} | प्रारंभिक शेष {AMOUNT}
+{DATE}  अंतरण {ACCOUNT}  -{AMOUNT}
+{DATE}  अंतरण संदर्भ {REF}  -{AMOUNT}
+खाताधारक: {PERSON}  खाता संख्या: {ACCOUNT}  विवरण तिथि: {DATE}

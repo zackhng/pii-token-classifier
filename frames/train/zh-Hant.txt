@@ -1,0 +1,54 @@
+#lang: zh-Hant
+# v5 training frames, Traditional Chinese: Hong Kong (戶口, written Cantonese in chat) and Taiwan (帳戶).
+
+## register: chat_hk
+唔該幫我睇下 {ACCOUNT} 呢個戶口今日有冇入數
+已經過咗數，{AMOUNT}，入咗 {ACCOUNT}，參考編號 {REF}
+已經過咗數，{AMOUNT}，參考編號 {REF}，聽日到
+客人生日係 {DOB}，唔係表格上面嗰個
+客人個郵遞區號係 {POSTCODE}，詳細地址遲啲先畀
+佢話轉咗電話，新號碼 {PHONE}
+係 {ACCOUNT} 定係 {ACCOUNT}？我見到兩個戶口
+{PERSON} 想將 {TICKER} 啲股票轉去 {ACCT}
+新地址：{ADDRESS}
+
+## register: chat_tw
+麻煩幫我查一下 {ACCOUNT} 這個帳戶今天有沒有入帳
+款項已匯出，{AMOUNT}，匯入 {ACCOUNT}，交易序號 {REF}
+款項已匯出，{AMOUNT}，交易序號 {REF}，明天入帳
+客戶生日是 {DOB}，跟身分證上的一樣
+{PERSON} 說 email 改成 {EMAIL} 了
+
+## register: email
+{PERSON} 您好：\n您於 {DATE} 申請之贖回款項 {AMOUNT} 已存入您的帳戶 {ACCOUNT}，敬請查收。\n{PERSON2} 敬上
+{PERSON} 您好：\n您於 {DATE} 申請之贖回款項 {AMOUNT} 已完成處理，交易編號 {REF}。\n{PERSON2} 敬上
+客戶 {PERSON}（出生日期：{DOB}）之住址已更新為 {ADDRESS}，請同步更新系統。
+請將 {BUSINESS} 之股息存入 {BANK} 戶口 {ACCOUNT}，切勿存入舊戶口。
+認購款項：收款人 {BUSINESS}，收款銀行 {BANK}，戶口號碼：{ACCOUNT}，SWIFT 代碼：{CODE}。
+認購款項：金額 {AMOUNT}，起息日 {DATE}，SWIFT 代碼：{CODE}。
+{PERSON} 先生之納稅識別號碼為 {TIN}。
+本週由 {PERSON2} 代 {PERSON} 跟進閣下戶口，電話 {PHONE}，電郵 {EMAIL}。
+
+## register: kyc_note
+客戶姓名：{PERSON}　出生日期：{DOB}　住址：{ADDRESS}　稅籍編號：{TIN}
+{PERSON}（{DOB} 出生）為 {BUSINESS} 之董事，公司往來銀行為 {BANK}。
+財富來源：出售 {BUSINESS}（{TICKER}）股份，所得 {AMOUNT} 存入 {ACCT}。
+財富來源：出售股份，所得 {AMOUNT} 於 {DATE} 入帳，債券編號 {ISIN}。
+客戶另申報戶口：{ACCOUNTS}，均開設於 {BANK}。
+客戶僅提供郵遞區號 {POSTCODE}，未有街道門牌，暫未能核實地址。
+{ALIAS@zh-Hant}，{DOB}，{ADDRESS}，手機 {PHONE}。
+
+## register: instruction
+請由 {ACCT} 轉帳 {AMOUNT} 至 {PERSON}，收款帳號 {ACCOUNT}（{BANK}）。
+請於 {DATE} 匯出 {AMOUNT}，附言 {REF}。
+本人 {PERSON} 授權貴行由戶口 {ACCOUNT} 扣除 {AMOUNT}。
+沽出 {TICKER} 2,000 股，所得款項存入戶口號碼 {ACCOUNT}。
+沽出 {TICKER} 2,000 股，交收日 {DATE}，成交單號 {REF}。
+收款人：{BUSINESS}\n銀行：{BANK}\n帳號 - {ACCOUNT}\n金額 - {AMOUNT}
+
+## register: statement
+{BANK}｜戶口號碼 {ACCOUNT}｜承上結餘 {AMOUNT}
+{DATE}　轉帳至 {ACCOUNT}　-{AMOUNT}
+{DATE}　轉帳 參考 {REF}　-{AMOUNT}
+戶名：{PERSON}　帳號：{ACCOUNT}　結單日期：{DATE}
+{PERSON}\n{ADDRESS_ML}\n\n投資組合編號 {ACCOUNT}

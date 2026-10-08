@@ -1,0 +1,69 @@
+# ml_struct_test frames, Hindi, Arabic, Thai, Vietnamese, Malay, Indonesian, Tagalog. Reported once.
+
+#lang: hi
+## register: sms
+## slice: crosscat_number
+लेनदेन सूचना: {DATE} को खाता {ACCOUNT} से {AMOUNT} कटे। संदर्भ {REF}।
+## register: questionnaire
+## slice: acct_bracket
+प्रश्न: क्या अन्य बैंकों में आपके खाते हैं?\nउत्तर: हाँ, {BANK} (खाता {ACCOUNT})।
+## register: narrative
+## slice: dob
+{PERSON} का जन्म {DOB} को हुआ और वे 2009 से हमारे ग्राहक हैं।
+
+#lang: ar
+## register: sms
+## slice: crosscat_number
+تنبيه عملية: خصم {AMOUNT} من الحساب {ACCOUNT} بتاريخ {DATE}. المرجع {REF}.
+## register: questionnaire
+## slice: acct_bracket
+س: هل لديك حسابات لدى مؤسسات أخرى؟\nج: نعم، {BANK} (حساب {ACCOUNT}).
+## register: narrative
+## slice: dob
+وُلد {PERSON} بتاريخ {DOB} وهو عميل لدينا منذ 2009.
+
+#lang: th
+## register: sms
+## slice: crosscat_number
+แจ้งเตือนรายการ: {DATE} บัญชี {ACCOUNT} ถูกหัก {AMOUNT} อ้างอิง {REF}
+## register: questionnaire
+## slice: acct_bracket
+ถาม: ท่านมีบัญชีกับสถาบันอื่นหรือไม่\nตอบ: มี {BANK} (บัญชี {ACCOUNT})
+## register: narrative
+## slice: dob
+คุณ{PERSON} เกิดเมื่อ {DOB} และเป็นลูกค้าตั้งแต่ปี 2552
+
+#lang: vi
+## register: sms
+## slice: crosscat_number
+Thông báo GD: TK {ACCOUNT} -{AMOUNT} ngày {DATE}. Mã GD {REF}.
+## register: questionnaire
+## slice: acct_bracket
+Hỏi: Quý khách có tài khoản tại tổ chức khác không?\nĐáp: Có, {BANK} (TK {ACCOUNT}).
+## register: narrative
+## slice: dob
+{PERSON} sinh ngày {DOB} và là khách hàng từ năm 2009.
+
+#lang: ms
+## register: sms
+## slice: crosscat_number
+Makluman transaksi: {AMOUNT} didebit dari akaun {ACCOUNT} pada {DATE}. Rujukan {REF}.
+## register: questionnaire
+## slice: acct_bracket
+S: Adakah anda mempunyai akaun di institusi lain?\nJ: Ya, {BANK} (akaun {ACCOUNT}).
+
+#lang: id
+## register: sms
+## slice: crosscat_number
+Notifikasi transaksi: rek. {ACCOUNT} didebet {AMOUNT} tgl {DATE}. Ref {REF}.
+## register: questionnaire
+## slice: acct_bracket
+T: Apakah Anda memiliki rekening di lembaga lain?\nJ: Ya, {BANK} (rekening {ACCOUNT}).
+
+#lang: tl
+## register: sms
+## slice: crosscat_number
+Abiso: {AMOUNT} ang ibinawas sa account {ACCOUNT} noong {DATE}. Ref {REF}.
+## register: questionnaire
+## slice: acct_bracket
+T: May account ba kayo sa ibang institusyon?\nS: Oo, {BANK} (account {ACCOUNT}).

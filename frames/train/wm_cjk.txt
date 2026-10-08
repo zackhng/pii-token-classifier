@@ -1,0 +1,80 @@
+# v5 training frames: wealth-management workflows in Chinese (Simplified / Traditional), Japanese,
+# Korean. Native phrasing per market (mainland / SG private banking; HK / TW; Japan; Korea).
+
+#lang: zh-Hans
+#cs: none
+## register: source_of_wealth
+财富来源：客户{PERSON}于2021年将其创办的{BUSINESS}60%股权出售予{BUSINESS}，交易对价{AMOUNT}，款项已汇入{ACCT}。
+资金来源核实：股权转让协议签署于{DATE}，结算单显示{AMOUNT}已付至客户在{BANK}的账户{ACCOUNT}。
+客户继承其父{PERSON2}遗产{AMOUNT}，遗嘱认证日期{DATE}。
+## register: rm_meeting_note
+在客户家中（{ADDRESS}）拜访{PERSON}夫妇，讨论子女教育金规划及{BUSINESS}上市后的流动性安排。
+与{PERSON}午餐，客户对{TICKER}回撤不满，希望将仓位降至组合的5%，方案将发至{EMAIL}。
+客户女儿{PERSON2}（出生日期{DOB}）将加入账户{ACCOUNT}作为联名持有人。
+## register: kyc_check
+KYC核查－{PERSON}\n证件：护照，有效期至{DATE}\n出生日期：{DOB}\n住址：{ADDRESS}\n纳税识别号：{TIN}\n结果：通过
+地址核验未通过：水电费账单地址为{ADDRESS}，与开户申请表不一致。
+## register: periodic_review
+年度回顾－{PERSON}\n风险等级：平衡型（不变）\n资产规模：{AMOUNT}\n已复核账户：{ACCOUNTS}\n下次回顾：{DATE}
+休眠账户{ACCOUNT}自{DATE}起无交易，建议销户并将余额{AMOUNT}转入{ACCOUNT}。
+## register: investment_consultation
+与{PERSON}讨论将现金转为三年期阶梯债券组合，目标收益率4.6%，首笔投资{AMOUNT}。
+适合性评估：客户（{DOB}出生，已退休）风险承受能力中等，不建议认购杠杆票据{ISIN}。
+## register: stock_pitch
+本周推荐：{TICKER}。订单充足，净现金{AMOUNT}，预期市盈率14倍，建议配置3%。
+相比{TICKER}，我们更看好{TICKER}；如您同意，可在账户{ACCOUNT}下单。
+## register: trade_instruction
+为{PERSON}买入{ISIN}，金额{AMOUNT}，从{ACCT}扣款，交收日{DATE}。
+限价卖出{TICKER} 2,000股，所得款项转入{ACCOUNT}，客户已致电{PHONE}确认。
+
+#lang: zh-Hant
+## register: source_of_wealth
+財富來源：客戶{PERSON}出售其創辦之{BUSINESS}股權，所得{AMOUNT}已存入{ACCT}。
+客戶之資金來源為受僱於{BUSINESS}（{TICKER}）所得之股份獎勵，約值{AMOUNT}，存放於證券戶口{ACCOUNT}。
+## register: rm_meeting_note
+與{PERSON}會面，客戶擬於三月遷往{ADDRESS}，確認後更新通訊地址。
+客戶{PERSON}查詢續期Lombard信貸，抵押戶口{ACCOUNT}，現時貸款價值比38%。
+## register: kyc_check
+KYC審查－{PERSON}　出生日期：{DOB}　住址：{ADDRESS}　稅籍編號：{TIN}　結果：已核實
+公司客戶：{BUSINESS}，註冊地址{ADDRESS}，最終實益擁有人{PERSON}（100%），公司戶口{ACCOUNT}。
+## register: periodic_review
+定期覆核：客戶僱主由{BUSINESS}轉為{BUSINESS}，收入約{AMOUNT}，請更新系統。
+## register: stock_pitch
+行業觀點：增持亞洲銀行股，首選{TICKER}及{TICKER}，避開{TICKER}。
+{BUSINESS}招股：客戶{PERSON}擬透過戶口{ACCOUNT}認購{AMOUNT}。
+
+#lang: ja
+## register: source_of_wealth
+資産の源泉：{PERSON}様は創業した{BUSINESS}の株式60%を2021年に{BUSINESS}へ売却、売却代金{AMOUNT}を{ACCT}にて受領。
+相続財産：お父様{PERSON2}様の遺産{AMOUNT}を{DATE}に相続。
+## register: rm_meeting_note
+{PERSON}様ご夫妻をご自宅（{ADDRESS}）に訪問。お子様の教育資金と{BUSINESS}上場後の資金計画について協議。
+{PERSON}様より{TICKER}の下落についてご不満あり。比率を5%まで下げたいとのこと。提案書を{EMAIL}へ送付予定。
+## register: kyc_check
+本人確認－{PERSON}様\n生年月日：{DOB}\n住所：{ADDRESS}\nマイナンバー：{TIN}\n結果：確認済
+## register: periodic_review
+定期レビュー：預り資産{AMOUNT}、対象口座{ACCOUNTS}、次回レビュー{DATE}。
+## register: investment_consultation
+適合性：お客様（{DOB}生、退職済）は中程度のリスク許容度のため、レバレッジ型債券{ISIN}はお勧めしません。
+## register: stock_pitch
+今週の注目銘柄：{TICKER}。受注好調、ネットキャッシュ{AMOUNT}。組入比率3%を提案します。
+## register: trade_instruction
+{TICKER}を2,000株指値で売却し、代金を口座{ACCOUNT}へ入金。お客様より{PHONE}にて確認済。
+
+#lang: ko
+## register: source_of_wealth
+자금 출처: {PERSON} 고객은 창업한 {BUSINESS} 지분 60%를 2021년 {BUSINESS}에 매각, 대금 {AMOUNT}을 {ACCT}로 수령.
+상속 재산: 부친 {PERSON2}의 유산 {AMOUNT}을 {DATE}에 상속.
+## register: rm_meeting_note
+{PERSON} 고객 부부 자택({ADDRESS}) 방문. 자녀 교육 자금과 {BUSINESS} 상장 후 유동성 계획 논의.
+{PERSON} 고객이 {TICKER} 손실에 불만, 비중을 5%로 줄이길 원함. 제안서는 {EMAIL}로 발송 예정.
+## register: kyc_check
+고객확인 - {PERSON}\n생년월일: {DOB}\n주소: {ADDRESS}\n사업자등록번호: {TIN}\n결과: 확인 완료
+## register: periodic_review
+정기 점검: 운용자산 {AMOUNT}, 점검 계좌 {ACCOUNTS}, 다음 점검일 {DATE}.
+## register: investment_consultation
+적합성 평가: 고객({DOB}생, 은퇴)은 위험 감수 성향이 중간이므로 레버리지 상품 {ISIN}은 권하지 않음.
+## register: stock_pitch
+이번 주 추천 종목: {TICKER}. 수주 호조, 순현금 {AMOUNT}. 비중 3% 제안.
+## register: trade_instruction
+{TICKER} 2,000주 지정가 매도 후 대금은 계좌 {ACCOUNT}로 입금. 고객 {PHONE}로 확인 완료.

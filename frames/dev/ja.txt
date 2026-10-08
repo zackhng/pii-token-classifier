@@ -1,0 +1,40 @@
+#lang: ja
+# ml_struct_dev frames, Japanese. NEVER trained on.
+
+## register: form
+## slice: acct_cue
+口座{ACCOUNT}（普通預金）
+口座No：{ACCOUNT}
+{ACCOUNT}がご登録の受取口座です。
+ご指定の{ACCOUNT}は解約済みのため、別の口座をご指定ください。
+
+## slice: acct_list
+ご家族名義の口座は{ACCOUNT}（共同）、{ACCOUNT}（信託）、{ACCOUNT}（保護預り）の三つです。
+{ACCOUNT}と{ACCOUNT}のどちらが米ドル口座でしょうか。
+
+## slice: acct_bracket
+家賃は普通預金口座（{ACCOUNT}）から毎月引き落とされます。
+受渡しは{BANK}にて確認済み【保護預り口座 {ACCOUNT}】。
+
+## slice: crosscat_number
+郵便番号{POSTCODE}、口座番号{ACCOUNT}、金額{AMOUNT}。
+受付番号{REF}は{ACCOUNT}からの出金に関するもので、口座番号ではありません。
+
+## register: kyc_review
+## slice: dob
+{DOB}生まれ、2004年にシンガポールへ移住。
+{PERSON}様の生年月日は{DOB}として登録されています。
+
+## slice: crosscat_date
+口座開設日{DATE}、生年月日{DOB}、前回見直し{DATE}。
+
+## slice: business_ticker
+最大の保有銘柄は{TICKER}、次いで{TICKER}です。
+
+## slice: address_struct
+送付先　{ADDRESS}
+登記上の住所：\n{ADDRESS_ML}
+昨年{ADDRESS}から転居されました。
+
+## slice: alias
+名義人：{ALIAS@ja}

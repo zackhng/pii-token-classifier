@@ -1,0 +1,72 @@
+#lang: en
+# ml_struct_dev frames, English. NEVER trained on. Structures deliberately absent from frames/train
+# (value before cue, tables, leaders, footnotes, questions, forwarded text); values come from the
+# test-only pools (ml_templates, held-out institutions and tickers). See src/frames.py.
+
+## register: form
+## slice: acct_cue
+A/C# {ACCOUNT} (savings)
+Acct no:{ACCOUNT}
+acc no. → {ACCOUNT}
+Account........................{ACCOUNT}
+Account (primary) = {ACCOUNT}
+{ACCOUNT} is the account we have on file for you.
+The number you gave us, {ACCOUNT}, belongs to a closed account.
+Your new account, number {ACCOUNT}, is now active.
+
+## register: email
+## slice: acct_list
+We hold three accounts for the family: {ACCOUNT} (joint), {ACCOUNT} (trust) and {ACCOUNT} (custody).
+Accounts to be merged:\n  1. {ACCOUNT}\n  2. {ACCOUNT}\n  3. {ACCOUNT}
+Please freeze {ACCOUNTS} until compliance signs off.
+Could you tell me which of these is the USD one: {ACCOUNT}, {ACCOUNT}?
+
+## slice: acct_bracket
+The rent goes out of her current account ({ACCOUNT}) on the 1st.
+Sweep excess cash (from a/c {ACCOUNT}) into the money-market fund.
+Settlement [custody acct {ACCOUNT}] confirmed by {BANK}.
+{PERSON} - {BANK} [{ACCOUNT}] - signatory since 2017
+
+## slice: crosscat_number
+Postal code {POSTCODE}; account {ACCOUNT}; amount {AMOUNT}.
+Ref no. {REF} relates to the payment out of {ACCOUNT}, not to the account itself.
+The cheque for {AMOUNT} was drawn on {ACCOUNT}; the bank's SWIFT is {CODE}.
+Is {POSTCODE} the postcode or part of the account number? The account is {ACCOUNT}.
+Bond {ISIN} was delivered into {ACCOUNT} under ref {REF}.
+
+## register: kyc_review
+## slice: dob
+Born on {DOB} in Penang, the client relocated to Singapore in 2004.
+{PERSON}, whose date of birth is recorded as {DOB}, holds dual citizenship.
+Age check: DOB {DOB} -> client is over 21.
+The client's birthday ({DOB}) falls on the review date, so we called to congratulate.
+
+## slice: crosscat_date
+Account opened {DATE}; client born {DOB}; last review {DATE}.
+The deed was signed on {DATE}, ten years after the client was born ({DOB}).
+Next review due {DATE}.
+
+## slice: business_ticker
+The client's largest holding is {TICKER}, followed by {TICKER}.
+We trimmed the {TICKER} position after the results.
+{BUSINESS}, a supplier to {TICKER}, is wholly owned by the client.
+Exposure: 12% {TICKER} | 8% {TICKER} | 5% cash
+
+## slice: address_struct
+Correspondence: {ADDRESS}
+Registered office -\n{ADDRESS_ML}
+The client moved from {ADDRESS} last year.
+Deliver documents c/o {BUSINESS}, {ADDRESS}.
+Postcode on file is {POSTCODE} but the street line is blank.
+
+## slice: alias
+Holder: {ALIAS@zh-Hans}; secondary holder: {ALIAS@zh-Hans}
+The passport reads {ALIAS@ko}.
+Name as printed on the cheque: {ALIAS@ja}
+Mr {ALIAS@zh-Hant} called about the dividend.
+
+## register: chat
+## slice: acct_cue
+acct?? {ACCOUNT} or the other one
+fwd: "please credit {ACCOUNT} by eod" - can you action
+{ACCOUNT} <- this one, not the old one

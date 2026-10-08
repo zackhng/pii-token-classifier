@@ -10,6 +10,8 @@ partially annotated sources (`partial`) still learn them as not-PII. Documents w
 an evaluation set (ml_real, ml_synth, English test / stress) are dropped.
 
     python build_ml_train.py [--allow_gaps]
+    python build_ml_train.py --v5     # ml_train_v5 / ml_val_v5: ADDRESS fragments merged (address_merge.py)
+                                      # + v5 frames (frames.py) at frames.share of the training docs
 """
 import argparse
 import json
@@ -25,6 +27,7 @@ from common import IGNORE, ROOT, load_yaml
 from ml_sources import READERS, ai4privacy_500k_hi
 from ml_lookalikes import records as lookalike_records
 from ml_train_docs import generate
+from address_merge import merge_address_spans
 
 LANGS = ["en", "zh-Hans", "zh-Hant", "ja", "ko", "hi", "ar", "th", "vi", "ms", "id", "tl"]
 ENTITIES = load_yaml("label_map.yaml")["entities"]
@@ -35,7 +38,7 @@ ZH_STREET = re.compile(r"[0-9０-９]|[路街道巷弄号號室楼樓栋棟层�
 
 def eval_texts() -> set[str]:
     out = set()
-    for name in ["ml_real", "ml_synth", "test", "stress"]:
+    for name in ["ml_real", "ml_synth", "ml_mixed", "ml_struct", "ml_struct_dev", "ml_struct_test", "test", "stress"]:
         p = PROC / f"{name}.jsonl"
         if p.exists():
             out.update(json.loads(l)["text"] for l in open(p, encoding="utf-8"))
@@ -128,6 +131,35 @@ def load_source(name, cfg, split, seed, stats):
     return rows
 
 
+def frame_docs(n_docs: int, max_per_doc: int, seed: int) -> list[dict]:
+    """v5 frame rows packed 1..max_per_doc per document (same language / code-switch pair), so a
+    window holds several structures and, for en+X pairs, switches language between sentences."""
+    import frames
+    from collections import defaultdict as dd
+    values, rng = frames.Values("train"), random.Random(f"v5-frames-{seed}")
+    by_key = dd(list)
+    for f in frames.load_frames("train"):
+        by_key[(f["lang"], f["cs"])].append(f)
+    keys = sorted(by_key, key=str)
+    out = []
+    for i in range(n_docs):
+        key = keys[i % len(keys)]               # even spread over languages and en+X pairs
+        text, spans = "", []
+        for k in range(rng.randint(1, max_per_doc)):
+            pool = by_key[key]
+            if key[1] and rng.random() < 0.5:   # mix both directions of the pair in one doc
+                pool = by_key.get((key[1], key[0]), pool)
+            r = frames.fill(rng.choice(pool), rng, values)
+            if text:
+                text += rng.choice(["\n", "\n\n", " "])
+            spans += [{**sp, "start": sp["start"] + len(text), "end": sp["end"] + len(text)} for sp in r["spans"]]
+            text += r["text"]
+        spans = [{k2: v for k2, v in sp.items() if k2 != "neg"} for sp in spans]
+        out.append({"id": f"frames-{i}", "source": "frames", "lang": key[0], "cs": key[1], "kind": "generated",
+                    "partial": "", "text": text, "spans": spans})
+    return out
+
+
 def coverage(rows: list[dict]):
     cells = defaultdict(Counter)            # lang -> entity -> spans
     kinds = defaultdict(Counter)            # lang -> kind -> spans
@@ -163,6 +195,7 @@ def report(docs, cells, kinds, min_spans) -> tuple[str, list]:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--allow_gaps", action="store_true", help="write outputs even if a cell is below min_spans")
+    ap.add_argument("--v5", action="store_true", help="v5 build: merge ADDRESS fragments, add frames, write *_v5")
     args = ap.parse_args()
     scfg = load_yaml("ml_sources.yaml")
     seed = load_yaml("train.yaml")["seed"]
@@ -217,6 +250,27 @@ def main():
             train += recs
             print(f"lookalike_{lang:8s} train {len(recs):6d}  (pool sizes {dict((k, len(v)) for k, v in pool.items())})")
 
+    if args.v5:
+        merged = Counter()
+        for r in train + val_rows:
+            r["spans"], st = merge_address_spans(r["text"], r["spans"])
+            merged[r["source"]] += st["merged"]
+            stats["address_postcode_ignored"] += st["postcode_ignored"]
+        stats["address_fragments_merged"] = sum(merged.values())
+        fcfg = scfg.get("frames", {})
+        n_frames = round(len(train) * fcfg.get("share", 0.15) / (1 - fcfg.get("share", 0.15)))
+        n_wm = round(n_frames * fcfg.get("wm_share", 0.5))      # wealth-management grid docs (wm_gen.py)
+        fdocs = frame_docs(n_frames - n_wm, fcfg.get("max_per_doc", 4), seed)
+        import wm_gen
+        wdocs = [{"id": r["id"], "source": "frames_wm", "lang": r["lang"], "cs": r["mode"] if r["mode"] != "mono" else None,
+                  "kind": "generated", "partial": "", "text": r["text"],
+                  "spans": [{"start": x["start"], "end": x["end"], "label": x["label"]} for x in r["spans"]] +
+                           [{"start": x["start"], "end": x["end"], "label": "O"} for x in r["negs"]]}
+                 for r in wm_gen.generate("train", 0, seed, max_docs=n_wm)]
+        train += fdocs + wdocs
+        print(f"frames          train {len(fdocs) + len(wdocs):6d}  ({fcfg.get('share', 0.15):.0%} of training docs: "
+              f"{len(fdocs)} hand-written frame docs + {len(wdocs)} wealth-management grid docs)")
+
     val_texts = {r["text"] for r in val_rows}
     train = [r for r in train if r["text"] not in val_texts]
     rng.shuffle(train)
@@ -226,17 +280,21 @@ def main():
     print("\n" + txt)
     print(f"\ncleanup: {dict(stats)}")
     (ROOT / "results").mkdir(exist_ok=True)
-    with open(ROOT / "results/ml_train_coverage.txt", "w", encoding="utf-8") as f:
+    sfx = "_v5" if args.v5 else ""
+    with open(ROOT / f"results/ml_train{sfx}_coverage.txt", "w", encoding="utf-8") as f:
         f.write(txt + "\n")
-    with open(ROOT / "results/ml_train_coverage.json", "w", encoding="utf-8") as f:
+    with open(ROOT / f"results/ml_train{sfx}_coverage.json", "w", encoding="utf-8") as f:
         json.dump({"docs": docs, "spans": cells, "by_kind": kinds,
                    "val_docs": Counter(r["lang"] for r in val_rows), "gaps": gaps}, f, indent=1, ensure_ascii=False)
     if gaps and not args.allow_gaps:
         raise SystemExit(f"{len(gaps)} language x entity cells below min_spans - fill them "
                          f"(configs/ml_sources.yaml) or pass --allow_gaps")
 
-    write_jsonl(PROC / "ml_train.jsonl", train)
-    write_jsonl(PROC / "ml_val.jsonl", val_rows)
+    write_jsonl(PROC / f"ml_train{sfx}.jsonl", train)
+    write_jsonl(PROC / f"ml_val{sfx}.jsonl", val_rows)
+    if args.v5:                          # ml_kiii_test is unchanged by v5
+        print(f"wrote ml_train_v5 {len(train)}, ml_val_v5 {len(val_rows)}")
+        return
     kiii_test = []
     for r in mapped_rows("kiii", scfg["sources"]["kiii"], "test", Counter()):
         negs = [{"start": s["start"], "end": s["end"], "label": "code"} for s in r["spans"] if s["label"] == "O"]

@@ -1,0 +1,40 @@
+#lang: zh-Hant
+# ml_struct_dev frames, Traditional Chinese (HK / TW). NEVER trained on.
+
+## register: form
+## slice: acct_cue
+戶口{ACCOUNT}（儲蓄）
+帳號／卡號：{ACCOUNT}
+{ACCOUNT}係我哋登記嘅收款戶口。
+閣下提供之 {ACCOUNT} 已經取消，請提供另一戶口。
+
+## slice: acct_list
+家族共持有三個戶口：{ACCOUNT}（聯名）、{ACCOUNT}（信託）及 {ACCOUNT}（託管）。
+請問 {ACCOUNT} 同 {ACCOUNT} 邊個係美金戶口？
+
+## slice: acct_bracket
+每月租金由佢嘅往來戶口（{ACCOUNT}）扣除。
+交收已由 {BANK} 確認【託管帳戶 {ACCOUNT}】。
+
+## slice: crosscat_number
+郵遞區號 {POSTCODE}；帳號 {ACCOUNT}；金額 {AMOUNT}。
+參考編號 {REF} 係由 {ACCOUNT} 轉出嘅款項，唔係戶口號碼。
+
+## register: kyc_review
+## slice: dob
+客戶於{DOB}出生，2004 年移居新加坡。
+{PERSON}之出生日期登記為{DOB}。
+
+## slice: crosscat_date
+開戶日期 {DATE}；出生日期 {DOB}；上次覆核 {DATE}。
+
+## slice: business_ticker
+客戶最大持倉為 {TICKER}，其次為 {TICKER}。
+
+## slice: address_struct
+通訊地址　{ADDRESS}
+註冊地址：\n{ADDRESS_ML}
+客戶去年由 {ADDRESS} 搬走。
+
+## slice: alias
+持有人：{ALIAS@zh-Hant}

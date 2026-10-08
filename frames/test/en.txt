@@ -1,0 +1,53 @@
+#lang: en
+# ml_struct_test frames, English. NEVER trained on and NEVER used for choices: reported once.
+# Document shapes absent from frames/train and frames/dev: quoted e-mail threads, CSV / export rows,
+# Q&A questionnaires, legal clauses, SMS alerts, footnotes, multi-sentence narrative.
+
+## register: thread
+## slice: acct_cue
+> Can you confirm which account the coupon went to?\nIt went to {ACCOUNT}, same as last quarter.
+> pls use the new one\nnoted - updating our records to {ACCOUNT} today
+On Tue, {PERSON} wrote:\n> the old a/c {ACCOUNT} is closed\nThanks, we'll stop using it.
+
+## register: export
+## slice: acct_list
+name,account_no,currency\n{PERSON},{ACCOUNT},USD\n{PERSON2},{ACCOUNT},SGD
+client_id;accounts\nC-1182;{ACCOUNT}|{ACCOUNT}|{ACCOUNT}
+"{PERSON}","{ACCOUNT}","joint"
+
+## register: questionnaire
+## slice: acct_bracket
+Q: Do you hold accounts with other institutions?\nA: Yes - {BANK} (a/c {ACCOUNT}) and a brokerage account (no. {ACCOUNT}).
+Q3. Nominated bank account for redemptions (bank, number):\nA3. {BANK} / {ACCOUNT}
+
+## register: legal
+## slice: crosscat_number
+The Borrower shall maintain the Collection Account (number {ACCOUNT}) with a minimum balance of {AMOUNT}.
+Pursuant to clause 4.2, the amount of {AMOUNT} shall be paid by {DATE}, quoting reference {REF}, to the account numbered {ACCOUNT}.
+The Property, being the premises with postal code {POSTCODE}, is excluded from the Charge.
+
+## register: sms
+## slice: crosscat_number
+Txn alert: {AMOUNT} debited from A/C {ACCOUNT} on {DATE}. Ref {REF}. Not you? Call us.
+OTP for your transfer to {ACCOUNT} is 482913. Never share it.
+
+## register: narrative
+## slice: dob
+{PERSON} was born on {DOB} and has banked with us since 2009; the joint holder is her son.
+Our records show a date of birth of {DOB}, which matches the passport presented at onboarding.
+
+## slice: crosscat_date
+The policy started on {DATE}; the insured, born {DOB}, renewed it on {DATE}.
+
+## slice: business_ticker
+Over the year the portfolio added {TICKER} and exited {TICKER} after the profit warning.
+Note [2]: holdings in {TICKER} are subject to a lock-up until next year.
+
+## slice: address_struct
+Please courier the original documents to the address below.\n\n{ADDRESS_ML}\n\nAttention: {PERSON}
+Site visit completed at {ADDRESS}; the client was present.
+Only the postcode ({POSTCODE}) was legible on the scanned bill.
+
+## slice: alias
+Signed: {ALIAS@zh-Hans}
+The beneficiary, {ALIAS@ko}, is the client's daughter.

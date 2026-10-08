@@ -1,0 +1,127 @@
+# ml_wm spec, Vietnamese (private-banking / securities usage). Lists split index % 3.
+lang: vi
+field_seps: [": ", ": ", " : ", " - ", ": ", "\t"]
+and: " và "
+comma: ", "
+period: "."
+sentence_join: ". "
+speakers: {rm: RM, client: Khách hàng}
+table_headers: [[Mục, Nội dung], [Trường, Thông tin], [Mục, Chi tiết], [Hạng mục, Nội dung], [Mục, Ghi chú], [Trường, Giá trị]]
+table_note: [Ghi chú, Lưu ý, Chi tiết, Ghi chú, Tình trạng, Bổ sung]
+
+cues:
+  PERSON: [Họ tên khách hàng, Họ và tên, Chủ tài khoản, Chủ sở hữu hưởng lợi, Đồng chủ tài khoản, Người đề nghị, Tên tài khoản, Khách hàng, Chủ tài khoản chính]
+  BUSINESS: [Nơi làm việc, Tên công ty, Đối tác, Tổ chức phát hành, Đơn vị công tác, Tên doanh nghiệp, Công ty mẹ, Công ty được đầu tư, Doanh nghiệp]
+  ADDRESS: [Địa chỉ, Địa chỉ liên lạc, Địa chỉ thường trú, Địa chỉ liên hệ, Địa chỉ đăng ký, Hộ khẩu thường trú, Địa chỉ nhà riêng, Địa chỉ cơ quan, Địa chỉ nhận thư]
+  DOB: [Ngày sinh, Ngày tháng năm sinh, Ngày sinh (hộ chiếu), Ngày sinh (CCCD), NS, Sinh ngày, Ngày sinh đăng ký, Ngày sinh trên hồ sơ, Ngày sinh (dương lịch)]
+  ACCOUNT: [Số tài khoản, STK, Tài khoản lưu ký, Tài khoản thanh toán, Tài khoản chứng khoán, Mã danh mục, Tài khoản ngân hàng, Tài khoản đầu tư, Tài khoản nhận tiền]
+  PHONE: [Điện thoại di động, Điện thoại, Số liên hệ, SĐT, Điện thoại cơ quan, Liên lạc, Điện thoại nhà, Số điện thoại, Số khẩn cấp]
+  EMAIL: [Email, Địa chỉ email, Email liên hệ, Thư điện tử, Mail, Email cá nhân, Email công việc, Email đăng ký, Email nhận sao kê]
+  TIN: [Mã số thuế, MST, Mã số thuế cá nhân, TIN (CRS), Mã số doanh nghiệp, Số thuế, Mã số người nộp thuế, Mã thuế, MST đăng ký]
+  AMOUNT: [Số tiền, Tổng tài sản quản lý, Số tiền đăng ký mua, Số dư, Giá trị danh nghĩa, Tiền thu về, Số tiền đầu tư, Tổng tài sản, Mức tối thiểu]
+  DATE: [Ngày rà soát, Ngày hiệu lực, Ngày giao dịch, Ngày gặp, Ngày đáo hạn, Lần rà soát tới, Ngày thanh toán, Ngày mở tài khoản, Tính đến ngày]
+  REF: [Mã tham chiếu, Mã giao dịch, Số tham chiếu, Mã hồ sơ, Số phiếu, Số lệnh, Tham chiếu, Mã hợp đồng, Số xác nhận]
+  POSTCODE: [Mã bưu điện, Mã bưu chính, Mã bưu điện (nhận thư), Mã bưu chính đăng ký, Bưu chính, Mã vùng bưu điện, Mã bưu điện nhà, Mã bưu điện hiện tại, Mã postal]
+  CODE: [Mã SWIFT, Mã ngân hàng, Mã chi nhánh, SWIFT, Mã BIC, Số chi nhánh, Mã định danh ngân hàng, Mã NH, Mã ngân hàng nhận]
+  ISIN: [ISIN, Mã chứng khoán, Mã trái phiếu, Mã sản phẩm, ISIN của chứng chỉ, Mã quỹ, Số ISIN, Mã CK, Số sản phẩm]
+plural:
+  PERSON: [Các chủ tài khoản, Người được ủy quyền ký, Thành viên HĐQT, Người thụ hưởng, Đồng chủ tài khoản, Người ký, Cổ đông, Chủ tài khoản, Thành viên gia đình]
+  BUSINESS: [Các công ty, Các đối tác, Nơi làm việc cũ, Cổ phiếu nắm giữ, Công ty liên kết, Công ty được đầu tư, Công ty trong tập đoàn, Tổ chức phát hành, Tổ chức liên quan]
+  ADDRESS: [Các địa chỉ, Địa chỉ cũ, Địa chỉ đã đăng ký, Địa chỉ đã biết, Bất động sản, Nơi ở trước đây, Nơi cư trú, Địa chỉ tài sản, Địa chỉ liên lạc]
+  DOB: [Ngày sinh, Ngày sinh của các con, Ngày sinh gia đình, Ngày sinh người phụ thuộc, Ngày sinh người thụ hưởng, Ngày sinh từng người, Ngày tháng năm sinh, Ngày sinh thành viên, Các ngày sinh]
+  ACCOUNT: [Các tài khoản, Các số tài khoản, Tài khoản liên kết, Tài khoản cần đóng, Tài khoản khác, Tài khoản nắm giữ, Tài khoản liên quan, Tài khoản đã khai báo, Tài khoản đăng ký]
+  PHONE: [Các số điện thoại, Số liên hệ, Số đã đăng ký, Số di động, Số dự phòng, Kênh liên lạc, Di động, Số, Điện thoại]
+  EMAIL: [Các email, Email đăng ký, Email liên hệ, Email nhận báo cáo, Địa chỉ email, Thư điện tử, Email đang dùng, Email dự phòng, Email chính]
+  TIN: [Các mã số thuế, MST theo quốc gia, Mã số người nộp thuế, Mã thuế, TIN, Mã số doanh nghiệp, Số đăng ký, Số thuế, Các MST]
+
+patterns:
+  before:
+    - "{c} của khách hàng là {v}"
+    - "đã cập nhật {c} thành {v}"
+    - "đề nghị đổi {c} sang {v}"
+    - "sau khi xác minh, {c} là {v}"
+    - "{c} khách hàng cung cấp là {v}"
+    - "{c} mới là {v}, xin lưu ý"
+    - "vui lòng xác nhận {c} {v} với khách"
+    - "tháng trước {c} đã đổi thành {v}"
+    - "trên giấy tờ {c} ghi là {v}"
+  after:
+    - "{v} là {c} chúng tôi đang lưu"
+    - "{v} ({c})"
+    - "{v} được khách khai là {c}"
+    - "{v}, tức {c} trên hệ thống"
+    - "{v} - {c}, đã xác minh"
+    - "{v} vẫn là {c} hiện tại"
+    - "{v} được đăng ký là {c}"
+    - "{v} [{c}]"
+    - "dùng {v} làm {c}"
+  list:
+    - "{c}: {vs}"
+    - "{c} đã đăng ký gồm {vs}"
+    - "khách khai báo {c} {vs}"
+    - "{c} - {vs}"
+    - "chúng tôi lưu {c} {vs}"
+    - "{c} đã rà soát: {vs}"
+    - "{c} ({vs})"
+    - "{c} bao gồm {vs}"
+    - "{c} lần lượt là {vs}"
+  bracket:
+    - "{a} ({c}: {v})"
+    - "{a} - {c} {v}"
+    - "{a} [{c} {v}]"
+    - "{a}, {c} {v},"
+    - "{a} (có {c} {v})"
+    - "{a} / {c} {v}"
+    - "{a} ({c} {v})"
+    - "{a}; {c}: {v}"
+    - "{a} - {c}: {v}"
+  spoken:
+    - "{c} của tôi là {v}"
+    - "vâng, {v}"
+    - "{c} hả? {v}"
+    - "dùng {v} đi, đó là {c} của tôi"
+    - "chắc là {v}"
+    - "ờ, hình như là {v}"
+    - "{v}, đúng cái đó"
+    - "năm ngoái tôi đổi sang {v}"
+    - "anh ghi giúp {v} là {c} nhé"
+ask:
+  - "Anh/chị xác nhận giúp {c} ạ?"
+  - "Còn {c} thì sao ạ?"
+  - "Mình dùng {c} nào ạ?"
+  - "Cho em xin {c} được không ạ?"
+  - "{c} hiện tại là gì ạ?"
+  - "Em kiểm tra lại {c} nhé."
+  - "{c} là bao nhiêu ạ?"
+  - "{c} vẫn như cũ chứ ạ?"
+  - "Để xác minh, anh/chị cho biết {c} ạ."
+
+narrative:
+  PERSON: ["{v} gọi sáng nay về việc bán lại chứng chỉ quỹ.", "Gặp {v} tại chi nhánh để trao đổi về ủy thác.", "{v} sẽ ký hồ sơ tuần sau.", "Văn phòng gia đình do {v} điều hành.", "{v} đề nghị xem lại biểu phí.", "Được khách hàng lâu năm {v} giới thiệu."]
+  BUSINESS: ["Bà làm việc tại {v} mười hai năm rồi nghỉ hưu.", "Cổ tức đến từ {v}.", "Phần lớn tài sản nằm ở {v}.", "Khách đã bán cổ phần tại {v} năm ngoái.", "Hiện ông làm cố vấn cho {v}.", "Bảo lãnh do {v} phát hành."]
+  ADDRESS: ["Chúng tôi gặp khách tại {v}.", "Từ tháng sau sao kê gửi về {v}.", "Bất động sản tại {v} đã bán năm 2021.", "Ông sống tại {v} từ năm 2015.", "Hồ sơ đã gửi tới {v}.", "Bà sẽ chuyển đến {v} vào tháng Ba."]
+  DOB: ["Bà sinh ngày {v} tại Hà Nội.", "Ông sinh {v}, sắp sáu mươi tuổi.", "Khách sinh {v}, hiện đã nghỉ hưu.", "Hộ chiếu ghi ngày sinh {v}.", "Khách sinh ngày {v}, quốc tịch Việt Nam.", "Theo hộ chiếu, sinh nhật bà là {v}."]
+  ACCOUNT: ["Vui lòng chuyển tiền lãi vào {v}.", "Tiền bán lại đã về {v}.", "Đóng {v} sau khi chuyển xong.", "Lệnh gọi ký quỹ ghi vào {v}.", "Tiền rời {v} hôm thứ Sáu.", "Cổ tức được gom về {v} mỗi quý."]
+  PHONE: ["Gọi lại bà theo số {v} sau trưa.", "Có thể liên hệ ông qua {v}.", "Tin nhắn đến từ {v}.", "Nếu máy bàn bận thì gọi {v}.", "Khách gọi từ số {v}.", "Số di động mới của bà là {v}."]
+  EMAIL: ["Gửi đề xuất tới {v}.", "Sao kê gửi về {v}.", "Yêu cầu được gửi từ {v}.", "Đồng gửi bản điều khoản cho {v}.", "Ông viết thư từ {v}.", "Trả lời {v} trước thứ Sáu."]
+  TIN: ["Báo cáo CRS theo {v}.", "Mẫu W-8BEN ghi {v}.", "Quyết toán thuế theo {v}.", "Bản tự xác nhận ghi {v}.", "Khấu trừ thuế áp dụng cho {v}.", "Dùng {v} trên chứng từ thuế."]
+
+titles:
+  kyc: [Hồ sơ KYC, Thẩm định khách hàng, Cập nhật KYC, Xác minh khách hàng, Danh mục kiểm tra KYC, Tóm tắt CDD]
+  sow: [Nguồn gốc tài sản, Đánh giá nguồn gốc tài sản, Nguồn tiền, Ghi chú nguồn gốc tài sản, Chứng minh nguồn gốc tài sản, Tóm tắt nguồn gốc tài sản]
+  rm_note: [Biên bản gặp khách hàng, Ghi chú cuộc gọi, Báo cáo thăm khách, Biên bản họp, Ghi chú của RM, Rà soát quan hệ]
+  call: [Bản ghi cuộc gọi, Cuộc gọi ghi âm, Nhật ký điện thoại, Ghi nhận cuộc gọi, Lệnh qua điện thoại, Gỡ băng cuộc gọi]
+  email: ["Re: Cập nhật tài khoản", "Fwd: Hồ sơ KYC", "Re: Rà soát danh mục", "Re: Lệnh chuyển tiền", "Fwd: Thông tin khách hàng", "Re: Mở tài khoản"]
+  consult: [Tư vấn đầu tư, Đánh giá mức độ phù hợp, Đề xuất danh mục, Ghi chú tư vấn, Rà soát đầu tư, Đánh giá khẩu vị rủi ro]
+  background: [Kiểm tra lý lịch, Báo cáo sàng lọc, Kiểm tra tin xấu, Báo cáo thẩm định, Kiểm tra tham chiếu, Sàng lọc danh sách]
+  review: [Rà soát định kỳ, Rà soát hằng năm, Rà soát KYC định kỳ, Rà soát tài khoản, Rà soát khách hàng, Rà soát quan hệ]
+
+fillers:
+  kyc: ["Mức rủi ro: trung bình, sàng lọc gần nhất {DATE}.", "Mã sàng lọc {REF}.", "Dự kiến nộp ban đầu {AMOUNT}.", "Trên hóa đơn chỉ đọc được mã bưu điện {POSTCODE}.", "Rà soát ngày {DATE}.", "Hồ sơ {REF} đã đóng."]
+  sow: ["Tài sản thanh khoản khoảng {AMOUNT}.", "Giao dịch hoàn tất ngày {DATE}.", "Mã ký quỹ {REF}.", "Đã tái đầu tư {AMOUNT}.", "Trái phiếu {ISIN} đáo hạn ngày {DATE}.", "Nhận cổ tức {AMOUNT}."]
+  rm_note: ["Giá trị danh mục {AMOUNT} tính đến {DATE}.", "Phiếu theo dõi {REF}.", "Lần gặp tới {DATE}.", "Đã trao đổi về chứng chỉ {ISIN}.", "Thống nhất dự phòng tiền mặt {AMOUNT}.", "Mã hoàn phí {REF}."]
+  call: ["Cuộc gọi được ghi âm mã {REF}.", "Số tiền là {AMOUNT}.", "Ngày hiệu lực {DATE}.", "SWIFT là {CODE}.", "Mã {REF}, đã ghi nhận.", "Ngày giao dịch {DATE}."]
+  email: ["Đính kèm: sao kê đến {DATE}.", "Đã chuyển {AMOUNT}, mã {REF}.", "SWIFT ngân hàng thụ hưởng {CODE}.", "Vui lòng thanh toán trước {DATE}.", "Hóa đơn {REF}, số tiền {AMOUNT}.", "Chỉ có mã bưu điện {POSTCODE}."]
+  consult: ["Số tiền đề xuất {AMOUNT}.", "Chứng chỉ {ISIN}, kỳ hạn 3 năm.", "Rà soát lại ngày {DATE}.", "Lợi suất mục tiêu 4,8% trên {AMOUNT}.", "Mã đề xuất {REF}.", "Ngày trả lãi {DATE}."]
+  background: ["Tra cứu ngày {DATE}, mã {REF}.", "Không có kết quả trên {AMOUNT}.", "Lưu trữ báo cáo {REF}.", "Trích lục đăng ký ngày {DATE}.", "Phí {AMOUNT}.", "Hồ sơ {REF}."]
+  review: ["Tài sản {AMOUNT} tại ngày rà soát {DATE}.", "Lần rà soát tới {DATE}.", "Phiếu rà soát {REF}.", "Phí cả năm {AMOUNT}.", "Nắm giữ {ISIN} không đổi.", "Phê duyệt ngày {DATE}."]

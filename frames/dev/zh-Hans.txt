@@ -1,0 +1,47 @@
+#lang: zh-Hans
+# ml_struct_dev frames, Simplified Chinese. NEVER trained on; structures absent from frames/train.
+
+## register: form
+## slice: acct_cue
+账号{ACCOUNT}（活期）
+卡号/账号：{ACCOUNT}
+{ACCOUNT}是我们登记的收款账户。
+您提供的 {ACCOUNT} 已经销户，请换一个账户。
+收款账户＝{ACCOUNT}
+
+## slice: acct_list
+家族名下共有三个账户：{ACCOUNT}（联名）、{ACCOUNT}（信托）及 {ACCOUNT}（托管）。
+需要合并的账户：\n一、{ACCOUNT}\n二、{ACCOUNT}
+麻烦问一下 {ACCOUNT} 和 {ACCOUNT} 哪个是美元户？
+
+## slice: acct_bracket
+房租每月从她的活期账户（{ACCOUNT}）扣款。
+交收已由 {BANK} 确认【托管账户 {ACCOUNT}】。
+
+## slice: crosscat_number
+邮编 {POSTCODE}；账号 {ACCOUNT}；金额 {AMOUNT}。
+流水号 {REF} 对应的是从 {ACCOUNT} 转出的款项，不是账号本身。
+{POSTCODE} 是邮编还是账号的一部分？账号是 {ACCOUNT}。
+
+## register: kyc_review
+## slice: dob
+客户生于{DOB}，2004 年移居新加坡。
+{PERSON}的出生日期登记为{DOB}，持有双重国籍。
+年龄核查：出生日期 {DOB}，已满二十一岁。
+
+## slice: crosscat_date
+开户日期 {DATE}；出生日期 {DOB}；上次复核 {DATE}。
+
+## slice: business_ticker
+客户最大的持仓是 {TICKER}，其次是 {TICKER}。
+{BUSINESS} 是 {TICKER} 的供应商，由客户全资持有。
+
+## slice: address_struct
+通讯地址　{ADDRESS}
+注册地址：\n{ADDRESS_ML}
+客户去年从 {ADDRESS} 搬走了。
+档案里只有邮编 {POSTCODE}，没有街道地址。
+
+## slice: alias
+持有人：{ALIAS@zh-Hans}
+支票上的户名为 {ALIAS@zh-Hans}。

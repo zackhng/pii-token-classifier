@@ -1,0 +1,47 @@
+#lang: ja
+# v5 training frames, Japanese. Business-email keigo, form labels with full-width colons, chat.
+
+## register: chat
+{ACCOUNT}の口座、今日入金あったか確認お願いできますか
+振込済みです。{AMOUNT}を{ACCOUNT}へ、受付番号は{REF}です
+振込済みです。{AMOUNT}、受付番号は{REF}、明日着金予定
+お客様の生年月日は{DOB}です（申込書の日付ではありません）
+郵便番号は{POSTCODE}とだけ伺っています。番地は未確認です
+携帯番号が{PHONE}に変わったそうです
+{ACCOUNT}と{ACCOUNT}、どちらの口座ですか？
+{PERSON}様、{TICKER}を{ACCT}へ移管希望とのこと
+新住所：{ADDRESS}
+
+## register: email
+{PERSON}様\nいつもお世話になっております。{DATE}にご依頼いただいた解約代金{AMOUNT}を、口座番号{ACCOUNT}へお振込みいたしました。\n{PERSON2}
+{PERSON}様\nいつもお世話になっております。{DATE}にご依頼いただいた解約代金{AMOUNT}のお手続きが完了しました。受付番号：{REF}\n{PERSON2}
+{PERSON}様（生年月日：{DOB}）のご住所を{ADDRESS}に変更いたしました。
+{BUSINESS}からの配当金は、{BANK}の口座（{ACCOUNT}）にお振込みください。
+お振込先：{BANK}　口座番号：{ACCOUNT}　口座名義：{BUSINESS}　SWIFTコード：{CODE}
+お振込金額：{AMOUNT}　お振込日：{DATE}　SWIFTコード：{CODE}
+今週は{PERSON}に代わり{PERSON2}が担当いたします。お電話は{PHONE}、メールは{EMAIL}までお願いいたします。
+マイナンバー（{TIN}）のご提出ありがとうございました。
+
+## register: kyc_note
+氏名：{PERSON}　生年月日：{DOB}　住所：{ADDRESS}　マイナンバー：{TIN}
+{PERSON}氏（{DOB}生）は{BUSINESS}の代表取締役。取引銀行は{BANK}。
+資産の源泉：{BUSINESS}（{TICKER}）株式の売却代金{AMOUNT}を{ACCT}に入金。
+資産の源泉：株式売却代金{AMOUNT}を{DATE}に受領。銘柄コード{ISIN}。
+その他の保有口座：{ACCOUNTS}（いずれも{BANK}）。
+住所は郵便番号{POSTCODE}のみ申告。番地以下は未確認。
+{ALIAS@ja}　{DOB}　{ADDRESS}　{PHONE}
+
+## register: instruction
+{ACCT}から{AMOUNT}を{PERSON}様（{BANK}、口座番号{ACCOUNT}）へお振込みください。
+{DATE}に{AMOUNT}を振込、依頼人番号{REF}。
+{TICKER}を500株売却し、代金を口座番号{ACCOUNT}に入金してください。
+{TICKER}を500株売却、受渡日{DATE}、約定番号{REF}。
+振込先：{BUSINESS}\n銀行：{BANK}\n口座 - {ACCOUNT}\n金額 - {AMOUNT}
+口座{ACCOUNTS}を解約し、残高を{ACCOUNT}にまとめてください。
+
+## register: statement
+{BANK}｜口座番号 {ACCOUNT}｜前月繰越 {AMOUNT}
+{DATE}　振込 {ACCOUNT}　-{AMOUNT}
+{DATE}　振込 受付{REF}　-{AMOUNT}
+口座名義：{PERSON}　口座番号：{ACCOUNT}　作成日：{DATE}
+{PERSON}様\n{ADDRESS_ML}\n\nお客様番号 {ACCOUNT}

@@ -1,0 +1,127 @@
+# ml_wm spec, Indonesian (private-banking / securities usage). Lists split index % 3.
+lang: id
+field_seps: [": ", ": ", " : ", " - ", ": ", "\t"]
+and: " dan "
+comma: ", "
+period: "."
+sentence_join: ". "
+speakers: {rm: RM, client: Nasabah}
+table_headers: [[Keterangan, Isi], [Kolom, Informasi], [Butir, Rincian], [Kolom, Rincian], [Butir, Catatan], [Kolom, Nilai]]
+table_note: [Catatan, Keterangan, Rincian, Catatan, Status, Tambahan]
+
+cues:
+  PERSON: [Nama nasabah, Nama lengkap, Pemilik rekening, Pemilik manfaat, Pemegang rekening bersama, Pemohon, Atas nama, Nasabah, Pemegang utama]
+  BUSINESS: [Tempat bekerja, Nama perusahaan, Pihak lawan, Penerbit, Pemberi kerja, Nama badan usaha, Perusahaan induk, Perusahaan investasi, Usaha]
+  ADDRESS: [Alamat, Alamat korespondensi, Alamat tinggal, Alamat yang dapat dihubungi, Alamat terdaftar, Alamat sesuai KTP, Alamat rumah, Alamat kantor, Alamat surat]
+  DOB: [Tanggal lahir, Tgl lahir, Tanggal lahir (paspor), Tanggal lahir (KTP), Tempat/tanggal lahir, Lahir tanggal, Tanggal lahir terdaftar, Tanggal lahir di catatan, Hari lahir]
+  ACCOUNT: [Nomor rekening, No. rek., Rekening kustodian, Rekening penyelesaian, Rekening efek, No. portofolio, Rekening bank, Rekening investasi, Rekening tujuan]
+  PHONE: [HP, Telepon, Nomor yang dapat dihubungi, No. HP, Telepon kantor, Kontak, Telepon rumah, No. telepon, Nomor darurat]
+  EMAIL: [Email, Alamat email, Email kontak, Surel, Surat elektronik, Email pribadi, Email kantor, Email terdaftar, Email laporan]
+  TIN: [NPWP, Nomor NPWP, Nomor pokok wajib pajak, TIN (CRS), NIB, Nomor identitas pajak, No. pajak, Nomor wajib pajak, NPWP terdaftar]
+  AMOUNT: [Jumlah, Dana kelolaan, Nilai pembelian, Saldo, Nilai nominal, Hasil penjualan, Nilai investasi, Total aset, Minimum pembelian]
+  DATE: [Tanggal review, Tanggal valuta, Tanggal transaksi, Tanggal pertemuan, Tanggal jatuh tempo, Review berikutnya, Tanggal penyelesaian, Tanggal pembukaan rekening, Per tanggal]
+  REF: [Nomor referensi, ID transaksi, Referensi, No. kasus, No. tiket, No. order, No. ref., ID transaksi efek, No. konfirmasi]
+  POSTCODE: [Kode pos, Kode pos (korespondensi), Kode pos terdaftar, Kodepos, Kode pos rumah, Kode pos saja, Kode pos saat ini, Kode wilayah pos, Kode pos kantor]
+  CODE: [Kode SWIFT, Kode bank, Kode cabang, SWIFT, Kode BIC, No. cabang, Kode identifikasi bank, Kode bank tujuan, Kode routing]
+  ISIN: [ISIN, Kode efek, Kode obligasi, Kode produk, ISIN surat utang, Kode reksa dana, Nomor ISIN, Kode saham, No. produk]
+plural:
+  PERSON: [Pemegang rekening, Penandatangan berwenang, Direktur, Penerima manfaat, Pemegang bersama, Penandatangan, Pemegang saham, Pemilik rekening, Anggota keluarga]
+  BUSINESS: [Perusahaan, Pihak lawan, Pemberi kerja sebelumnya, Kepemilikan, Perusahaan afiliasi, Perusahaan investasi, Perusahaan grup, Penerbit, Badan usaha terkait]
+  ADDRESS: [Alamat, Alamat sebelumnya, Alamat terdaftar, Alamat yang diketahui, Properti, Alamat lama, Tempat tinggal, Lokasi properti, Alamat kontak]
+  DOB: [Tanggal lahir, Tanggal lahir anak-anak, Tanggal lahir keluarga, Tanggal lahir tanggungan, Tanggal lahir penerima manfaat, Tanggal lahir masing-masing, Tgl lahir, Hari lahir anggota keluarga, Hari lahir]
+  ACCOUNT: [Rekening, Nomor rekening, Rekening terkait, Rekening yang akan ditutup, Rekening lain, Rekening yang dimiliki, Rekening terhubung, Rekening yang dilaporkan, Rekening terdaftar]
+  PHONE: [Nomor telepon, Nomor kontak, Nomor terdaftar, Nomor HP, Nomor alternatif, Saluran kontak, HP, Nomor, Telepon]
+  EMAIL: [Email, Email terdaftar, Email kontak, Email laporan, Alamat email, Surel, Email yang dipakai, Email alternatif, Email utama]
+  TIN: [NPWP, Nomor pajak per negara, Nomor identitas pajak, Nomor wajib pajak, TIN, NIB, Nomor terdaftar, No. pajak, Semua NPWP]
+
+patterns:
+  before:
+    - "{c} nasabah adalah {v}"
+    - "{c} sudah diperbarui menjadi {v}"
+    - "mohon ubah {c} menjadi {v}"
+    - "setelah diverifikasi, {c} adalah {v}"
+    - "{c} yang diberikan nasabah adalah {v}"
+    - "{c} baru adalah {v}, mohon dicatat"
+    - "mohon konfirmasi {c} {v} ke nasabah"
+    - "bulan lalu {c} berubah menjadi {v}"
+    - "di dokumen, {c} tertulis {v}"
+  after:
+    - "{v} adalah {c} di catatan kami"
+    - "{v} ({c})"
+    - "{v} diberikan sebagai {c}"
+    - "{v}, yaitu {c} di sistem"
+    - "{v} - {c}, terverifikasi"
+    - "{v} tetap menjadi {c} untuk saat ini"
+    - "{v} terdaftar sebagai {c}"
+    - "{v} [{c}]"
+    - "gunakan {v} sebagai {c}"
+  list:
+    - "{c}: {vs}"
+    - "{c} yang tercatat adalah {vs}"
+    - "nasabah melaporkan {c} {vs}"
+    - "{c} - {vs}"
+    - "kami memegang {c} {vs}"
+    - "{c} yang direview: {vs}"
+    - "{c} ({vs})"
+    - "{c} meliputi {vs}"
+    - "{c} masing-masing {vs}"
+  bracket:
+    - "{a} ({c}: {v})"
+    - "{a} - {c} {v}"
+    - "{a} [{c} {v}]"
+    - "{a}, {c} {v},"
+    - "{a} (dengan {c} {v})"
+    - "{a} / {c} {v}"
+    - "{a} ({c} {v})"
+    - "{a}; {c}: {v}"
+    - "{a} - {c}: {v}"
+  spoken:
+    - "{c} saya {v}"
+    - "iya, {v}"
+    - "{c}? {v}"
+    - "pakai {v} saja, itu {c} saya"
+    - "harusnya {v}"
+    - "eh, kayaknya {v}"
+    - "{v}, yang itu"
+    - "tahun lalu saya ganti ke {v}"
+    - "tolong catat {v} sebagai {c} saya"
+ask:
+  - "Boleh dikonfirmasi {c} Bapak/Ibu?"
+  - "Lalu {c}-nya?"
+  - "{c} yang mana yang dipakai?"
+  - "Boleh saya minta {c}?"
+  - "{c} saat ini apa ya?"
+  - "Saya cek dulu {c}-nya."
+  - "Berapa {c}-nya?"
+  - "Apakah {c} masih sama?"
+  - "Untuk verifikasi, {c} Bapak/Ibu?"
+
+narrative:
+  PERSON: ["{v} menelepon pagi ini soal pencairan.", "Kami bertemu {v} di cabang untuk membahas mandat.", "{v} akan menandatangani dokumen minggu depan.", "Kantor keluarga dikelola oleh {v}.", "{v} meminta kami meninjau ulang biaya.", "Direferensikan oleh nasabah lama, {v}."]
+  BUSINESS: ["Beliau bekerja di {v} selama dua belas tahun sebelum pensiun.", "Dividen berasal dari {v}.", "Sebagian besar kekayaan ada di {v}.", "Nasabah menjual sahamnya di {v} tahun lalu.", "Kini beliau menjadi konsultan untuk {v}.", "Garansi diterbitkan oleh {v}."]
+  ADDRESS: ["Kami mengunjungi nasabah di {v}.", "Laporan akan dikirim ke {v} mulai bulan depan.", "Properti di {v} dijual pada 2021.", "Beliau tinggal di {v} sejak 2015.", "Dokumen dikirim ke {v}.", "Beliau akan pindah ke {v} bulan Maret."]
+  DOB: ["Beliau lahir pada {v} di Surabaya.", "Lahir {v}, beliau hampir enam puluh tahun.", "Nasabah lahir {v} dan sudah pensiun.", "Paspor mencantumkan tanggal lahir {v}.", "Nasabah yang lahir {v} adalah WNI.", "Menurut paspor, ulang tahunnya {v}."]
+  ACCOUNT: ["Mohon kupon dikreditkan ke {v}.", "Hasil pencairan dibayarkan ke {v}.", "Tutup {v} setelah transfer selesai.", "Margin call dicatat pada {v}.", "Dana keluar dari {v} hari Jumat.", "Dividen dipindahkan ke {v} setiap kuartal."]
+  PHONE: ["Telepon balik beliau di {v} setelah makan siang.", "Beliau bisa dihubungi di {v}.", "SMS datang dari {v}.", "Kalau telepon kantor sibuk, hubungi {v}.", "Nasabah menelepon dari {v}.", "HP barunya {v}."]
+  EMAIL: ["Kirim proposal ke {v}.", "Laporan dikirim ke {v}.", "Permintaan datang dari {v}.", "Tembuskan term sheet ke {v}.", "Beliau menulis dari {v}.", "Balas ke {v} sebelum Jumat."]
+  TIN: ["Pelaporan CRS memakai {v}.", "Formulir W-8BEN mencantumkan {v}.", "SPT dilaporkan dengan {v}.", "Pernyataan diri mencantumkan {v}.", "Pemotongan pajak berlaku untuk {v}.", "Gunakan {v} di bukti potong."]
+
+titles:
+  kyc: [Catatan KYC, Uji tuntas nasabah, Pembaruan KYC, Verifikasi nasabah, Daftar periksa KYC, Ringkasan CDD]
+  sow: [Sumber kekayaan, Penilaian sumber kekayaan, Sumber dana, Catatan asal kekayaan, Pembuktian sumber kekayaan, Ringkasan sumber kekayaan]
+  rm_note: [Catatan pertemuan RM, Catatan telepon, Laporan kunjungan, Notulen rapat, Catatan RM, Tinjauan hubungan]
+  call: [Transkrip telepon, Panggilan terekam, Log telepon, Catatan panggilan, Instruksi via telepon, Catatan percakapan]
+  email: ["Re: Pembaruan rekening", "Fwd: Dokumen KYC", "Re: Review portofolio", "Re: Instruksi transfer", "Fwd: Data nasabah", "Re: Pembukaan rekening"]
+  consult: [Konsultasi investasi, Penilaian kesesuaian, Usulan portofolio, Catatan saran, Review investasi, Profil risiko]
+  background: [Pemeriksaan latar belakang, Laporan penyaringan, Pemeriksaan berita negatif, Laporan uji tuntas, Pemeriksaan referensi, Penyaringan nama]
+  review: [Review berkala, Review tahunan, Review KYC berkala, Review rekening, Review nasabah, Review hubungan]
+
+fillers:
+  kyc: ["Tingkat risiko: sedang, penyaringan terakhir {DATE}.", "Referensi penyaringan {REF}.", "Setoran awal diperkirakan {AMOUNT}.", "Di tagihan hanya terbaca kode pos {POSTCODE}.", "Direview pada {DATE}.", "Kasus {REF} ditutup."]
+  sow: ["Total kekayaan likuid sekitar {AMOUNT}.", "Penyelesaian terjadi pada {DATE}.", "Referensi escrow {REF}.", "Hasil {AMOUNT} diinvestasikan kembali.", "Obligasi {ISIN} jatuh tempo {DATE}.", "Dividen {AMOUNT} diterima."]
+  rm_note: ["Nilai portofolio {AMOUNT} per {DATE}.", "Tiket tindak lanjut {REF}.", "Pertemuan berikutnya {DATE}.", "Membahas surat utang {ISIN}.", "Disepakati cadangan kas {AMOUNT}.", "Referensi rabat biaya {REF}."]
+  call: ["Panggilan direkam dengan nomor {REF}.", "Jumlahnya {AMOUNT}.", "Tanggal valuta {DATE}.", "SWIFT-nya {CODE}.", "Referensi {REF}, dicatat.", "Tanggal transaksi {DATE}."]
+  email: ["Terlampir: laporan per {DATE}.", "{AMOUNT} sudah dikirim, referensi {REF}.", "SWIFT bank penerima {CODE}.", "Mohon diselesaikan sebelum {DATE}.", "Faktur {REF} sebesar {AMOUNT}.", "Hanya kode pos {POSTCODE}."]
+  consult: ["Nilai yang diusulkan {AMOUNT}.", "Surat utang {ISIN}, tenor 3 tahun.", "Review ulang pada {DATE}.", "Target imbal hasil 4,8% atas {AMOUNT}.", "Referensi usulan {REF}.", "Tanggal kupon {DATE}."]
+  background: ["Pencarian pada {DATE}, referensi {REF}.", "Tidak ada temuan di atas {AMOUNT}.", "Laporan {REF} diarsipkan.", "Petikan daftar tertanggal {DATE}.", "Biaya {AMOUNT}.", "Kasus {REF}."]
+  review: ["Aset {AMOUNT} pada tanggal review {DATE}.", "Review berikutnya {DATE}.", "Tiket review {REF}.", "Biaya setahun {AMOUNT}.", "Kepemilikan {ISIN} tidak berubah.", "Disetujui pada {DATE}."]
