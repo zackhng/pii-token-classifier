@@ -38,6 +38,20 @@ def build_compute_metrics(id2label, window_langs=None):
     return compute
 
 
+def apply_freeze(model, fcfg: dict):
+    """v5 grid cells H (mode head_only: only the classifier trains) and P (mode top_k: the classifier
+    and the top k encoder layers train). Embeddings and lower layers stay frozen."""
+    mode, k = fcfg["mode"], fcfg.get("k", 0)
+    n_layers = model.config.num_hidden_layers
+    top = {f"encoder.layer.{i}." for i in range(n_layers - k, n_layers)} if mode == "top_k" else set()
+    assert mode in ("head_only", "top_k"), mode
+    for name, p in model.named_parameters():
+        p.requires_grad = name.startswith("classifier.") or any(t in name for t in top)
+    n_train = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"freeze: {mode}{f' k={k}' if k else ''}  trainable={n_train / 1e6:.3f}M "
+          f"of {sum(p.numel() for p in model.parameters()) / 1e6:.1f}M")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--max_train", type=int, help="limit train docs (smoke test)")
@@ -51,6 +65,9 @@ def main():
     ap.add_argument("--cpu", action="store_true", help="run on CPU without bf16 (smoke tests while the GPU is busy)")
     ap.add_argument("--config", default="train.yaml", help="configs/<name>: train.yaml (English DeBERTa) "
                     "or train_ml.yaml (multilingual)")
+    ap.add_argument("--train_split", help="override data.train_split, e.g. ml_train_v5 (v5 runs, frame pilots)")
+    ap.add_argument("--val_split", help="override data.val_split, e.g. ml_val_v5")
+    ap.add_argument("--learning_rate", type=float, help="override train.learning_rate (v5 per-method LR sweep)")
     args = ap.parse_args()
 
     cfg = load_yaml(args.config)
@@ -66,6 +83,10 @@ def main():
     tok = AutoTokenizer.from_pretrained(cfg["model_name"])
     tcfg = cfg["tokenize"]
     dcfg = cfg["data"]
+    if args.train_split:
+        dcfg["train_split"] = args.train_split
+    if args.val_split:
+        dcfg["val_split"] = args.val_split
     ml = dcfg.get("multilingual", False)
     load = (lambda n, lim: load_ml_split(n, lim, dcfg["processed_dir"])) if ml else load_split
     train_ds = tokenize(load(dcfg.get("train_split", "train"), args.max_train), tok, label2id,
@@ -101,13 +122,22 @@ def main():
     model.config.script_boundaries = tcfg.get("script_boundaries", False)
     if acfg:
         from adapters import AdapterTokenClassifier
-        model = AdapterTokenClassifier(model, acfg["bottleneck"], freeze_base=acfg.get("freeze_base", True))
+        model = AdapterTokenClassifier(model, acfg["bottleneck"], freeze_base=acfg.get("freeze_base", True),
+                                       shared=acfg.get("shared", False))
+        if acfg.get("reset_head"):       # B' with a fresh head: only the encoder is inherited
+            model.base.classifier.reset_parameters()
+            print("classifier head re-initialised (reset_head)")
         n_train = sum(p.numel() for p in model.parameters() if p.requires_grad)
         per = model.adapter_params()
-        print(f"adapters: bottleneck={acfg['bottleneck']}  trainable={n_train / 1e6:.2f}M  "
-              f"per language={next(iter(per.values())) / 1e6:.3f}M x {len(per)}")
+        print(f"adapters: bottleneck={acfg['bottleneck']}  shared={acfg.get('shared', False)}  trainable={n_train / 1e6:.2f}M  "
+              f"per adapter set={next(iter(per.values())) / 1e6:.3f}M x {len(per)}")
+    elif cfg["train"].get("freeze"):
+        apply_freeze(model, cfg["train"]["freeze"])
 
     t = cfg["train"]
+    if args.learning_rate:
+        t["learning_rate"] = args.learning_rate
+        print(f"learning rate override: {args.learning_rate}")
     targs = TrainingArguments(
         output_dir=out_dir,
         learning_rate=t["learning_rate"],

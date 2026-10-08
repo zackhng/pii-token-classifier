@@ -115,3 +115,58 @@ def test_encoder_is_swappable_bert():
             vocab_size=100, hidden_size=32, num_hidden_layers=2, num_attention_heads=2, intermediate_size=64,
             max_position_embeddings=64, num_labels=5))
     _identity_and_routing(make)
+
+
+# ---------------------------------------------------------------- v5 grid: shared adapter (S1), freeze modes (H, P)
+def test_shared_adapter_ignores_language_and_has_one_set():
+    model = AdapterTokenClassifier(tiny_base(), bottleneck=8, shared=True).eval()
+    with torch.no_grad():
+        for p in model.parameters():
+            p.add_(torch.randn_like(p) * 0.05)
+    ids, mask = batch()
+    with torch.no_grad():
+        a = model(input_ids=ids, attention_mask=mask, lang_ids=torch.tensor([0, 1, 2, 3])).logits
+        b = model(input_ids=ids, attention_mask=mask, lang_ids=torch.tensor([5, 5, 5, 5])).logits
+        c = model(input_ids=ids, attention_mask=mask).logits          # no routing needed at all
+    assert torch.allclose(a, b) and torch.allclose(a, c)
+    per = model.adapter_params()
+    assert set(per) == {"shared"} and per["shared"] == 2 * (64 + 264 + 288)   # one set per layer
+
+
+def test_shared_adapter_save_load_roundtrip(tmp_path):
+    model = AdapterTokenClassifier(tiny_base(), bottleneck=8, shared=True).eval()
+    with torch.no_grad():
+        for n, p in model.named_parameters():
+            if ".adapters." in n:
+                p.add_(torch.randn_like(p) * 0.05)
+    model.base.save_pretrained(tmp_path / "basecopy")
+    model.save_pretrained(tmp_path / "m", base_dir=str(tmp_path / "basecopy"))
+    loaded = AdapterTokenClassifier.from_pretrained(tmp_path / "m").eval()
+    assert loaded.shared
+    ids, mask = batch()
+    with torch.no_grad():
+        assert torch.allclose(model(input_ids=ids, attention_mask=mask).logits,
+                              loaded(input_ids=ids, attention_mask=mask).logits, atol=1e-6)
+
+
+def test_default_adapter_model_unchanged():
+    """B1 / B' (queued) use the default: per-language adapters, routing required."""
+    model = AdapterTokenClassifier(tiny_base(), bottleneck=8)
+    assert not model.shared and set(model.adapter_params()) == set(ADAPTERS)
+    import pytest
+    ids, mask = batch()
+    with pytest.raises(RuntimeError):
+        model(input_ids=ids, attention_mask=mask)
+
+
+def test_freeze_modes():
+    from train import apply_freeze
+    m = tiny_base()
+    apply_freeze(m, {"mode": "head_only"})
+    assert {n for n, p in m.named_parameters() if p.requires_grad} == {"classifier.weight", "classifier.bias"}
+    m = tiny_base()
+    apply_freeze(m, {"mode": "top_k", "k": 1})
+    train = {n for n, p in m.named_parameters() if p.requires_grad}
+    assert {"classifier.weight", "classifier.bias"} <= train
+    assert any(".encoder.layer.1." in n for n in train) and not any(".encoder.layer.0." in n for n in train)
+    assert not any("embeddings" in n for n in train)

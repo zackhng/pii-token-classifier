@@ -1,0 +1,41 @@
+# v5 grid cell S: frozen XLM-R base + ONE shared bottleneck adapter per layer (all languages) + head.
+# Everything else = train_ml_B.yaml (v4.2 recipe) - only "shared" differs from B1.
+# LR from the per-method sweep (run_v5_stage2.sh).
+seed: 42
+model_name: xlm-roberta-base
+output_dir: outputs/xlmr-base-pii-ml-S64-v5data
+
+data:
+  multilingual: true
+  processed_dir: data/processed
+  train_split: ml_train
+  val_split: ml_val
+
+tokenize:
+  max_length: 384
+  stride: 96
+  label_all_tokens: false
+  visible_breaks: true
+  script_boundaries: true
+
+adapters:
+  bottleneck: 64
+  freeze_base: true
+  shared: true               # S1: one adapter for every language, no routing
+  init_from: null            # B' -> outputs/xlmr-base-pii-ml-A
+  router: outputs/router     # trained by router.py; copied into the model dir
+
+train:
+  learning_rate: 1.0e-4      # adapter default (encoder frozen)
+  num_train_epochs: 3
+  per_device_train_batch_size: 32
+  per_device_eval_batch_size: 64
+  gradient_accumulation_steps: 1
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  bf16: true
+  eval_steps: 4000
+  save_steps: 4000
+  logging_steps: 200
+  save_total_limit: 2
+  metric_for_best_model: macro_f1

@@ -12,6 +12,10 @@ feed-forward output projection and before the residual LayerNorm:
 model exactly before training. Every example in a mixed-language batch goes through its own
 language's adapter (rows grouped per language). zh-Hans and zh-Hant share the "zh" adapter.
 
+shared=True (v5 grid cell S1): ONE adapter per layer for every language, lang_ids ignored - same
+parameter budget per layer as one language adapter, so S1 vs B1 isolates "per-language" from
+"adapters"; it also avoids routing errors in code-switched windows.
+
 Written here rather than with AdapterHub's `adapters` package, which pins older transformers.
 """
 import json
@@ -53,15 +57,17 @@ class AdapterOutput(nn.Module):
     """Drop-in replacement for XLMRobertaOutput (same dense / LayerNorm / dropout parameters, so
     state-dict keys of the base model are unchanged) with a bank of language adapters."""
 
-    def __init__(self, orig, bottleneck: int, route: _Route):
+    def __init__(self, orig, bottleneck: int, route: _Route, n_adapters: int = len(ADAPTERS)):
         super().__init__()
         self.dense, self.LayerNorm, self.dropout = orig.dense, orig.LayerNorm, orig.dropout
         hidden = orig.dense.out_features
-        self.adapters = nn.ModuleList([BottleneckAdapter(hidden, bottleneck) for _ in ADAPTERS])
+        self.adapters = nn.ModuleList([BottleneckAdapter(hidden, bottleneck) for _ in range(n_adapters)])
         self.route = route
 
     def forward(self, hidden_states, input_tensor):
         h = self.dropout(self.dense(hidden_states))
+        if len(self.adapters) == 1:              # shared adapter: no routing
+            return self.LayerNorm(self.adapters[0](h) + input_tensor)
         ids = self.route.lang_ids
         if ids is None:
             raise RuntimeError("adapter model called without lang_ids")
@@ -76,15 +82,16 @@ class AdapterTokenClassifier(nn.Module):
     """Token classifier with per-language adapters. forward(..., lang_ids) - lang_ids is a
     LongTensor [batch] of adapter indices (LANG_IDS)."""
 
-    def __init__(self, base: nn.Module, bottleneck: int = 64, freeze_base: bool = True):
+    def __init__(self, base: nn.Module, bottleneck: int = 64, freeze_base: bool = True, shared: bool = False):
         super().__init__()
         self.base = base
         self.config = base.config
         self.bottleneck = bottleneck
+        self.shared = shared
         self.route = _Route()
         encoder = getattr(base, base.base_model_prefix).encoder
         for layer in encoder.layer:
-            layer.output = AdapterOutput(layer.output, bottleneck, self.route)
+            layer.output = AdapterOutput(layer.output, bottleneck, self.route, 1 if shared else len(ADAPTERS))
         if freeze_base:
             for name, p in self.named_parameters():
                 p.requires_grad = ".adapters." in name or name.startswith("base.classifier.")
@@ -98,6 +105,8 @@ class AdapterTokenClassifier(nn.Module):
 
     # -------------------------------------------------------------- parameter accounting
     def adapter_params(self) -> dict:
+        if self.shared:
+            return {"shared": sum(p.numel() for n, p in self.named_parameters() if ".adapters." in n)}
         per = {a: 0 for a in ADAPTERS}
         for name, p in self.named_parameters():
             if ".adapters." in name:
@@ -118,7 +127,7 @@ class AdapterTokenClassifier(nn.Module):
         self.config.save_pretrained(out)
         with open(out / CONFIG_NAME, "w", encoding="utf-8") as f:
             json.dump({"bottleneck": self.bottleneck, "adapters": ADAPTERS, "lang2adapter": LANG2ADAPTER,
-                       "base": base_dir or "base"}, f, indent=1)
+                       "base": base_dir or "base", "shared": self.shared}, f, indent=1)
 
     @classmethod
     def from_pretrained(cls, model_dir, dtype=torch.float32):
@@ -128,7 +137,7 @@ class AdapterTokenClassifier(nn.Module):
         from transformers import AutoConfig
         config = AutoConfig.from_pretrained(d)
         base = AutoModelForTokenClassification.from_pretrained(str(base_path), config=config, dtype=dtype)
-        model = cls(base, acfg["bottleneck"], freeze_base=True)
+        model = cls(base, acfg["bottleneck"], freeze_base=True, shared=acfg.get("shared", False))
         missing, unexpected = model.load_state_dict(torch.load(d / WEIGHTS_NAME, map_location="cpu"), strict=False)
         assert not unexpected, unexpected
         assert not [k for k in missing if ".adapters." in k or "classifier" in k], missing

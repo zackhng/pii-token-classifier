@@ -1,0 +1,40 @@
+# v5 B' (run_v5_queue.sh): frozen A-v5data encoder (v4.1 recipe on ml_train_v5) + per-language bottleneck adapters + shared PII head,
+# trained jointly on mixed-language batches, each window routed to its gold language's adapter.
+# python train.py --config train_ml_B.yaml          (B' : adapters.init_from = Model A's dir)
+seed: 42
+model_name: xlm-roberta-base
+output_dir: outputs/xlmr-base-pii-ml-Bprime-v5data
+
+data:
+  multilingual: true
+  processed_dir: data/processed
+  train_split: ml_train
+  val_split: ml_val
+
+tokenize:
+  max_length: 384
+  stride: 96
+  label_all_tokens: false
+  visible_breaks: true
+  script_boundaries: true
+
+adapters:
+  bottleneck: 64
+  freeze_base: true
+  init_from: outputs/xlmr-base-pii-ml-A-v5data   # B': adapters on A-v5data's fine-tuned encoder
+  router: outputs/router     # trained by router.py; copied into the model dir
+
+train:
+  learning_rate: 1.0e-4      # adapter default (encoder frozen)
+  num_train_epochs: 3
+  per_device_train_batch_size: 32
+  per_device_eval_batch_size: 64
+  gradient_accumulation_steps: 1
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  bf16: true
+  eval_steps: 4000
+  save_steps: 4000
+  logging_steps: 200
+  save_total_limit: 2
+  metric_for_best_model: macro_f1
