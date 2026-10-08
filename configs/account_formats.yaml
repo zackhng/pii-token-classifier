@@ -1,0 +1,276 @@
+# Account number formats per jurisdiction and institution, for generated training / test data
+# (v5, src/ml_values.py). Every format here comes from a cited public source - no invented shapes.
+#
+# pattern   one printed layout: '#' digit, 'A' capital letter, 'X' capital letter or digit, anything
+#           else literal (separators, fixed prefixes such as "IN" or "1681"); [XYZ] = one of
+#           those characters, so a literal A or X is written [A] / [X] (e.g. "[A][E]" for a UAE IBAN);
+#           separators appear only where a source prints them. Several patterns =
+#           layouts the sources give (lengths that vary by product / vintage).
+# plain     true: also rendered with the separators removed (transfer forms and payment
+#           instructions ask for the digits only, per the bank-code / IBG guides cited below)
+# status    verified  two sources agree, or one official/primary source
+#           partial   one secondary source, a single sample, or sources disagree (lower weight)
+#           unverified  recorded for the research trail only - NEVER sampled
+# kind      bank | private_bank | custodian | broker | depository | iban
+# names     how the institution is written in documents (first = default); BUSINESS spans
+#
+# Checked 2026-10-08. Formats sources disagree on are ranges (several patterns) with every source.
+
+checked: 2026-10-08
+
+sources:
+  ocbc_fast: https://www.ocbc.com/iwov-resources/sg/ocbc/personal/pdf/help-and-support/payments-and-transactions/fast-fact-sheet.pdf
+  peatix_sg: https://help-organizer.peatix.com/en/support/solutions/articles/44001821808
+  uob_ach: https://www.uob.com.sg/assets/pdfs/global/achcode.pdf
+  moomoo_cdp: https://www.moomoo.com/sg/support/topic5_1427
+  poems_funding: https://smart.poems.com.sg/funding/
+  webull_hk: https://www.webull.hk/en/help/faq/2124-Bank-Codes-and-Account-Number-Explanation
+  photonpay_hk: https://www.photonpay.com/hk/blog/article/bank-codes?lang=en
+  bankislam_ibg: https://www.bankislam.com/wp-content/uploads/List-of-IBG-Participating-Financial-Institutions-and-Product-Offering-Ac....pdf
+  cimb_ibg: https://www.cimb.com.my/content/dam/cimb/personal/gws-eform/pll-cashlite/ibg-listing.pdf
+  maybank_ibg: https://maybank2u.com.my/iwov-resources/pdf/personal/services/funds_transfer/ibft_bankList.pdf
+  xendit_id: https://docs.xendit.co/docs/payout-coverage-indonesia
+  kontan_id: https://momsmoney.kontan.co.id/news/cara-mengetahui-bank-dari-nomor-rekening-yang-aman-untuk-cegah-salah-transfer
+  cdq_th: https://meta.cdq.com/DataModel:CDQ/Business_Partner/Bank_Account_Model/TH
+  ppro_th: https://developerhub.ppro.com/simple-api/docs/thailand-banks
+  netsuite_jp: https://oracle.hydrogen.sagittarius.connect.product.adaptavist.com/en/cloud/saas/netsuite/ns-online-help/section_N1628890.html
+  purview_jp: https://learn.microsoft.com/sv-SE/purview/sit-defn-japan-bank-account-number
+  rakuten_yucho: https://www.rakuten-sec.co.jp/web/info/info20130314-02.html
+  paisabazaar_in: https://www.paisabazaar.com/banking/bank-account-number/
+  upstox_demat: https://upstox.com/learning-center/demat-account/what-is-the-demat-account-number-format/article-483/
+  ddable_kr: https://ddable.com/bank-account-number/
+  nanumtip_kr: https://www.nanumtip.com/qa/224402/
+  smartmlab_nh: https://smartmlab.com/2025/06/nonghyup-account-number-format/
+  samsungpop_kr: https://samsungpop.com/v2/today-invest/series/firststep-1979
+  sohu_cn: https://www.sohu.com/a/336132226_488672
+  uobmy_duitnow: https://uob.com.my/assets/web-resources/business/pdf/ibg-duitnow-participating-bank.pdf
+  money101_tw: https://www.money101.com.tw/blog/各家銀行代碼-代號查詢一覽表
+  uptogo_esun: https://uptogo.com.tw/%e8%b2%a1%e7%b6%93/%e7%8e%89%e5%b1%b1%e5%8c%af%e6%ac%be%e5%b8%b3%e8%99%9f%e5%b9%be%e7%a2%bc%ef%bc%9f/
+  vietanlaw_vn: https://vietanlaw.com/account-number-selection-service
+  worldremit_ph: https://www.worldremit.com/en/philippines/bank-transfer
+  cbuae_iban: https://centralbank.ae/en/our-operations/payments-and-settlements/regulations-and-standards/iban/
+  wise_ae_iban: https://wise.com/gb/iban/united-arab-emirates
+  wise_sortcode: https://wise.com/gb/sort-code
+  ibkr_acats: https://ibkb.interactivebrokers.com/de/node/3145
+  marotta_schwab: https://marottaonmoney.com/three-ways-to-find-full-account-numbers-on-schwab-com/
+  fidelity_form: https://www.fidelity.com/bin-public/060_www_fidelity_com/documents/written-stmt-under-penalty-perjury.pdf
+  ibkr_campus: https://www.interactivebrokers.com/campus/trading-lessons/hedge-fund-account-overview/
+  icicidirect_ibkr: https://www.icicidirect.com/faqs/global-investment/i-have-transferred-money-to-interactive-brokers-today_-when-will-it-get-reflected-in-that-account-how-much-time-will-it-take-to-deposit-the-transferred-amount-in-icicidirect-global-investment
+  pershing_wire: https://willowcreekwealth.com/uploads/files/Pershing-Incoming-Wire-Instructions.pdf
+  pershing_layout: https://www.tecdud.com/pershing-account-number-format/
+  pershing_stmt: http://www.glebaandassociates.com/wp-content/uploads/2018/03/How-to-read-Pershing-Brokerage-Statements.pdf
+  morningstar_bny: https://developers.byallaccounts.morningstar.com/docs/bny-mellon-wealth-management-financial-professionals-sftp
+  morningstar_nexen: https://developers.byallaccounts.morningstar.com/docs/bny-mellon-nexen-gsp-custody-financial-professional-sftp-access
+  addepar_bny: https://integrations.addepar.com/product/bny-mellon-global-securities-processing
+  pp_forum_ubs: https://forum.portfolio-performance.info/t/pdf-import-von-ubs-ag/20627
+  ohmyfin_ch: https://ohmyfin.ai/swift-codes/CRESCHZHXXX
+  tiger_au_hin: https://www.itiger.com/au/help/detail/28136227
+
+institutions:
+  # ================================================================ Singapore
+  - {id: sg_dbs, jurisdiction: SG, kind: bank, names: [DBS Bank, DBS, 星展银行], patterns: ["##########"], plain: false,
+     status: verified, sources: [ocbc_fast, peatix_sg], note: "10 digits, first 3 = branch"}
+  - {id: sg_posb, jurisdiction: SG, kind: bank, names: [POSB, POSB Bank], patterns: ["#########"], plain: false,
+     status: verified, sources: [ocbc_fast, peatix_sg], note: "9 digits, branch code 081 (not part of the number)"}
+  - {id: sg_ocbc, jurisdiction: SG, kind: bank, names: [OCBC Bank, OCBC, 华侨银行], patterns: ["##########", "############"], plain: false,
+     status: verified, sources: [ocbc_fast], note: "10 or 12 digits, first 3 = branch"}
+  - {id: sg_uob, jurisdiction: SG, kind: bank, names: [UOB, United Overseas Bank, 大华银行], patterns: ["##########"], plain: false,
+     status: verified, sources: [uob_ach, peatix_sg], note: "10 digits"}
+  - {id: sg_scb, jurisdiction: SG, kind: bank, names: [Standard Chartered Bank, Standard Chartered, 渣打银行], patterns: ["##########"], plain: false,
+     status: partial, sources: [peatix_sg], note: "10 digits (sample 1803645852)"}
+  - {id: sg_hsbc, jurisdiction: SG, kind: bank, names: [HSBC Singapore, HSBC], patterns: ["############"], plain: false,
+     status: verified, sources: [ocbc_fast, peatix_sg], note: "12 digits, first 3 = branch"}
+  - {id: sg_cdp, jurisdiction: SG, kind: depository, names: [CDP, The Central Depository, SGX CDP], patterns: ["1681########"], plain: false,
+     status: partial, sources: [moomoo_cdp], note: "12 digits starting 1681 (one secondary source)"}
+  - {id: sg_phillip, jurisdiction: SG, kind: broker, names: [Phillip Securities, POEMS, PhillipCapital], patterns: ["#######", "#######CFD"], plain: false,
+     status: verified, sources: [poems_funding], note: "7-digit trading account; CFD accounts add the suffix CFD"}
+
+  # ================================================================ Hong Kong (bank code 3 digits, then account)
+  - {id: hk_hsbc, jurisdiction: HK, kind: bank, names: [HSBC, 滙豐銀行, 汇丰银行, The Hongkong and Shanghai Banking Corporation],
+     patterns: ["###-######-###", "004-###-########", "##########"], plain: true,
+     status: verified, sources: [webull_hk, photonpay_hk], note: "10-12 digits; may be written with bank code 004 in front"}
+  - {id: hk_hangseng, jurisdiction: HK, kind: bank, names: [Hang Seng Bank, 恒生銀行, 恒生银行], patterns: ["##########", "############"], plain: false,
+     status: verified, sources: [webull_hk], note: "10-12 digits, bank code 024"}
+  - {id: hk_boc, jurisdiction: HK, kind: bank, names: [Bank of China (Hong Kong), BOCHK, 中國銀行(香港), 中银香港], patterns: ["###########"], plain: false,
+     status: verified, sources: [webull_hk], note: "11 digits, bank code 012 omitted in transfers"}
+  - {id: hk_scb, jurisdiction: HK, kind: bank, names: [Standard Chartered Hong Kong, 渣打銀行(香港)], patterns: ["###########"], plain: false,
+     status: partial, sources: [webull_hk], note: "11 digits or letters (digits used here)"}
+  - {id: hk_icbc, jurisdiction: HK, kind: bank, names: [ICBC (Asia), 中國工商銀行(亞洲)], patterns: ["############"], plain: false,
+     status: verified, sources: [webull_hk], note: "12 digits"}
+  - {id: hk_citic, jurisdiction: HK, kind: bank, names: [China CITIC Bank International, 中信銀行(國際)], patterns: ["############"], plain: false,
+     status: verified, sources: [webull_hk], note: "12 digits, bank code 018 omitted"}
+  - {id: hk_citi, jurisdiction: HK, kind: bank, names: [Citibank (Hong Kong), 花旗銀行], patterns: ["390########", "790########", "########"], plain: false,
+     status: verified, sources: [webull_hk], note: "10-11 digits; 8-digit numbers take branch 390 / 790 in front"}
+  - {id: hk_ccb, jurisdiction: HK, kind: bank, names: [China Construction Bank (Asia), 建行(亞洲)], patterns: ["###########", "############"], plain: false,
+     status: verified, sources: [webull_hk], note: "11-12 digits"}
+  - {id: hk_cmb, jurisdiction: HK, kind: bank, names: [China Merchants Bank Hong Kong Branch, 招商銀行香港分行], patterns: ["################"], plain: false,
+     status: verified, sources: [webull_hk], note: "16 digits"}
+  - {id: hk_za, jurisdiction: HK, kind: bank, names: [ZA Bank, 眾安銀行], patterns: ["############"], plain: false,
+     status: verified, sources: [webull_hk], note: "12 digits"}
+  - {id: hk_mox, jurisdiction: HK, kind: bank, names: [Mox Bank, Mox], patterns: ["749########", "749#########"], plain: false,
+     status: verified, sources: [webull_hk], note: "11-13 digits incl. 749 prefix"}
+  - {id: hk_dbs, jurisdiction: HK, kind: bank, names: [DBS Bank (Hong Kong), 星展銀行(香港)], patterns: ["############"], plain: false,
+     status: verified, sources: [webull_hk], note: "12 digits, bank code 016 omitted"}
+  - {id: hk_dahsing, jurisdiction: HK, kind: bank, names: [Dah Sing Bank, 大新銀行], patterns: ["##########", "###########"], plain: false,
+     status: verified, sources: [webull_hk], note: "10-11 digits"}
+  - {id: hk_ant, jurisdiction: HK, kind: bank, names: [Ant Bank (Hong Kong), 螞蟻銀行(香港)], patterns: ["753###########"], plain: false,
+     status: verified, sources: [webull_hk], note: "14 digits with branch 753 in front"}
+  - {id: hk_spd, jurisdiction: HK, kind: bank, names: [SPD Bank Hong Kong Branch, 浦發銀行香港分行], patterns: ["2888##########"], plain: false,
+     status: partial, sources: [webull_hk], note: "14 digits; masked samples all start 2888"}
+
+  # ================================================================ Malaysia
+  - {id: my_maybank, jurisdiction: MY, kind: bank, names: [Maybank, Malayan Banking Berhad], patterns: ["############"], plain: false,
+     status: verified, sources: [bankislam_ibg, maybank_ibg], note: "12 digits"}
+  - {id: my_cimb, jurisdiction: MY, kind: bank, names: [CIMB Bank, CIMB], patterns: ["##########", "##############"], plain: false,
+     status: verified, sources: [bankislam_ibg, cimb_ibg], note: "10 or 14 digits"}
+  - {id: my_publicbank, jurisdiction: MY, kind: bank, names: [Public Bank, Public Bank Berhad], patterns: ["##########"], plain: false,
+     status: verified, sources: [bankislam_ibg, maybank_ibg], note: "10 digits"}
+  - {id: my_rhb, jurisdiction: MY, kind: bank, names: [RHB Bank, RHB], patterns: ["##############"], plain: false,
+     status: verified, sources: [maybank_ibg, cimb_ibg], note: "14 digits"}
+  - {id: my_hongleong, jurisdiction: MY, kind: bank, names: [Hong Leong Bank, HLB], patterns: ["###########", "#############"], plain: false,
+     status: verified, sources: [bankislam_ibg], note: "11 or 13 digits"}
+
+  # ================================================================ Indonesia
+  - {id: id_bca, jurisdiction: ID, kind: bank, names: [BCA, Bank Central Asia], patterns: ["##########"], plain: false,
+     status: verified, sources: [xendit_id, kontan_id], note: "10 digits"}
+  - {id: id_bri, jurisdiction: ID, kind: bank, names: [BRI, Bank Rakyat Indonesia], patterns: ["###############"], plain: false,
+     status: verified, sources: [xendit_id, kontan_id], note: "15 digits most common (range 13-17)"}
+  - {id: id_bni, jurisdiction: ID, kind: bank, names: [BNI, Bank Negara Indonesia], patterns: ["##########"], plain: false,
+     status: verified, sources: [kontan_id, xendit_id], note: "10 digits most common (range 7-11)"}
+  - {id: id_mandiri, jurisdiction: ID, kind: bank, names: [Bank Mandiri, Mandiri], patterns: ["#############"], plain: false,
+     status: verified, sources: [kontan_id, xendit_id], note: "13 digits most common (range 12-17)"}
+
+  # ================================================================ Thailand
+  - {id: th_bbl, jurisdiction: TH, kind: bank, names: [Bangkok Bank, ธนาคารกรุงเทพ], patterns: ["###-#-#####-#"], plain: true,
+     status: verified, sources: [cdq_th, ppro_th], note: "10 digits"}
+  - {id: th_kbank, jurisdiction: TH, kind: bank, names: [Kasikornbank, KBank, ธนาคารกสิกรไทย], patterns: ["###-#-#####-#"], plain: true,
+     status: verified, sources: [cdq_th, ppro_th], note: "10 digits"}
+  - {id: th_scb, jurisdiction: TH, kind: bank, names: [Siam Commercial Bank, SCB, ธนาคารไทยพาณิชย์], patterns: ["###-#-#####-#"], plain: true,
+     status: verified, sources: [cdq_th, ppro_th], note: "10 digits"}
+  - {id: th_ktb, jurisdiction: TH, kind: bank, names: [Krungthai Bank, ธนาคารกรุงไทย], patterns: ["###-#-#####-#"], plain: true,
+     status: verified, sources: [cdq_th, ppro_th], note: "10 digits"}
+  - {id: th_gsb, jurisdiction: TH, kind: bank, names: [Government Savings Bank, ธนาคารออมสิน], patterns: ["############"], plain: false,
+     status: partial, sources: [ppro_th], note: "12 digits"}
+
+  # ================================================================ Japan
+  - {id: jp_bank, jurisdiction: JP, kind: bank, names: [三菱UFJ銀行, 三井住友銀行, みずほ銀行, りそな銀行, MUFG Bank, SMBC, Mizuho Bank],
+     patterns: ["###-#######"], plain: false,
+     status: verified, sources: [netsuite_jp, purview_jp], note: "3-digit branch (支店番号) + 7-digit account (口座番号)"}
+  - {id: jp_yucho, jurisdiction: JP, kind: bank, names: [ゆうちょ銀行, Japan Post Bank], patterns: ["#####-########", "###-#######"], plain: false,
+     status: verified, sources: [rakuten_yucho], note: "記号 5 + 番号 8, or 店番 3 + 口座番号 7 for transfers"}
+
+  # ================================================================ India
+  - {id: in_sbi, jurisdiction: IN, kind: bank, names: [State Bank of India, SBI], patterns: ["###########"], plain: false,
+     status: verified, sources: [paisabazaar_in], note: "11 digits"}
+  - {id: in_icici, jurisdiction: IN, kind: bank, names: [ICICI Bank, ICICI], patterns: ["############"], plain: false,
+     status: verified, sources: [paisabazaar_in], note: "12 digits"}
+  - {id: in_hdfc, jurisdiction: IN, kind: bank, names: [HDFC Bank, HDFC], patterns: ["##############", "#############"], plain: false,
+     status: partial, sources: [paisabazaar_in], note: "14 digits (some sources 13-14)"}
+  - {id: in_axis, jurisdiction: IN, kind: bank, names: [Axis Bank, Axis], patterns: ["###############"], plain: false,
+     status: verified, sources: [paisabazaar_in], note: "15 digits"}
+  - {id: in_nsdl, jurisdiction: IN, kind: depository, names: [NSDL, National Securities Depository], patterns: ["IN##############", "IN###### ########"], plain: false,
+     status: verified, sources: [upstox_demat], note: "demat: IN + 14 digits (DP ID 8 chars incl. IN, client ID 8)"}
+  - {id: in_cdsl, jurisdiction: IN, kind: depository, names: [CDSL, Central Depository Services], patterns: ["################", "######## ########"], plain: false,
+     status: verified, sources: [upstox_demat], note: "demat / BO ID: 16 digits (DP ID 8 + client 8)"}
+
+  # ================================================================ Korea (two tables agree: ddable 2006, nanumtip 2021)
+  - {id: kr_kb, jurisdiction: KR, kind: bank, names: [KB국민은행, 국민은행, KB Kookmin Bank], patterns: ["######-##-######", "###-##-####-###"], plain: true,
+     status: verified, sources: [ddable_kr, nanumtip_kr], note: "new 14 digits; old 12"}
+  - {id: kr_ibk, jurisdiction: KR, kind: bank, names: [IBK기업은행, 기업은행, Industrial Bank of Korea], patterns: ["###-######-##-###"], plain: true,
+     status: verified, sources: [ddable_kr, nanumtip_kr], note: "14 digits"}
+  - {id: kr_nh, jurisdiction: KR, kind: bank, names: [NH농협은행, 농협, NongHyup Bank], patterns: ["3##-####-####-##"], plain: true,
+     status: verified, sources: [ddable_kr, nanumtip_kr, smartmlab_nh], note: "13 digits; 301 / 351 / 356 prefixes for new accounts"}
+  - {id: kr_shinhan, jurisdiction: KR, kind: bank, names: [신한은행, Shinhan Bank], patterns: ["###-###-######", "###-##-######"], plain: true,
+     status: verified, sources: [ddable_kr, nanumtip_kr], note: "new 12 digits; old 11"}
+  - {id: kr_woori, jurisdiction: KR, kind: bank, names: [우리은행, Woori Bank], patterns: ["####-###-######"], plain: true,
+     status: verified, sources: [ddable_kr, nanumtip_kr], note: "13 digits"}
+  - {id: kr_hana, jurisdiction: KR, kind: bank, names: [하나은행, KEB하나은행, Hana Bank], patterns: ["###-######-#####"], plain: true,
+     status: verified, sources: [ddable_kr, nanumtip_kr], note: "14 digits; first 3 branch, last 2 product"}
+  - {id: kr_citi, jurisdiction: KR, kind: bank, names: [한국씨티은행, Citibank Korea], patterns: ["###-######-###"], plain: true,
+     status: verified, sources: [ddable_kr, nanumtip_kr], note: "12 digits"}
+  - {id: kr_sc, jurisdiction: KR, kind: bank, names: [SC제일은행, Standard Chartered Korea], patterns: ["###-##-######"], plain: true,
+     status: verified, sources: [ddable_kr, nanumtip_kr], note: "11 digits"}
+  - {id: kr_busan, jurisdiction: KR, kind: bank, names: [BNK부산은행, 부산은행, Busan Bank], patterns: ["###-####-####-##"], plain: true,
+     status: verified, sources: [ddable_kr, nanumtip_kr], note: "13 digits"}
+  - {id: kr_daegu, jurisdiction: KR, kind: bank, names: [DGB대구은행, iM뱅크, Daegu Bank], patterns: ["###-##-######-#", "###-##-######"], plain: true,
+     status: verified, sources: [ddable_kr, nanumtip_kr], note: "12 digits; 11 for demand deposits"}
+  - {id: kr_kbank, jurisdiction: KR, kind: bank, names: [케이뱅크, K bank], patterns: ["###-###-######"], plain: true,
+     status: partial, sources: [nanumtip_kr], note: "12 digits"}
+  - {id: kr_kakao, jurisdiction: KR, kind: bank, names: [카카오뱅크, KakaoBank], patterns: ["3333-##-#######"], plain: true,
+     status: partial, sources: [nanumtip_kr], note: "13 digits XXXX-XX-XXXXXXX; 3333 prefix per jab-guyver blog"}
+  - {id: kr_shinhan_sec, jurisdiction: KR, kind: broker, names: [신한투자증권, 신한금융투자, Shinhan Securities], patterns: ["###-##-######"], plain: true,
+     status: partial, sources: [ddable_kr], note: "11 digits (2006 table)"}
+  - {id: kr_samsung_sec, jurisdiction: KR, kind: broker, names: [삼성증권, Samsung Securities], patterns: [], plain: false,
+     status: unverified, sources: [samsungpop_kr], note: "base number + 2-digit product suffix (01 general, 14 ISA, 15 pension); base length unknown"}
+
+  # ================================================================ China / Taiwan
+  - {id: cn_icbc, jurisdiction: CN, kind: bank, names: [中国工商银行, 工商银行, ICBC], patterns: ["###################", "622202#############"], plain: false,
+     status: partial, sources: [sohu_cn, uobmy_duitnow], note: "corporate 19 digits (4 region + 4 outlet + 2 app + 7 serial + 2 check); debit cards 19 digits BIN 622202"}
+  - {id: cn_abc, jurisdiction: CN, kind: bank, names: [中国农业银行, 农业银行, Agricultural Bank of China], patterns: ["#################"], plain: false,
+     status: partial, sources: [sohu_cn], note: "corporate 17 digits"}
+  - {id: cn_boc, jurisdiction: CN, kind: bank, names: [中国银行, Bank of China], patterns: ["############"], plain: false,
+     status: partial, sources: [sohu_cn], note: "corporate 12 digits (Remitbee says 19 - conflict)"}
+  - {id: tw_esun, jurisdiction: TW, kind: bank, names: [玉山銀行, E.SUN Bank], patterns: ["#############"], plain: false,
+     status: partial, sources: [uptogo_esun, money101_tw], note: "13 digits; bank code 808"}
+  - {id: tw_generic, jurisdiction: TW, kind: bank, names: [臺灣銀行, 國泰世華銀行, 中國信託商業銀行, Bank of Taiwan, Cathay United Bank, CTBC Bank],
+     patterns: ["############", "#############", "##############"], plain: false,
+     status: partial, sources: [money101_tw], note: "12-14 digits depending on bank; codes 004 / 013 / 822"}
+
+  # ================================================================ Vietnam / Philippines
+  - {id: vn_vcb, jurisdiction: VN, kind: bank, names: [Vietcombank, Ngân hàng TMCP Ngoại thương Việt Nam], patterns: ["#############"], plain: false,
+     status: partial, sources: [vietanlaw_vn], note: "13 digits"}
+  - {id: vn_tcb, jurisdiction: VN, kind: bank, names: [Techcombank], patterns: ["##############"], plain: false,
+     status: partial, sources: [vietanlaw_vn], note: "14 digits (slash.com says 19 - conflict)"}
+  - {id: vn_bidv, jurisdiction: VN, kind: bank, names: [BIDV, Ngân hàng TMCP Đầu tư và Phát triển Việt Nam], patterns: ["##############"], plain: false,
+     status: partial, sources: [vietanlaw_vn], note: "14 digits"}
+  - {id: vn_vietin, jurisdiction: VN, kind: bank, names: [VietinBank], patterns: ["############"], plain: false,
+     status: partial, sources: [vietanlaw_vn], note: "12 characters"}
+  - {id: ph_bdo, jurisdiction: PH, kind: bank, names: [BDO Unibank, BDO], patterns: ["############"], plain: false,
+     status: partial, sources: [worldremit_ph], note: "12 digits"}
+  - {id: ph_bpi, jurisdiction: PH, kind: bank, names: [BPI, Bank of the Philippine Islands], patterns: ["##########"], plain: false,
+     status: partial, sources: [worldremit_ph], note: "10 digits"}
+  - {id: ph_metrobank, jurisdiction: PH, kind: bank, names: [Metrobank, Metropolitan Bank and Trust], patterns: ["#############"], plain: false,
+     status: partial, sources: [worldremit_ph], note: "13 digits"}
+  - {id: ph_landbank, jurisdiction: PH, kind: bank, names: [LANDBANK, Land Bank of the Philippines], patterns: ["##########", "################"], plain: false,
+     status: partial, sources: [worldremit_ph], note: "10 or 16 digits"}
+  - {id: ph_pnb, jurisdiction: PH, kind: bank, names: [PNB, Philippine National Bank], patterns: ["############"], plain: false,
+     status: partial, sources: [worldremit_ph], note: "12 digits"}
+
+  # ================================================================ UAE / UK / Switzerland (IBAN and local)
+  - {id: ae_iban, jurisdiction: AE, kind: iban, names: [Emirates NBD, First Abu Dhabi Bank, Abu Dhabi Commercial Bank, Mashreq],
+     patterns: ["[A][E]######################", "[A][E]## #### #### #### #### ###"], plain: false,
+     status: verified, sources: [cbuae_iban, wise_ae_iban], note: "23 chars: AE + 2 check + 3 bank + 16 account (check digits random here, not MOD97 - acceptable for NER)"}
+  - {id: uk_sortcode, jurisdiction: UK, kind: bank, names: [Barclays, Lloyds Bank, NatWest, HSBC UK, Santander UK],
+     patterns: ["##-##-## ########", "########"], plain: false,
+     status: verified, sources: [wise_sortcode], note: "sort code 6 digits as 3 pairs + 8-digit account; the sort code alone is a branch code (O), the account is ACCOUNT"}
+  - {id: ch_iban, jurisdiction: CH, kind: iban, names: [UBS, Julius Baer, Pictet, Lombard Odier, EFG Bank],
+     patterns: ["CH###################", "CH## #### #### #### #### #"], plain: false,
+     status: verified, sources: [ohmyfin_ch], note: "21 chars: CH + 2 check + 5 bank + 12 account"}
+  - {id: ch_ubs_depot, jurisdiction: CH, kind: private_bank, names: [UBS, UBS Switzerland], patterns: ["###-######.A#", "###-######"], plain: false,
+     status: partial, sources: [pp_forum_ubs], note: "single statement sample: depot 292-123456.S1, client 123-456789"}
+
+  # ================================================================ Global custodians / brokers
+  - {id: us_schwab, jurisdiction: US, kind: broker, names: [Charles Schwab, Schwab], patterns: ["####-####", "########"], plain: false,
+     status: verified, sources: [ibkr_acats, marotta_schwab], note: "8 digits, shown as 1234-5678"}
+  - {id: us_fidelity, jurisdiction: US, kind: broker, names: [Fidelity, Fidelity Investments, National Financial Services], patterns: ["[XYZ]XX######"], plain: false,
+     status: verified, sources: [ibkr_acats, fidelity_form], note: "9 chars: 3 alphanumeric + 6 digits; nonretirement brokerage begins X / Y / Z"}
+  - {id: us_pershing, jurisdiction: US, kind: custodian, names: [Pershing, BNY Pershing, Pershing LLC], patterns: ["XXX-######", "XXX######"], plain: false,
+     status: partial, sources: [pershing_wire, pershing_layout, pershing_stmt], note: "office code 3 chars + base account 6 (39K-111111, N6K-111111, A1Qxxxxxx, 999-999999)"}
+  - {id: global_ibkr, jurisdiction: GLOBAL, kind: broker, names: [Interactive Brokers, IBKR, 盈透证券], patterns: ["U#######", "F#######"], plain: false,
+     status: partial, sources: [ibkr_campus, icicidirect_ibkr], note: "U + digits (individual / sub-account), F + digits (advisor / fund master); length from examples only"}
+  - {id: global_bny_wealth, jurisdiction: US, kind: custodian, names: [BNY Wealth, BNY Mellon Wealth Management, BNY], patterns: ["1##########"], plain: false,
+     status: partial, sources: [morningstar_bny], note: "11 digits, mostly starting with 1"}
+  - {id: global_bny_custody, jurisdiction: GLOBAL, kind: custodian, names: [BNY Mellon, The Bank of New York Mellon, BNY], patterns: ["######", "00######", "#######"], plain: false,
+     status: verified, sources: [morningstar_nexen, addepar_bny], note: "Nexen GSP custody 6-8 digits, may have leading 00"}
+  - {id: au_tiger_hin, jurisdiction: AU, kind: broker, names: [Tiger Brokers, Tiger Brokers (AU)], patterns: ["[X]##########"], plain: false,
+     status: verified, sources: [tiger_au_hin], note: "CHESS HIN: X + 10 digits"}
+
+  # ================================================================ still to research (not sampled)
+  - {id: ch_leonteq, jurisdiction: CH, kind: private_bank, names: [Leonteq, Leonteq Securities AG], patterns: [], plain: false,
+     status: unverified, sources: [], note: "issuer of structured products; no public client account format found - documents usually show ISIN / valor (O) and the client's custody account at the custodian"}
+  - {id: global_futu, jurisdiction: HK, kind: broker, names: [Futu Securities, moomoo, 富途证券], patterns: [], plain: false,
+     status: unverified, sources: [], note: "transfer forms say 'Account Number: <Your Moomoo ID>'; digit count not published"}
+  - {id: global_saxo, jurisdiction: GLOBAL, kind: broker, names: [Saxo Bank, Saxo Markets], patterns: [], plain: false,
+     status: unverified, sources: [], note: "client number not published"}
+  - {id: ch_juliusbaer, jurisdiction: CH, kind: private_bank, names: [Julius Baer, Bank Julius Bär], patterns: [], plain: false,
+     status: unverified, sources: [], note: "only the Swiss IBAN pattern is known (ch_iban)"}

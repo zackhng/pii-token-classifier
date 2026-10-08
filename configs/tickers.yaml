@@ -1,0 +1,81 @@
+# Listed companies and their exchange tickers, for BUSINESS spans in v5 frames (user rule: tickers,
+# company, LLC and fund names are all BUSINESS). Large, well-known primary listings only.
+# Rendered as the bare code, "<EXCHANGE>: <code>", "(<code>)" or Yahoo-style "<code>.<suffix>".
+# split: test = held out for ml_struct (never in training frames).
+# Spot-check status: see `checked` - entries not yet confirmed against the exchange are `pending`.
+
+checked: pending        # verify a sample against exchange / company IR pages before the final build
+
+markets:
+  US: {exchange: [NASDAQ, NYSE], suffix: ""}
+  HK: {exchange: [HKEX, SEHK], suffix: .HK}
+  SG: {exchange: [SGX], suffix: .SI}
+  JP: {exchange: [TSE, TYO], suffix: .T}
+  KR: {exchange: [KRX, KOSPI], suffix: .KS}
+  IN: {exchange: [NSE], suffix: .NS}
+  CN: {exchange: [SSE, SZSE], suffix: ""}       # suffix per listing below (.SS / .SZ)
+  TW: {exchange: [TWSE], suffix: .TW}
+  MY: {exchange: [Bursa Malaysia, Bursa], suffix: .KL}
+  ID: {exchange: [IDX], suffix: .JK}
+  TH: {exchange: [SET], suffix: .BK}
+  PH: {exchange: [PSE], suffix: ""}
+  VN: {exchange: [HOSE], suffix: ""}
+  AE: {exchange: [DFM, ADX], suffix: ""}
+
+companies:
+  - {market: US, code: AAPL, exchange: NASDAQ, names: [Apple Inc., Apple]}
+  - {market: US, code: MSFT, exchange: NASDAQ, names: [Microsoft Corporation, Microsoft]}
+  - {market: US, code: NVDA, exchange: NASDAQ, names: [NVIDIA Corporation, NVIDIA]}
+  - {market: US, code: AMZN, exchange: NASDAQ, names: [Amazon.com Inc., Amazon]}
+  - {market: US, code: JPM, exchange: NYSE, names: [JPMorgan Chase & Co., JPMorgan Chase]}
+  - {market: US, code: TSLA, exchange: NASDAQ, names: [Tesla Inc., Tesla]}
+  - {market: US, code: GOOGL, exchange: NASDAQ, names: [Alphabet Inc., Alphabet], split: test}
+  - {market: HK, code: "0700", names: [Tencent Holdings Ltd., Tencent, 騰訊控股, 腾讯控股]}
+  - {market: HK, code: "0005", names: [HSBC Holdings plc, HSBC Holdings, 滙豐控股]}
+  - {market: HK, code: "1299", names: [AIA Group Ltd., AIA, 友邦保險]}
+  - {market: HK, code: "9988", names: [Alibaba Group Holding Ltd., Alibaba, 阿里巴巴]}
+  - {market: HK, code: "0388", names: [Hong Kong Exchanges and Clearing Ltd., HKEX, 香港交易所]}
+  - {market: HK, code: "1810", names: [Xiaomi Corporation, Xiaomi, 小米集團], split: test}
+  - {market: SG, code: D05, names: [DBS Group Holdings Ltd, DBS Group, 星展集团]}
+  - {market: SG, code: O39, names: [Oversea-Chinese Banking Corporation, OCBC]}
+  - {market: SG, code: U11, names: [United Overseas Bank Ltd, UOB]}
+  - {market: SG, code: Z74, names: [Singapore Telecommunications Ltd, Singtel]}
+  - {market: SG, code: C6L, names: [Singapore Airlines Ltd, Singapore Airlines], split: test}
+  - {market: JP, code: "7203", names: [Toyota Motor Corporation, トヨタ自動車, Toyota]}
+  - {market: JP, code: "6758", names: [Sony Group Corporation, ソニーグループ, Sony]}
+  - {market: JP, code: "8306", names: [Mitsubishi UFJ Financial Group, 三菱UFJフィナンシャル・グループ, MUFG]}
+  - {market: JP, code: "9984", names: [SoftBank Group Corp., ソフトバンクグループ]}
+  - {market: JP, code: "7974", names: [Nintendo Co., Ltd., 任天堂], split: test}
+  - {market: KR, code: "005930", names: [Samsung Electronics Co., Ltd., 삼성전자, Samsung Electronics]}
+  - {market: KR, code: "000660", names: [SK hynix Inc., SK하이닉스, SK hynix]}
+  - {market: KR, code: "005380", names: [Hyundai Motor Company, 현대자동차, 현대차]}
+  - {market: KR, code: "035420", names: [NAVER Corporation, 네이버, NAVER], split: test}
+  - {market: IN, code: RELIANCE, names: [Reliance Industries Ltd, Reliance Industries, रिलायंस इंडस्ट्रीज]}
+  - {market: IN, code: TCS, names: [Tata Consultancy Services Ltd, Tata Consultancy Services, टाटा कंसल्टेंसी सर्विसेज]}
+  - {market: IN, code: HDFCBANK, names: [HDFC Bank Ltd, HDFC Bank, एचडीएफसी बैंक]}
+  - {market: IN, code: INFY, names: [Infosys Ltd, Infosys, इंफोसिस], split: test}
+  - {market: CN, code: "600519", exchange: SSE, suffix: .SS, names: [贵州茅台酒股份有限公司, 贵州茅台, Kweichow Moutai]}
+  - {market: CN, code: "300750", exchange: SZSE, suffix: .SZ, names: [宁德时代新能源科技股份有限公司, 宁德时代, CATL]}
+  - {market: CN, code: "601318", exchange: SSE, suffix: .SS, names: [中国平安保险(集团)股份有限公司, 中国平安, Ping An Insurance]}
+  - {market: CN, code: "002594", exchange: SZSE, suffix: .SZ, names: [比亚迪股份有限公司, 比亚迪, BYD], split: test}
+  - {market: TW, code: "2330", names: [台灣積體電路製造股份有限公司, 台積電, TSMC]}
+  - {market: TW, code: "2317", names: [鴻海精密工業股份有限公司, 鴻海, Hon Hai Precision]}
+  - {market: TW, code: "2454", names: [聯發科技股份有限公司, 聯發科, MediaTek], split: test}
+  - {market: MY, code: "1155", names: [Malayan Banking Berhad, Maybank]}
+  - {market: MY, code: "1295", names: [Public Bank Berhad, Public Bank]}
+  - {market: MY, code: "5347", names: [Tenaga Nasional Berhad, TNB], split: test}
+  - {market: ID, code: BBCA, names: [PT Bank Central Asia Tbk, Bank Central Asia, BCA]}
+  - {market: ID, code: BBRI, names: [PT Bank Rakyat Indonesia (Persero) Tbk, Bank Rakyat Indonesia]}
+  - {market: ID, code: TLKM, names: [PT Telkom Indonesia (Persero) Tbk, Telkom Indonesia], split: test}
+  - {market: TH, code: PTT, names: [PTT Public Company Limited, บริษัท ปตท. จำกัด (มหาชน), ปตท.]}
+  - {market: TH, code: AOT, names: [Airports of Thailand PCL, บริษัท ท่าอากาศยานไทย จำกัด (มหาชน)]}
+  - {market: TH, code: CPALL, names: [CP ALL PCL, บริษัท ซีพี ออลล์ จำกัด (มหาชน)], split: test}
+  - {market: PH, code: JFC, names: [Jollibee Foods Corporation, Jollibee Foods]}
+  - {market: PH, code: BDO, names: [BDO Unibank Inc., BDO Unibank]}
+  - {market: PH, code: ALI, names: [Ayala Land Inc., Ayala Land], split: test}
+  - {market: VN, code: VNM, names: [Vinamilk, Công ty Cổ phần Sữa Việt Nam]}
+  - {market: VN, code: VCB, names: [Vietcombank, Ngân hàng TMCP Ngoại thương Việt Nam]}
+  - {market: VN, code: FPT, names: [FPT Corporation, Công ty Cổ phần FPT], split: test}
+  - {market: AE, code: EMAARDEV, exchange: DFM, names: [Emaar Development PJSC, إعمار للتطوير]}
+  - {market: AE, code: FAB, exchange: ADX, names: [First Abu Dhabi Bank PJSC, بنك أبوظبي الأول]}
+  - {market: AE, code: EMIRATESNBD, exchange: DFM, names: [Emirates NBD Bank PJSC, بنك الإمارات دبي الوطني], split: test}
