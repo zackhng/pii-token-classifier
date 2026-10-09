@@ -22,9 +22,13 @@ def main():
     ap.add_argument("--pred", required=True)
     ap.add_argument("--mode", default="default", choices=["default", "alltok"])
     ap.add_argument("--out")
+    ap.add_argument("--trim", action="store_true", help="apply predict.trim_span to the predictions (v5.0 as released)")
     a = ap.parse_args()
     gold = {json.loads(l)["id"]: json.loads(l) for l in open(ROOT / "data/processed" / f"{a.split}.jsonl", encoding="utf-8")}
     preds = {json.loads(l)["id"]: json.loads(l)[a.mode] for l in open(a.pred, encoding="utf-8")}
+    if a.trim:
+        from predict import trim_span
+        preds = {k: [t for t in (trim_span(gold[k]["text"], p) for p in v) if t] for k, v in preds.items()}
     hit = defaultdict(Counter)            # key -> n / strict / lenient
     neg = defaultdict(Counter)            # ctx -> n / flagged
     for rid, row in gold.items():

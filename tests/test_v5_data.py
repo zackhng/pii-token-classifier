@@ -188,3 +188,23 @@ def test_wm_documents_have_exact_spans_every_language():
                     assert v and v == v.strip(), (lang, mode, fmt, v)
                 seen |= {s["label"] for s in d["spans"]}
         assert seen == set(wm_gen.LABELS), (lang, set(wm_gen.LABELS) - seen)
+
+
+# ---------------------------------------------------------------- v5.0.1 punctuation trimming
+def test_trim_span_removes_glued_punctuation_only():
+    from predict import trim_span
+
+    def t(text, sub, label):
+        a = text.index(sub)
+        r = trim_span(text, {"start": a, "end": a + len(sub), "label": label, "text": sub})
+        return r["text"] if r else None
+    assert t("BNI (rekening 2317299980).", "2317299980).", "ACCOUNT") == "2317299980"
+    assert t("已复核：28889306656789、5819224667和", "、5819224667", "ACCOUNT") == "5819224667"
+    assert t("託管戶口：28888120439593 |", "：28888120439593", "ACCOUNT") == "28888120439593"
+    assert t("Tan (陈伟明) x", "(陈伟明)", "PERSON") == "陈伟明"
+    assert t("call +65 6123 4567.", "+65 6123 4567.", "PHONE") == "+65 6123 4567"
+    # kept: abbreviations, initials, balanced brackets inside a name, internal suffixes
+    assert t("Harbour Capital Pte. Ltd.", "Harbour Capital Pte. Ltd.", "BUSINESS") == "Harbour Capital Pte. Ltd."
+    assert t("S. Lee joined", "S. Lee", "PERSON") == "S. Lee"
+    assert t("A (Holdings) Ltd", "A (Holdings) Ltd", "BUSINESS") == "A (Holdings) Ltd"
+    assert t("UBS (607-768752.I6)", "607-768752.I6)", "ACCOUNT") == "607-768752.I6"

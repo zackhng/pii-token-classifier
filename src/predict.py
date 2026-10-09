@@ -14,10 +14,43 @@ from common import ROOT, load_yaml
 from tokenize_bio import fill_continuations, labels_to_spans, window_encode, word_starts
 
 
+OPEN, CLOSE = "([{【「『（［", ")]}】」』）］"
+PAIRS = dict(zip(CLOSE, OPEN))
+LEAD = "、，,：:;；·・"
+# a trailing full stop / comma is trimmed only after a digit for number-like labels; BUSINESS keeps
+# "Pte. Ltd." and PERSON keeps initials
+NUMERIC = {"ACCOUNT", "PHONE", "TIN", "DOB", "ADDRESS"}
+
+
+def trim_span(text: str, sp: dict) -> dict | None:
+    """Drop punctuation the tokenizer glued onto an entity (v5 error analysis): an unmatched closing
+    bracket ('2317299980)'), a leading list comma / colon ('、5819224667', '：2888...'), and a final
+    '.' / '。' / ',' after a digit for number-like labels ('607009209.'). Returns None if nothing is left."""
+    a, b = sp["start"], sp["end"]
+    while a < b and (text[a] in LEAD or text[a].isspace() or (text[a] in OPEN and not any(c in CLOSE for c in text[a:b]))):
+        a += 1
+    while a < b:
+        c = text[b - 1]
+        if c.isspace():
+            b -= 1
+        elif c in CLOSE and PAIRS[c] not in text[a:b - 1]:
+            b -= 1
+        elif c in ".。,，、;；:：" and sp["label"] in NUMERIC and b - 2 >= a and (text[b - 2].isdigit() or text[b - 2] in CLOSE):
+            b -= 1
+        else:
+            break
+    # a span fully wrapped in one pair of brackets: "(陈伟明)" -> "陈伟明"
+    if b - a > 2 and text[a] in OPEN and PAIRS.get(text[b - 1]) == text[a] and not any(c in OPEN + CLOSE for c in text[a + 1:b - 1]):
+        a, b = a + 1, b - 1
+    if a >= b:
+        return None
+    return {**sp, "start": a, "end": b, "text": text[a:b]} if (a, b) != (sp["start"], sp["end"]) else sp
+
+
 class PIIPredictor:
     def __init__(self, model_dir: str, max_length: int = 384, stride: int = 96,
                  label_all_tokens: bool = False, device=None, batch_windows: int = 16,
-                 script_boundaries: bool | None = None):
+                 script_boundaries: bool | None = None, trim_punct: bool | None = None):
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.tok = AutoTokenizer.from_pretrained(model_dir)
         # Model B: language adapters on a shared encoder, routed per segment (router.py)
@@ -39,10 +72,20 @@ class PIIPredictor:
         self.max_length, self.stride = max_length, stride
         self.label_all_tokens = label_all_tokens
         self.batch_windows = batch_windows
+        # punctuation trimming (v5.0+ releases set "trim_punct": true in config.json); models without
+        # the key behave as before, so earlier results stay comparable. None = as the config says.
+        self.trim_punct = (bool(getattr(self.model.config, "trim_punct", False))
+                           if trim_punct is None else trim_punct)
 
     def predict(self, text: str, lang: str | None = None) -> list[dict]:
         """PII spans in `text`. Adapter models route each segment to its language's adapter
         (`lang` forces one language for the whole text, e.g. the gold language)."""
+        spans = self._predict_routed(text, lang)
+        if self.trim_punct:
+            spans = [t for t in (trim_span(text, sp) for sp in spans) if t]
+        return spans
+
+    def _predict_routed(self, text: str, lang: str | None) -> list[dict]:
         if not self.adapter:
             return self._predict(text, None)
         routed = [(0, len(text), lang)] if lang else self.router.route_segments(text)

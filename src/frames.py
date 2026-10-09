@@ -250,7 +250,7 @@ class Values:
         self.row[kind] += 1
         if k < len(self.row["insts"]):
             return self.row["insts"][k]
-        pool, w = institutions(lang, self.split)
+        pool, w = institutions(lang, getattr(self, "acct_split", self.split))
         inst = rng.choices(pool, w)[0]
         self.row["insts"].append(inst)
         return inst

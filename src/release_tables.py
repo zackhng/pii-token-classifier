@@ -14,11 +14,15 @@ from common import IGNORE, ROOT, load_yaml
 from evaluate import overlaps, prf, score_doc
 
 ENTITIES = load_yaml("label_map.yaml")["entities"]
-ML_SPLITS = ["ml_struct_test", "ml_wm_test", "ml_struct_dev", "ml_wm_dev", "ml_synth", "ml_real", "ml_mixed", "ml_kiii_test"]
+ML_SPLITS = ["ml_struct_test", "ml_wm_test", "ml_struct_dev", "ml_wm_dev", "ml_wm_known", "ml_synth", "ml_real", "ml_mixed",
+             "ml_kiii_test"]
 MERGE_VARIANTS = {"ml_real", "ml_mixed"}          # AI4Privacy-derived gold: also scored with merged addresses
 
 
 def score_split(split: str, tag: str, merge: bool) -> dict:
+    """tag "X+trim": X's saved predictions with predict.trim_span applied (v5.0 as released)."""
+    trim = tag.endswith("+trim")
+    tag = tag.removesuffix("+trim")
     preds_path = ROOT / "outputs" / f"{tag}_{split}_predictions.jsonl"
     if not preds_path.exists():
         return {}
@@ -32,7 +36,11 @@ def score_split(split: str, tag: str, merge: bool) -> dict:
         spans = merge_address_spans(r["text"], r["spans"])[0] if merge else r["spans"]
         ignore = [s for s in spans if s["label"] == IGNORE]
         gold = [s for s in spans if s["label"] not in (IGNORE, "O")]
-        pred = [p for p in P[r["id"]] if not any(overlaps(p, g) for g in ignore)]
+        pred = P[r["id"]]
+        if trim:
+            from predict import trim_span
+            pred = [t for t in (trim_span(r["text"], p) for p in pred) if t]
+        pred = [p for p in pred if not any(overlaps(p, g) for g in ignore)]
         keys = lambda lab: ["ALL", f"ent/{lab}"]
         score_doc(gold, pred, strict, keys, lenient=False)
         score_doc(gold, pred, lenient, keys, lenient=True)
@@ -44,7 +52,11 @@ def score_split(split: str, tag: str, merge: bool) -> dict:
     return out
 
 
+EN_TAG = {"A-v5data+trim": "v5.0.1"}     # English results of the trimmed model (evaluate.py on its folder)
+
+
 def english(tag: str, split: str, merged: bool) -> dict:
+    tag = EN_TAG.get(tag, tag)
     p = ROOT / "results" / f"{tag}_en_{split}{'_mergedgold' if merged else ''}.json"
     if not p.exists():
         return {}

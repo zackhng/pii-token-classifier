@@ -307,14 +307,18 @@ def plans_for(split: str, min_cell: int, seed: int, langs: list[str], max_docs: 
             return docs
 
 
-def generate(split: str, min_cell: int, seed: int = 42, langs=None, max_docs: int | None = None) -> list[dict]:
+def generate(split: str, min_cell: int, seed: int = 42, langs=None, max_docs: int | None = None,
+             known_formats: bool = False) -> list[dict]:
     """Benchmark splits: until every factor pair has >= min_cell spans. Training: max_docs documents
     (same round-robin balance over languages / modes / formats)."""
     langs = langs or [l for l in LANGS if (SPEC_DIR / f"{l}.yaml").exists()]
-    gen, out = Gen(split, seed), []
+    gen, out = Gen(split, seed + (7 if known_formats else 0)), []
+    if known_formats:               # account institutions from the training pool (formats seen in training)
+        gen.values.acct_split = "train"
     for i, (plan, (lang, mode), fmt, doc_type) in enumerate(plans_for(split, min_cell, seed, langs, max_docs)):
         d = gen.document(plan, lang, mode, fmt, doc_type)
-        d.update(id=f"wm_{split}_{i}", source=f"ml_wm_{split}" if split != "train" else "wm_frames")
+        name = "known" if known_formats else split
+        d.update(id=f"wm_{name}_{i}", source=f"ml_wm_{name}" if split != "train" else "wm_frames")
         out.append(d)
     return out
 
@@ -344,13 +348,15 @@ def main():
     ap.add_argument("--min_cell", type=int, default=50)
     ap.add_argument("--langs", nargs="*")
     ap.add_argument("--show", type=int, default=0)
+    ap.add_argument("--known_formats", action="store_true",
+                    help="test phrasing / values but accounts from the training institutions -> ml_wm_known.jsonl")
     a = ap.parse_args()
-    rows = generate(a.split, a.min_cell, langs=a.langs)
+    rows = generate(a.split, a.min_cell, langs=a.langs, known_formats=a.known_formats)
     from build_dataset import write_jsonl
     from build_ml_eval import tag_scripts
     if a.split != "train":
         rows = [tag_scripts(r) for r in rows]
-        write_jsonl(ROOT / f"data/processed/ml_wm_{a.split}.jsonl", rows)
+        write_jsonl(ROOT / f"data/processed/ml_wm_{'known' if a.known_formats else a.split}.jsonl", rows)
     else:
         write_jsonl(ROOT / "data/processed/wm_train_frames.jsonl", rows)
     print(f"{a.split}: {len(rows)} docs, {sum(len(r['spans']) for r in rows)} spans, "
