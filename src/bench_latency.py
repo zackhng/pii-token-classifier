@@ -23,7 +23,7 @@ from tokenize_bio import window_encode
 N_CHARS = 100_000
 
 
-def build_doc(kind: str, seed: int = 0) -> str:
+def build_doc(kind: str, seed: int = 0, n_chars: int = N_CHARS) -> str:
     path = ROOT / "data/processed" / ("test.jsonl" if kind == "en" else "ml_real.jsonl")
     rows = [json.loads(l)["text"] for l in open(path, encoding="utf-8")]
     random.Random(seed).shuffle(rows)
@@ -31,9 +31,9 @@ def build_doc(kind: str, seed: int = 0) -> str:
     for t in rows:
         parts.append(t)
         n += len(t) + 2
-        if n >= N_CHARS:
+        if n >= n_chars:
             break
-    return "\n\n".join(parts)[:N_CHARS]
+    return "\n\n".join(parts)[:n_chars]
 
 
 def sync(device):
@@ -47,12 +47,17 @@ def main():
     ap.add_argument("--doc", choices=["en", "ml"], default="en")
     ap.add_argument("--device", choices=["cuda", "cpu"], default="cuda")
     ap.add_argument("--runs", type=int, default=10)
+    ap.add_argument("--int8", action="store_true", help="dynamic int8 encoder weights (CPU)")
+    ap.add_argument("--stride", type=int, help="window overlap (default 96)")
+    ap.add_argument("--merge", choices=["max", "central", "avg"], default="max")
     ap.add_argument("--threads", type=int, default=6)
+    ap.add_argument("--chars", type=int, default=N_CHARS, help="document length in characters (default 100,000)")
     args = ap.parse_args()
     torch.set_num_threads(args.threads)
-    text = build_doc(args.doc)
+    text = build_doc(args.doc, n_chars=args.chars)
     t0 = time.perf_counter()
-    p = PIIPredictor(args.model_dir, device=args.device)
+    p = PIIPredictor(args.model_dir, device=args.device, int8=args.int8, merge=args.merge,
+                     **({"stride": args.stride} if args.stride else {}))
     load = time.perf_counter() - t0
 
     t0 = time.perf_counter()

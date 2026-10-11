@@ -55,10 +55,15 @@ def main():
     ap.add_argument("--out", help="write metrics json here")
     ap.add_argument("--merge_address_gold", action="store_true",
                     help="v5 label definition: merge fragmented gold ADDRESS spans (address_merge.py) before scoring")
+    ap.add_argument("--trim", action="store_true", help="punctuation trim on (as v5.0 is released), whatever config.json says")
+    ap.add_argument("--stride", type=int, help="override the window overlap at inference (training used 96)")
+    ap.add_argument("--merge", choices=["max", "central", "avg"], default="max",
+                    help="how overlapping windows are merged (predict.PIIPredictor)")
     args = ap.parse_args()
 
     t = cfg["tokenize"]
-    predictor = PIIPredictor(args.model_dir, t["max_length"], t["stride"], t["label_all_tokens"])
+    predictor = PIIPredictor(args.model_dir, t["max_length"], args.stride or t["stride"], t["label_all_tokens"],
+                             merge=args.merge, **({"trim_punct": True} if args.trim else {}))
     ds = load_split(args.split, args.limit)
     strict = defaultdict(lambda: defaultdict(int))
     lenient = defaultdict(lambda: defaultdict(int))

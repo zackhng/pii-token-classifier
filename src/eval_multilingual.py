@@ -165,6 +165,12 @@ def main():
     ap.add_argument("--group", help="also report per value of this row field, e.g. slice (ml_struct)")
     ap.add_argument("--script_boundaries", choices=["model", "on", "off"], default="model",
                     help="word boundaries in unspaced scripts: as the model config says, or forced")
+    ap.add_argument("--stride", type=int, help="override the window overlap at inference (training used 96)")
+    ap.add_argument("--merge", choices=["max", "central", "avg"], default="max",
+                    help="how overlapping windows are merged (predict.PIIPredictor)")
+    ap.add_argument("--device", choices=["cuda", "cpu"], help="default: cuda if available")
+    ap.add_argument("--int8", action="store_true", help="dynamic int8 encoder weights (CPU)")
+    ap.add_argument("--default_only", action="store_true", help="skip the all-token decoding pass (faster)")
     args = ap.parse_args()
 
     rows = read_jsonl(ROOT / cfg["data"]["processed_dir"] / f"{args.split}.jsonl")
@@ -177,10 +183,14 @@ def main():
 
     t = cfg["tokenize"]
     sb = {"model": None, "on": True, "off": False}[args.script_boundaries]
-    predictor = PIIPredictor(args.model_dir, t["max_length"], t["stride"], False, script_boundaries=sb)
+    predictor = PIIPredictor(args.model_dir, t["max_length"], args.stride or t["stride"], False, script_boundaries=sb,
+                             merge=args.merge, device=args.device, int8=args.int8)
     preds = {m: {} for m in MODES}
     for row in tqdm(rows, desc=f"predict {args.split}"):
         for mode, alltok in MODES.items():   # same weights; only the word-level decoding differs
+            if args.default_only and mode != "default":
+                preds[mode][row["id"]] = []
+                continue
             predictor.label_all_tokens = alltok
             preds[mode][row["id"]] = predict_row(predictor, row, args.gold_lang)
 
