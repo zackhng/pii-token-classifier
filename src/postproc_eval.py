@@ -15,6 +15,7 @@ import re
 from collections import defaultdict
 
 from common import IGNORE, ROOT
+from results_layout import result_path
 from evaluate import overlaps, prf, score_doc
 from address_merge import merge_address_spans
 from predict import trim_span
@@ -73,6 +74,8 @@ def main():
     ap.add_argument("--tags", nargs="+", default=["A-v5data", "SPAN-v5data"])
     ap.add_argument("--out", default=str(ROOT / "results/v5_postproc"))
     args = ap.parse_args()
+    if args.out:
+        args.out = result_path(args.out)   # flat results/ path -> its group folder
     labels = ["PERSON", "ADDRESS", "ACCOUNT", "BUSINESS", "DOB", "PHONE", "EMAIL", "TIN"]
     res = {}
     for tag in args.tags:

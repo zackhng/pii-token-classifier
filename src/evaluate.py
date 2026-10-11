@@ -10,6 +10,7 @@ from collections import defaultdict
 from tqdm import tqdm
 
 from common import IGNORE, ROOT, load_yaml
+from results_layout import result_path
 from data import load_split
 from predict import PIIPredictor
 
@@ -60,6 +61,8 @@ def main():
     ap.add_argument("--merge", choices=["max", "central", "avg"], default="max",
                     help="how overlapping windows are merged (predict.PIIPredictor)")
     args = ap.parse_args()
+    if args.out:
+        args.out = result_path(args.out)   # flat results/ path -> its group folder
 
     t = cfg["tokenize"]
     predictor = PIIPredictor(args.model_dir, t["max_length"], args.stride or t["stride"], t["label_all_tokens"],

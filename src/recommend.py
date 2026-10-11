@@ -14,6 +14,7 @@ import csv
 
 from breakdown import ENTS, LANGS, cell, counts_for
 from common import ROOT
+from results_layout import find
 from experiments_table import DONE, EXPS, SETS, score
 
 START, END = "<!-- v5-suggestions:start -->", "<!-- v5-suggestions:end -->"
@@ -24,7 +25,7 @@ NOISE = 0.005           # single seed: differences below this are not treated as
 
 def latency(dev):
     """{tag: {chars: median seconds}} from results/{gpu,cpu}_latency/summary.tsv."""
-    p = ROOT / "results" / f"{dev}_latency" / "summary.tsv"
+    p = find(f"{dev}_latency/summary.tsv")
     out = {}
     if p.exists():
         for r in csv.DictReader(open(p, encoding="utf-8"), delimiter="\t"):

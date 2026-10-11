@@ -14,6 +14,7 @@ from collections import defaultdict
 
 from address_merge import merge_address_spans
 from common import IGNORE, ROOT
+from results_layout import find, result_path
 from evaluate import overlaps, prf, score_doc
 from predict import trim_span
 
@@ -69,6 +70,8 @@ def main():
     ap.add_argument("--tags", nargs="+", required=True)
     ap.add_argument("--out", default=str(ROOT / "results/v5_breakdown"))
     args = ap.parse_args()
+    if args.out:
+        args.out = result_path(args.out)   # flat results/ path -> its group folder
     C = {t: counts_for(t) for t in args.tags}
     names = [t.replace("-v5data", "") for t in args.tags]
     lines = ["# v5 candidates: strict F1 / coverage", "",
@@ -111,7 +114,7 @@ def main():
         D = {}
         for t in args.tags:
             for suf in ("_trim", ""):
-                p = ROOT / "results" / f"{t}_en_{split}{suf}.json"
+                p = find(f"{t}_en_{split}{suf}.json")
                 if p.exists():
                     D[t] = json.load(open(p, encoding="utf-8"))["summary"]
                     break

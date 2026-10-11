@@ -24,6 +24,7 @@ from datasets import load_from_disk
 from build_dataset import clean_spans, normalize, write_jsonl
 from build_ml_eval import ml_birth_cue, tag_scripts
 from common import IGNORE, ROOT, load_yaml
+from results_layout import result_path
 from ml_sources import READERS, ai4privacy_500k_hi
 from ml_lookalikes import records as lookalike_records
 from ml_train_docs import generate
@@ -281,9 +282,9 @@ def main():
     print(f"\ncleanup: {dict(stats)}")
     (ROOT / "results").mkdir(exist_ok=True)
     sfx = "_v5" if args.v5 else ""
-    with open(ROOT / f"results/ml_train{sfx}_coverage.txt", "w", encoding="utf-8") as f:
+    with open(result_path(ROOT / f"results/ml_train{sfx}_coverage.txt"), "w", encoding="utf-8") as f:
         f.write(txt + "\n")
-    with open(ROOT / f"results/ml_train{sfx}_coverage.json", "w", encoding="utf-8") as f:
+    with open(result_path(ROOT / f"results/ml_train{sfx}_coverage.json"), "w", encoding="utf-8") as f:
         json.dump({"docs": docs, "spans": cells, "by_kind": kinds,
                    "val_docs": Counter(r["lang"] for r in val_rows), "gaps": gaps}, f, indent=1, ensure_ascii=False)
     if gaps and not args.allow_gaps:

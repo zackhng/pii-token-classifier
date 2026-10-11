@@ -21,6 +21,7 @@ import json
 import math
 import random
 from collections import Counter, defaultdict
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -29,6 +30,7 @@ from transformers import (AutoModelForSequenceClassification, AutoTokenizer, Dat
                           Trainer, TrainingArguments)
 
 from common import IGNORE, ROOT, load_yaml
+from results_layout import result_path
 
 CONTEXT = 160
 LOOKALIKE = "LOOKALIKE"
@@ -114,6 +116,8 @@ def main():
     ap.add_argument("--epochs", type=float, default=2)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
+    if args.out:
+        args.out = result_path(args.out)   # flat results/ path -> its group folder
     seed = load_yaml("train.yaml")["seed"]
 
     rows = mentions(args.split, args.per_cell, seed)
@@ -145,7 +149,7 @@ def main():
         json.dump({"split": args.split, "per_cell": args.per_cell, "model": args.model, **s}, f, indent=1, ensure_ascii=False)
     with open(args.out + ".txt", "w", encoding="utf-8") as f:
         f.write(txt + "\n")
-    with open(ROOT / "outputs" / (args.out.split("/")[-1] + "_mentions.jsonl"), "w", encoding="utf-8") as f:
+    with open(ROOT / "outputs" / (Path(args.out).name + "_mentions.jsonl"), "w", encoding="utf-8") as f:
         for r in rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
 

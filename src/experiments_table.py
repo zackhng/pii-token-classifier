@@ -17,6 +17,7 @@ from functools import lru_cache
 
 from address_merge import merge_address_spans
 from common import IGNORE, ROOT
+from results_layout import find, organize
 from evaluate import overlaps, prf, score_doc
 from predict import trim_span
 
@@ -138,7 +139,7 @@ def val_f1(log):
 
 
 def english(tag, split):
-    p = ROOT / "results" / f"{tag}_en_{split}.txt"
+    p = find(f"{tag}_en_{split}.txt")
     if not p.exists():
         return None
     m = re.search(r"^ALL\s+\S+\s+\S+\s+(\S+)", p.read_text(encoding="utf-8", errors="ignore"), re.M)
@@ -146,8 +147,9 @@ def english(tag, split):
 
 
 def main():
+    organize()                                   # file results written flat by queue scripts into their groups
     thr = {}
-    pp = ROOT / "results/v5_postproc.json"
+    pp = find("v5_postproc.json")
     if pp.exists():
         thr = json.load(open(pp, encoding="utf-8"))
     f = lambda v: "–" if v is None else f"{v:.3f}"
@@ -195,7 +197,7 @@ def main():
         "(pilots / v4 rows: their own validation set).",
         "- Pilot rows train on a 50k-document pilot set; LR-sweep pilots are not listed. Older runs scored on "
         "`ml_struct` (the original name of ml_struct_dev, same 3,084 documents) are re-scored against today's gold.",
-        "- Threshold rows: the per-label thresholds tuned on wm (results/v5_postproc.json) applied to the saved "
+        "- Threshold rows: the per-label thresholds tuned on wm (results/v5/summary/v5_postproc.json) applied to the saved "
         "predictions; their wm column is the tuning set, so not a fair test. English needs a model run, so –.",
         "- Model names (AL, SPAN, SPAN-BS, …): see **Model names** in the suggestions section above.",
         "- **–** = not run, not scored on that set, or not recoverable (predictions not saved).",

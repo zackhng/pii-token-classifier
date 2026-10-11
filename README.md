@@ -167,7 +167,7 @@ Every v5 experiment that has run, is running or is queued; ideas that were dropp
 | Encoders + boundary-smoothed span | MiniLM-L6 + span-BS | head → SPAN-BS head (CE loss + boundary smoothing) | MiniLM-L6 + span | done | 0.917 | 0.927 | 0.953 | 0.964 | 0.963 | 0.844 | 0.891 | 0.920 | 0.929 |
 | Encoders + boundary-smoothed span | mDeBERTa-v3-base + span-BS | encoder → mDeBERTa-v3-base | SPAN-BS | queued | – | – | – | – | – | – | – | – | – |
 | Encoders + boundary-smoothed span | InfoXLM-base + span-BS | encoder → InfoXLM-base | SPAN-BS | done | 0.928 | 0.944 | 0.966 | 0.974 | 0.975 | 0.850 | 0.905 | 0.968 | 0.949 |
-| Encoders + boundary-smoothed span | XLM-V-base + span-BS | encoder → XLM-V-base | SPAN-BS | running | – | – | – | – | – | – | – | – | – |
+| Encoders + boundary-smoothed span | XLM-V-base + span-BS | encoder → XLM-V-base | SPAN-BS | running | – | – | – | – | – | – | – | – | 0.938 |
 | Encoders + boundary-smoothed span | XLM-R large + span-BS | encoder → XLM-R large | SPAN-BS | queued | – | – | – | – | – | – | – | – | – |
 | Inference only | v5.0 merge central | overlapping windows: most central window | v5.0 | done | 0.921 | 0.934 | 0.960 | 0.973 | 0.974 | 0.852 | 0.894 | 0.963 | – |
 | Inference only | v5.0 merge avg | overlapping windows: mean probabilities | v5.0 | done | 0.921 | 0.934 | 0.960 | 0.973 | 0.974 | 0.851 | 0.894 | 0.963 | – |
@@ -245,6 +245,23 @@ Every v5 experiment that has run, is running or is queued; ideas that were dropp
 | Inference only | int8 (all Linear) | dynamic int8 encoder, CPU (300-doc sample: F1 ≈ 0.50) | v5.0 | paused by user |
 | Validation | seed runs (v5.0, SPAN × 2 seeds) | seed 42 → 2 more seeds | v5.0 / SPAN | proposed, not queued |
 <!-- v5-experiments:end -->
+
+## Repository layout
+
+| Path | Contents |
+|---|---|
+| `src/` | data builders, training, prediction, evaluation |
+| `configs/` | data sources, training recipes, account-format registry |
+| `scripts/english/`, `scripts/v4/`, `scripts/v5/` | training and evaluation queues per series (run from anywhere; they `cd` to the repo) |
+| `results/english/<v1 \| v2 \| v2.1 \| v3>/` | English-only models |
+| `results/v4/<A \| B64 \| A-minilm \| A-pilot>/` | v4.1 / v4.2 / v4.3 and the v4 pilot; `train_set/`, `latency/`, `router/` |
+| `results/v5/runs/<run>/` | one folder per v5 model: every benchmark, inference-only variants, latency |
+| `results/v5/{pilots,sweeps,train_set,summary}/` | frame-share pilots, LR sweeps, training-data coverage, cross-run tables |
+| `results/v5/latency/{gpu,cpu}_latency/` | latency by document size (`summary.tsv`) |
+| `model_card/`, `reports/` | model cards per release, research reports |
+
+Evaluation scripts given an output path directly in `results/` write it into its group folder
+(`src/results_layout.py`); `python results_layout.py` files anything written there by a shell redirect.
 
 ## Labels
 

@@ -13,6 +13,7 @@ from collections import Counter, defaultdict
 from tqdm import tqdm
 
 from common import IGNORE, ROOT, load_yaml
+from results_layout import result_path
 from evaluate import overlaps
 from predict import PIIPredictor
 
@@ -30,6 +31,8 @@ def main():
     ap.add_argument("--limit", type=int)
     ap.add_argument("--out", help="write metrics json here")
     args = ap.parse_args()
+    if args.out:
+        args.out = result_path(args.out)   # flat results/ path -> its group folder
 
     pdir = ROOT / cfg["data"]["processed_dir"]
     rows = read_jsonl(pdir / f"{args.split}.jsonl")[:args.limit]

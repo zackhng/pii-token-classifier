@@ -22,6 +22,7 @@ from pathlib import Path
 from tqdm import tqdm
 
 from common import IGNORE, ROOT, load_yaml
+from results_layout import result_path
 from eval_confusion import read_jsonl
 from evaluate import overlaps, prf, score_doc
 from predict import PIIPredictor
@@ -172,6 +173,8 @@ def main():
     ap.add_argument("--int8", action="store_true", help="dynamic int8 encoder weights (CPU)")
     ap.add_argument("--default_only", action="store_true", help="skip the all-token decoding pass (faster)")
     args = ap.parse_args()
+    if args.out:
+        args.out = result_path(args.out)   # flat results/ path -> its group folder
 
     rows = read_jsonl(ROOT / cfg["data"]["processed_dir"] / f"{args.split}.jsonl")
     if args.limit:

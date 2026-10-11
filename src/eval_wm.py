@@ -12,6 +12,7 @@ import json
 from collections import Counter, defaultdict
 
 from common import ROOT
+from results_layout import result_path
 from evaluate import overlaps
 from wm_gen import CONTEXTS, FORMATS, LABELS
 
@@ -24,6 +25,8 @@ def main():
     ap.add_argument("--out")
     ap.add_argument("--trim", action="store_true", help="apply predict.trim_span to the predictions (v5.0 as released)")
     a = ap.parse_args()
+    if a.out:
+        a.out = result_path(a.out)   # flat results/ path -> its group folder
     gold = {json.loads(l)["id"]: json.loads(l) for l in open(ROOT / "data/processed" / f"{a.split}.jsonl", encoding="utf-8")}
     preds = {json.loads(l)["id"]: json.loads(l)[a.mode] for l in open(a.pred, encoding="utf-8")}
     if a.trim:

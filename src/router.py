@@ -139,6 +139,7 @@ def main():
     import json
     import random
     from common import ROOT
+    from results_layout import result_path
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(ROOT / "outputs/router"))
     ap.add_argument("--per_lang", type=int, default=8000)
@@ -161,7 +162,7 @@ def main():
         print(f"\n{split}: routing accuracy per language (document level)")
         for g, v in report[split].items():
             print(f"  {g:8s} {v['acc']:.3f}  n={v['n']:5d}  {v['confused']}")
-    with open(ROOT / "results/router_accuracy.json", "w", encoding="utf-8") as f:
+    with open(result_path(ROOT / "results/router_accuracy.json"), "w", encoding="utf-8") as f:
         json.dump(report, f, indent=1, ensure_ascii=False)
 
 

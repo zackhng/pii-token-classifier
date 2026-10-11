@@ -11,6 +11,7 @@ from pathlib import Path
 
 from address_merge import merge_address_spans
 from common import IGNORE, ROOT, load_yaml
+from results_layout import find, result_path
 from evaluate import overlaps, prf, score_doc
 
 ENTITIES = load_yaml("label_map.yaml")["entities"]
@@ -57,7 +58,7 @@ EN_TAG = {"A-v5data+trim": "v5.0.1"}     # English results of the trimmed model 
 
 def english(tag: str, split: str, merged: bool) -> dict:
     tag = EN_TAG.get(tag, tag)
-    p = ROOT / "results" / f"{tag}_en_{split}{'_mergedgold' if merged else ''}.json"
+    p = find(f"{tag}_en_{split}{'_mergedgold' if merged else ''}.json")
     if not p.exists():
         return {}
     s = json.load(open(p, encoding="utf-8"))["summary"]
@@ -70,6 +71,8 @@ def main():
     ap.add_argument("--models", nargs="+", default=["A", "A-v5data"])
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
+    if a.out:
+        a.out = result_path(a.out)   # flat results/ path -> its group folder
     res = {}
     for tag in a.models:
         res[tag] = {}

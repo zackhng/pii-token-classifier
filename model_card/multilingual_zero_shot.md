@@ -122,7 +122,7 @@ Default decoding. Synth: English 3.1%; ja / ko / th 0.2–1.7%; zh-Hans / zh-Han
 
 ## What goes wrong
 
-Label-confusion percentages come from the alltok predictions (`results/v3_ml_synth.txt`, last section).
+Label-confusion percentages come from the alltok predictions (`results/english/v3/v3_ml_synth.txt`, last section).
 
 1. **Native-script names, companies and addresses.** Thai: 0% of PERSON / BUSINESS / ADDRESS
    found. Arabic: 54% of names and 76% of companies missed. Hindi companies are read as PERSON
