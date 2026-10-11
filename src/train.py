@@ -68,6 +68,19 @@ def main():
     ap.add_argument("--train_split", help="override data.train_split, e.g. ml_train_v5 (v5 runs, frame pilots)")
     ap.add_argument("--val_split", help="override data.val_split, e.g. ml_val_v5")
     ap.add_argument("--learning_rate", type=float, help="override train.learning_rate (v5 per-method LR sweep)")
+    ap.add_argument("--head_layers", type=int, default=0,
+                    help="v5 deep head: N transformer layers between encoder and classifier (deep_head.py)")
+    ap.add_argument("--freeze_encoder", action="store_true", help="deep head: train only the new layers + classifier")
+    ap.add_argument("--head_lr", type=float, help="deep head / struct head: learning rate of the new head parameters")
+    ap.add_argument("--head", choices=["crf", "span"], help="v5 structured head on the encoder (heads.py)")
+    ap.add_argument("--span_loss", choices=["gp", "ce"], default="gp",
+                    help="span head loss: GlobalPointer multi-label CE (gp) or per-span softmax CE (ce)")
+    ap.add_argument("--bs_eps", type=float, default=0.0, help="boundary smoothing eps (span_loss ce)")
+    ap.add_argument("--bs_d", type=int, default=1, help="boundary smoothing distance in words")
+    ap.add_argument("--batch_size", type=int, help="override per-device batch (memory); pair with --grad_accum "
+                    "to keep the effective batch of 32")
+    ap.add_argument("--grad_accum", type=int, help="override gradient_accumulation_steps")
+    ap.add_argument("--grad_ckpt", action="store_true", help="gradient checkpointing (memory only, same maths)")
     args = ap.parse_args()
 
     cfg = load_yaml(args.config)
@@ -133,8 +146,40 @@ def main():
               f"per adapter set={next(iter(per.values())) / 1e6:.3f}M x {len(per)}")
     elif cfg["train"].get("freeze"):
         apply_freeze(model, cfg["train"]["freeze"])
+    optimizers = (None, None)
+    if args.grad_ckpt:
+        model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+    if args.head_layers or args.head:
+        if args.head_layers:
+            from deep_head import DeepHeadTokenClassifier
+            model = DeepHeadTokenClassifier(model, args.head_layers, freeze_encoder=args.freeze_encoder)
+        else:
+            from heads import StructHeadTokenClassifier
+            model = StructHeadTokenClassifier(model, args.head, span_loss=args.span_loss,
+                                              bs_eps=args.bs_eps, bs_d=args.bs_d)
+            if args.head == "span":
+                print(f"span loss: {args.span_loss}  boundary smoothing eps={args.bs_eps} D={args.bs_d}")
+        new = {id(p) for p in model.new_parameters()}
+        head_lr = args.head_lr or cfg["train"]["learning_rate"]
+        no_decay = lambda n: n.endswith("bias") or "LayerNorm" in n or "norm" in n.split(".")[-2:][0]
+        groups = []
+        for is_new, lr in ((True, head_lr), (False, args.learning_rate or cfg["train"]["learning_rate"])):
+            for decay in (True, False):
+                ps = [p for n, p in model.named_parameters()
+                      if p.requires_grad and (id(p) in new) == is_new and no_decay(n) != decay]
+                if ps:
+                    groups.append({"params": ps, "lr": lr, "weight_decay": cfg["train"]["weight_decay"] if decay else 0.0})
+        optimizers = (torch.optim.AdamW(groups), None)
+        n_train = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        print(f"{'deep head: %d transformer layers' % args.head_layers if args.head_layers else 'head: ' + args.head}"
+              f"  freeze_encoder={args.freeze_encoder}  head_lr={head_lr}  trainable={n_train / 1e6:.1f}M")
 
     t = cfg["train"]
+    if args.batch_size:
+        t["per_device_train_batch_size"] = args.batch_size
+    if args.grad_accum:
+        t["gradient_accumulation_steps"] = args.grad_accum
+    print(f"batch {t['per_device_train_batch_size']} x accumulation {t['gradient_accumulation_steps']}")
     if args.learning_rate:
         t["learning_rate"] = args.learning_rate
         print(f"learning rate override: {args.learning_rate}")
@@ -172,10 +217,13 @@ def main():
         data_collator=DataCollatorForTokenClassification(tok, pad_to_multiple_of=8),
         processing_class=tok,
         compute_metrics=build_compute_metrics(id2label, window_langs),
+        optimizers=optimizers,
     )
     trainer.train(resume_from_checkpoint=True if args.resume == "last" else args.resume)
     print(trainer.evaluate())
-    if acfg:
+    if args.head_layers or args.head:
+        model.save_pretrained(out_dir)
+    elif acfg:
         # frozen encoder: store only adapters + head and point at the base; else save everything
         frozen = acfg.get("freeze_base", True)
         model.save_pretrained(out_dir, base_dir=base_name if frozen else None)

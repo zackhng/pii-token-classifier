@@ -170,3 +170,33 @@ def test_freeze_modes():
     assert {"classifier.weight", "classifier.bias"} <= train
     assert any(".encoder.layer.1." in n for n in train) and not any(".encoder.layer.0." in n for n in train)
     assert not any("embeddings" in n for n in train)
+
+
+# ---------------------------------------------------------------- v5 grid: deep head (extra transformer layers)
+def test_deep_head_forward_freeze_and_roundtrip(tmp_path):
+    from deep_head import DeepHeadTokenClassifier, is_deep_head_model
+    base = tiny_base()
+    m = DeepHeadTokenClassifier(base, n_layers=2, freeze_encoder=True)
+    ids, mask = batch()
+    labels = torch.randint(0, 5, ids.shape)
+    out = m(input_ids=ids, attention_mask=mask, labels=labels)
+    assert out.logits.shape == (4, 10, 5) and out.loss is not None
+    out.loss.backward()
+    train = {n for n, p in m.named_parameters() if p.requires_grad}
+    assert all(n.startswith("extra.") or n.startswith("base.classifier.") for n in train)
+    assert any(n.startswith("extra.1.") for n in train)
+    assert all(p.grad is None for n, p in m.named_parameters() if n.startswith("base.roberta."))
+    m.eval()
+    m.save_pretrained(tmp_path / "dh")
+    assert is_deep_head_model(tmp_path / "dh")
+    loaded = DeepHeadTokenClassifier.from_pretrained(tmp_path / "dh").eval()
+    with torch.no_grad():
+        assert torch.allclose(m(input_ids=ids, attention_mask=mask).logits,
+                              loaded(input_ids=ids, attention_mask=mask).logits, atol=1e-5)
+
+
+def test_deep_head_fine_tune_trains_everything():
+    from deep_head import DeepHeadTokenClassifier
+    m = DeepHeadTokenClassifier(tiny_base(), n_layers=1, freeze_encoder=False)
+    assert all(p.requires_grad for p in m.parameters())
+    assert {id(p) for p in m.new_parameters()} >= {id(p) for p in m.extra.parameters()}

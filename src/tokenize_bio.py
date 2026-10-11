@@ -155,15 +155,19 @@ def window_encode(tokenizer, text: str, max_length: int, stride: int,
             s, e = offs[i]
             if tok == "▁" and e > s and not text[s].isspace():
                 offs[i] = (s - 1, s) if s > 0 and text[s - 1].isspace() else (s, s)
-    body = max_length - 2
+    # [CLS]/[SEP]; encoders without them (EuroBERT, Qwen3: v5 encoder swaps) use BOS/EOS, or nothing
+    first = tokenizer.cls_token_id if tokenizer.cls_token_id is not None else tokenizer.bos_token_id
+    last = tokenizer.sep_token_id if tokenizer.sep_token_id is not None else tokenizer.eos_token_id
+    pre, post = [t for t in (first,) if t is not None], [t for t in (last,) if t is not None]
+    body = max_length - len(pre) - len(post)
     step = max(1, body - stride)
     windows, start = [], 0
     while True:
         chunk = slice(start, start + body)
         windows.append({
-            "input_ids": [tokenizer.cls_token_id] + ids[chunk] + [tokenizer.sep_token_id],
-            "offset_mapping": [(0, 0)] + [tuple(o) for o in offs[chunk]] + [(0, 0)],
-            "special_tokens_mask": [1] + [0] * len(ids[chunk]) + [1],
+            "input_ids": pre + ids[chunk] + post,
+            "offset_mapping": [(0, 0)] * len(pre) + [tuple(o) for o in offs[chunk]] + [(0, 0)] * len(post),
+            "special_tokens_mask": [1] * len(pre) + [0] * len(ids[chunk]) + [1] * len(post),
         })
         if start + body >= len(ids):
             break
