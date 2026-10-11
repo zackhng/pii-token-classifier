@@ -1,0 +1,127 @@
+model: ../outputs/sweep_B64_5e-5
+split: ml_struct_dev (3084 docs)
+script_boundaries: True
+
+=== decoding: default  (strict F1 = exact boundaries + label; lenient = any overlap)
+lang          P      R     F1  F1-len  detect  R-latin  R-nonlat  neg-FP  support
+ALL       0.714  0.784  0.747   0.894                                        4553
+en        0.821  0.827  0.824   0.913   0.947    0.844     0.726   0.172     1361
+zh-Hans   0.697  0.794  0.743   0.915   0.982    0.823     0.719   0.194      456
+zh-Hant   0.736  0.852  0.790   0.901   0.991    0.857     0.840   0.226      324
+ja        0.682  0.809  0.740   0.912   1.000    0.889     0.645   0.226      324
+ko        0.693  0.747  0.719   0.903   0.978    0.838     0.482   0.119      324
+hi        0.721  0.853  0.782   0.891   0.992    0.829     0.943   0.190      252
+ar        0.349  0.452  0.394   0.732   0.960    0.311     0.946   0.107      252
+th        0.819  0.825  0.822   0.972   0.976    0.789     0.948   0.012      252
+vi        0.608  0.714  0.657   0.887   0.992    0.714         -   0.071      252
+ms        0.717  0.774  0.744   0.866   0.948    0.774         -   0.190      252
+id        0.679  0.782  0.727   0.875   0.956    0.782         -   0.071      252
+tl        0.724  0.770  0.746   0.865   0.960    0.770         -   0.095      252
+
+strict F1 per entity (default)
+lang       PERSON BUSINESS  ADDRESS      DOB  ACCOUNT    PHONE    EMAIL      TIN
+en          0.799    0.714    0.862    0.878    0.865        -        -        -
+zh-Hans     0.891    0.892    0.118    0.786    0.784        -        -        -
+zh-Hant     0.930    0.914    0.483    0.742    0.836        -        -        -
+ja          1.000    0.720    0.000    0.857    0.848        -        -        -
+ko          1.000    0.362    0.296    0.667    0.894        -        -        -
+hi          0.727    0.554    0.824    0.973    0.837        -        -        -
+ar          1.000    0.617    0.960    0.657    0.218        -        -        -
+th          1.000    0.194    1.000    0.944    0.903        -        -        -
+vi          1.000    0.600    0.182    0.659    0.771        -        -        -
+ms          1.000    0.709    0.473    0.819    0.803        -        -        -
+id          0.667    0.506    0.400    0.944    0.833        -        -        -
+tl          0.632    0.421    0.731    0.886    0.826        -        -        -
+
+=== decoding: alltok  (strict F1 = exact boundaries + label; lenient = any overlap)
+lang          P      R     F1  F1-len  detect  R-latin  R-nonlat  neg-FP  support
+ALL       0.533  0.691  0.602   0.828                                        4553
+en        0.620  0.727  0.669   0.852   0.954    0.729     0.711   0.256     1361
+zh-Hans   0.632  0.768  0.693   0.897   0.998    0.790     0.711   0.278      456
+zh-Hant   0.645  0.818  0.721   0.871   1.000    0.808     0.840   0.381      324
+ja        0.635  0.778  0.699   0.899   1.000    0.843     0.645   0.238      324
+ko        0.642  0.775  0.702   0.862   0.981    0.838     0.590   0.238      324
+hi        0.456  0.663  0.540   0.793   0.992    0.588     0.943   0.286      252
+ar        0.230  0.397  0.292   0.671   0.972    0.296     0.750   0.214      252
+th        0.746  0.806  0.775   0.954   0.992    0.778     0.897   0.060      252
+vi        0.544  0.687  0.607   0.860   1.000    0.687         -   0.155      252
+ms        0.215  0.373  0.272   0.661   0.984    0.373         -   0.286      252
+id        0.554  0.718  0.625   0.819   0.996    0.718         -   0.107      252
+tl        0.306  0.476  0.373   0.702   0.984    0.476         -   0.179      252
+
+strict F1 per entity (alltok)
+lang       PERSON BUSINESS  ADDRESS      DOB  ACCOUNT    PHONE    EMAIL      TIN
+en          0.738    0.702    0.847    0.869    0.650        -        -        -
+zh-Hans     0.883    0.839    0.117    0.786    0.711        -        -        -
+zh-Hant     0.930    0.857    0.467    0.742    0.722        -        -        -
+ja          1.000    0.698    0.000    0.857    0.783        -        -        -
+ko          1.000    0.521    0.230    0.706    0.846        -        -        -
+hi          0.727    0.530    0.824    0.973    0.507        -        -        -
+ar          0.571    0.457    0.737    0.647    0.172        -        -        -
+th          1.000    0.143    0.880    0.889    0.891        -        -        -
+vi          0.769    0.578    0.182    0.659    0.704        -        -        -
+ms          1.000    0.691    0.473    0.819    0.048        -        -        -
+id          0.526    0.500    0.400    0.944    0.725        -        -        -
+tl          0.632    0.367    0.630    0.854    0.286        -        -        -
+
+what the gold spans were predicted as (alltok, largest-overlap prediction)
+  en       PERSON    n=  336  PERSON 89%, MISS 10%, BUSINESS 1%
+  en       BUSINESS  n=  120  BUSINESS 84%, MISS 16%
+  en       ADDRESS   n=   48  ADDRESS 100%
+  en       DOB       n=  204  DOB 100%
+  en       ACCOUNT   n=  653  ACCOUNT 82%, TIN 14%, PHONE 3%, MISS 2%
+  zh-Hans  PERSON    n=   60  PERSON 100%
+  zh-Hans  BUSINESS  n=   72  BUSINESS 99%, MISS 1%
+  zh-Hans  ADDRESS   n=   36  ADDRESS 100%
+  zh-Hans  DOB       n=   48  DOB 100%
+  zh-Hans  ACCOUNT   n=  240  ACCOUNT 98%, PHONE 1%, TIN 1%, BUSINESS 0%
+  zh-Hant  PERSON    n=   36  PERSON 97%, BUSINESS 3%
+  zh-Hant  BUSINESS  n=   48  BUSINESS 100%
+  zh-Hant  ADDRESS   n=   36  ADDRESS 100%
+  zh-Hant  DOB       n=   36  DOB 100%
+  zh-Hant  ACCOUNT   n=  168  ACCOUNT 97%, ADDRESS 1%, TIN 1%, BUSINESS 1%
+  ja       PERSON    n=   36  PERSON 100%
+  ja       BUSINESS  n=   48  BUSINESS 100%
+  ja       ADDRESS   n=   36  ADDRESS 100%
+  ja       DOB       n=   36  DOB 100%
+  ja       ACCOUNT   n=  168  ACCOUNT 99%, BUSINESS 1%, PHONE 1%
+  ko       PERSON    n=   36  PERSON 100%
+  ko       BUSINESS  n=   48  BUSINESS 69%, ACCOUNT 23%, MISS 8%
+  ko       ADDRESS   n=   36  ADDRESS 100%
+  ko       DOB       n=   36  DOB 75%, TIN 14%, MISS 6%, ACCOUNT 6%
+  ko       ACCOUNT   n=  168  ACCOUNT 100%
+  hi       PERSON    n=   12  PERSON 100%
+  hi       BUSINESS  n=   36  BUSINESS 94%, MISS 6%
+  hi       ADDRESS   n=   24  ADDRESS 100%
+  hi       DOB       n=   36  DOB 100%
+  hi       ACCOUNT   n=  144  ACCOUNT 94%, TIN 3%, PHONE 2%
+  ar       PERSON    n=   12  PERSON 100%
+  ar       BUSINESS  n=   36  BUSINESS 97%, MISS 3%
+  ar       ADDRESS   n=   24  ADDRESS 100%
+  ar       DOB       n=   36  DOB 83%, MISS 17%
+  ar       ACCOUNT   n=  144  ACCOUNT 72%, TIN 21%, PHONE 3%, BUSINESS 3%
+  th       PERSON    n=   12  PERSON 100%
+  th       BUSINESS  n=   36  BUSINESS 94%, MISS 6%
+  th       ADDRESS   n=   24  ADDRESS 100%
+  th       DOB       n=   36  DOB 100%
+  th       ACCOUNT   n=  144  ACCOUNT 100%
+  vi       PERSON    n=   12  PERSON 100%
+  vi       BUSINESS  n=   36  BUSINESS 100%
+  vi       ADDRESS   n=   24  ADDRESS 100%
+  vi       DOB       n=   36  DOB 100%
+  vi       ACCOUNT   n=  144  ACCOUNT 94%, PHONE 6%
+  ms       PERSON    n=   12  PERSON 100%
+  ms       BUSINESS  n=   36  BUSINESS 94%, MISS 6%
+  ms       ADDRESS   n=   24  ADDRESS 100%
+  ms       DOB       n=   36  DOB 100%
+  ms       ACCOUNT   n=  144  TIN 81%, ACCOUNT 15%, PHONE 3%, MISS 1%
+  id       PERSON    n=   12  PERSON 100%
+  id       BUSINESS  n=   36  BUSINESS 100%
+  id       ADDRESS   n=   24  ADDRESS 100%
+  id       DOB       n=   36  DOB 100%
+  id       ACCOUNT   n=  144  ACCOUNT 85%, TIN 10%, PHONE 4%, MISS 1%
+  tl       PERSON    n=   12  PERSON 100%
+  tl       BUSINESS  n=   36  BUSINESS 56%, PERSON 33%, MISS 11%
+  tl       ADDRESS   n=   24  ADDRESS 100%
+  tl       DOB       n=   36  DOB 100%
+  tl       ACCOUNT   n=  144  ACCOUNT 62%, TIN 38%

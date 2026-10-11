@@ -32,6 +32,220 @@ length 384, first-sub-token labelling, seqeval F1):
 | v2.0 | [`deberta-v3-xsmall-pii-v2.zip`](../../releases/tag/v2.0) | Rejects look-alikes: DOB vs ordinary dates, account numbers vs amounts / codes; label-map fixes; DOB format augmentation; form-style records | [`model_card/v2.md`](model_card/v2.md) |
 | v1.0 | [`deberta-v3-xsmall-pii.zip`](../../releases/tag/v1.0) | First release | [`model_card/v1.md`](model_card/v1.md) |
 
+<!-- v5-suggestions:start -->
+## Which v5 model to use (suggestions)
+
+Built from the experiment log below by `src/recommend.py` (re-run by `experiments_table.py`), so it changes as queued runs finish. **Accuracy** = mean strict F1 over the six multilingual sets (struct, wm, synth, real, mixed, Kiii); **coverage** = mean share of gold PII spans overlapped by any prediction. Latency: one document, ml_real text, CPU = 6 threads fp32, GPU = RTX 5060 Ti, median of warm runs. Single seed: gaps under 0.005 are within noise, so near-ties are listed. Dev sets only; nothing here has been checked on the held-out test sets.
+
+**Model names**
+
+| Name | What it is |
+|---|---|
+| v5.0 (A-v5data) | XLM-R base, fully fine-tuned, softmax BIO head (one label per token), trained on ml_train_v5. The released v5 model and the parent of every other row. |
+| H1 | encoder frozen, only the classifier head trains |
+| P1 | only the top 4 encoder layers + head train (partial unfreeze) |
+| S1 | encoder frozen + one shared bottleneck adapter for all languages |
+| B1 / B′ | encoder frozen + one adapter per language, routed by the window's main language (B1 on pretrained XLM-R, B′ on v5.0's encoder). Dropped: switching adapters adds latency on long mixed-language documents |
+| AL2 / AL4 / AL8 | "Additional Layers": v5.0 with 2 / 4 / 8 extra transformer layers between the encoder and the classifier |
+| CRF | v5.0 with a linear-chain CRF on the classifier: decodes the best label sequence per window instead of each token alone, so B/I tags stay consistent |
+| SPAN | v5.0 with a span head (GlobalPointer) instead of per-token labels: scores every (start word, end word, type) candidate up to 160 tokens long and keeps the best non-overlapping spans. Better boundaries on long spans (ADDRESS, BUSINESS) |
+| SPAN-CE | SPAN with a different loss: each candidate span is a softmax over {not PII + 8 types} (the span-classification loss of Zhu & Li, ACL 2022) |
+| SPAN-BS | SPAN-CE + boundary smoothing (Zhu & Li 2022): 10% of each gold span's target is spread over spans whose start or end is one word off, so near-miss boundaries are not punished as hard |
+| mmBERT-small / -base | encoder swapped to mmBERT (ModernBERT architecture, 1,800+ languages); 140M / 307M parameters |
+| MiniLM-L12 / -L6 | encoder swapped to Multilingual-MiniLMv2, 12 or 6 layers of width 384, distilled from XLM-R large (same tokenizer as XLM-R); about 117M / 107M parameters, mostly the embedding table, so far fewer compute per token |
+| … + span / + span-BS | that encoder with the SPAN or SPAN-BS head instead of the softmax head |
+| InfoXLM-base | XLM-R base further pretrained with cross-lingual contrastive objectives (Microsoft) |
+| XLM-V-base | XLM-R base architecture with a 1M-token vocabulary (fewer, better tokens for many languages) |
+| mDeBERTa-v3-base | multilingual DeBERTa v3 (disentangled attention, ELECTRA-style pretraining) |
+| XLM-R large | 24-layer, 560M-parameter XLM-R |
+| merge central / avg, overlap 64 | inference-only changes: how predictions from overlapping 384-token windows are combined, and a 64-token instead of 96-token window overlap |
+
+| Use | Model | Accuracy | Coverage | CPU 1k chars | CPU 100k chars | GPU 100k chars | Why |
+|---|---|---|---|---|---|---|---|
+| Most accurate | **SPAN-BS** | 0.943 | 0.993 | 0.17 s | 24.98 s | 1.13 s | highest mean strict F1; within noise: SPAN, SPAN-CE, InfoXLM-base + span-BS, 2 more |
+| Most cost-efficient (CPU) | **MiniLM-L12 + span** | 0.936 | 0.990 | 57 ms | 8.79 s | 0.53 s | fastest model within 0.010 strict F1 of the most accurate; 2.8× faster than v5.0 on CPU |
+| Fastest acceptable | **MiniLM-L6 + span** | 0.928 | 0.985 | 33 ms | 4.80 s | 0.38 s | fastest model within 0.010 strict F1 of v5.0 |
+| Widest coverage (masking) | **AL8** | 0.939 | 0.996 | – | – | – | highest mean coverage; within noise: AL4, v5.0 (A-v5data), B′, 11 more |
+| Reference | **v5.0 (A-v5data)** | 0.935 | 0.996 | 0.16 s | 24.38 s | 1.07 s | v5.0 as released |
+
+### Accuracy vs CPU latency (models that nothing beats on both)
+
+| Model | Accuracy | Coverage | CPU 100k chars | Speed vs v5.0 |
+|---|---|---|---|---|
+| MiniLM-L6 | 0.912 | 0.992 | 4.25 s | 5.7× |
+| MiniLM-L6 + span | 0.928 | 0.985 | 4.80 s | 5.1× |
+| MiniLM-L12 + span | 0.936 | 0.990 | 8.79 s | 2.8× |
+| mmBERT-small + span | 0.937 | 0.987 | 20.29 s | 1.2× |
+| SPAN | 0.943 | 0.990 | 24.81 s | 1.0× |
+| SPAN-BS | 0.943 | 0.993 | 24.98 s | 1.0× |
+
+### Best model per entity (six sets pooled)
+
+Best strict F1, best coverage, and the best strict F1 among CPU-fast models (≤ 10 s per 100k characters: MiniLM-L12, MiniLM-L6, MiniLM-L12 + span, MiniLM-L6 + span). Last columns: strict F1 / coverage of the overall picks for comparison.
+
+| Entity | n | Best strict F1 | Best coverage | Best CPU-fast strict F1 | SPAN-BS | MiniLM-L12 + span |
+|---|---|---|---|---|---|---|
+| PERSON | 31474 | SPAN 0.938 (ties: InfoXLM-base + span-BS, AL2, AL8 …) | mmBERT-base 0.999 (ties: CRF, v5.0 (A-v5data), B′ …) | MiniLM-L12 + span 0.932 (ties: MiniLM-L6 + span) | 0.934 / 0.996 | 0.932 / 0.995 |
+| ADDRESS | 11214 | SPAN-BS 0.918 (ties: SPAN) | mmBERT-base 0.997 (ties: B′, v5.0 (A-v5data), AL4 …) | MiniLM-L12 + span 0.898 | 0.918 / 0.982 | 0.898 / 0.967 |
+| ACCOUNT | 16669 | mmBERT-small + span 0.945 (ties: InfoXLM-base + span-BS, SPAN, mmBERT-base …) | v5.0 (A-v5data) 0.998 (ties: B′, CRF, P1 …) | MiniLM-L12 + span 0.937 | 0.941 / 0.997 | 0.937 / 0.996 |
+| BUSINESS | 6685 | AL2 0.933 (ties: InfoXLM-base + span-BS, SPAN-CE) | AL8 0.997 (ties: MiniLM-L6, S1, AL2 …) | MiniLM-L12 + span 0.914 (ties: MiniLM-L6 + span) | 0.927 / 0.987 | 0.914 / 0.989 |
+| DOB | 6788 | AL4 0.934 (ties: v5.0 (A-v5data), AL8, CRF …) | MiniLM-L12 0.994 (ties: AL4, mmBERT-base, P1 …) | MiniLM-L12 0.923 (ties: MiniLM-L12 + span) | 0.929 / 0.979 | 0.923 / 0.977 |
+| PHONE | 11922 | mmBERT-base 0.976 (ties: SPAN, mmBERT-small + span, SPAN-CE …) | mmBERT-base 1.000 (ties: B′, AL2, AL4 …) | MiniLM-L12 + span 0.972 | 0.973 / 0.999 | 0.972 / 0.998 |
+| EMAIL | 12290 | SPAN 0.994 (ties: SPAN-CE, MiniLM-L12 + span, InfoXLM-base + span-BS …) | v5.0 (A-v5data) 1.000 (ties: H1, P1, S1 …) | MiniLM-L12 + span 0.993 (ties: MiniLM-L6 + span, MiniLM-L6, MiniLM-L12) | 0.992 / 0.997 | 0.993 / 0.998 |
+| TIN | 8321 | InfoXLM-base + span-BS 0.964 (ties: SPAN-CE, SPAN-BS, SPAN) | P1 0.993 (ties: AL4, MiniLM-L6, SPAN-CE …) | MiniLM-L12 + span 0.954 | 0.963 / 0.987 | 0.954 / 0.982 |
+
+### Best model per language (six sets pooled)
+
+Best strict F1, best coverage, and the best strict F1 among CPU-fast models (≤ 10 s per 100k characters: MiniLM-L12, MiniLM-L6, MiniLM-L12 + span, MiniLM-L6 + span). Last columns: strict F1 / coverage of the overall picks for comparison.
+
+| Language | n | Best strict F1 | Best coverage | Best CPU-fast strict F1 | SPAN-BS | MiniLM-L12 + span |
+|---|---|---|---|---|---|---|
+| en | 7088 | CRF 0.984 (ties: SPAN, SPAN-CE, mmBERT-small + span …) | v5.0 (A-v5data) 0.996 (ties: CRF, B′, P1 …) | MiniLM-L12 + span 0.975 (ties: MiniLM-L6 + span) | 0.981 / 0.994 | 0.975 / 0.993 |
+| zh-Hans | 7382 | InfoXLM-base + span-BS 0.984 (ties: SPAN, SPAN-BS, SPAN-CE …) | AL4 0.999 (ties: AL2, AL8, mmBERT-small …) | MiniLM-L12 + span 0.978 | 0.983 / 0.996 | 0.978 / 0.995 |
+| zh-Hant | 7332 | SPAN-BS 0.986 (ties: SPAN-CE, InfoXLM-base + span-BS, CRF …) | AL8 0.994 (ties: AL4, AL2, S1 …) | MiniLM-L12 + span 0.982 | 0.986 / 0.989 | 0.982 / 0.987 |
+| ja | 7460 | SPAN-BS 0.963 | AL4 0.999 (ties: mmBERT-base, B′, P1 …) | MiniLM-L12 + span 0.929 | 0.963 / 0.983 | 0.929 / 0.969 |
+| ko | 23782 | AL2 0.854 (ties: AL8, SPAN, B′ …) | v5.0 (A-v5data) 0.998 (ties: B′, AL4, AL2 …) | MiniLM-L12 + span 0.849 | 0.852 / 0.993 | 0.849 / 0.992 |
+| hi | 5666 | InfoXLM-base + span-BS 0.983 (ties: SPAN, SPAN-CE, AL2 …) | AL2 0.996 (ties: AL4, P1, S1 …) | MiniLM-L12 + span 0.976 | 0.977 / 0.993 | 0.976 / 0.992 |
+| ar | 4158 | SPAN-CE 0.965 (ties: SPAN) | P1 0.999 (ties: MiniLM-L12, mmBERT-base, MiniLM-L6 …) | MiniLM-L12 + span 0.954 | 0.957 / 0.984 | 0.954 / 0.983 |
+| th | 4134 | SPAN 0.985 (ties: mmBERT-base, AL4, SPAN-BS …) | S1 1.000 (ties: AL4, SPAN-CE, SPAN-BS …) | MiniLM-L12 + span 0.978 (ties: MiniLM-L6 + span) | 0.983 / 0.999 | 0.978 / 0.997 |
+| vi | 7391 | AL2 0.975 (ties: InfoXLM-base + span-BS, CRF, AL8 …) | S1 0.996 (ties: AL8, AL4, AL2 …) | MiniLM-L12 + span 0.964 | 0.966 / 0.993 | 0.964 / 0.991 |
+| ms | 7370 | mmBERT-small + span 0.970 (ties: SPAN) | mmBERT-base 0.999 (ties: SPAN-CE, S1, SPAN-BS …) | MiniLM-L12 + span 0.944 | 0.952 / 0.997 | 0.944 / 0.992 |
+| id | 7367 | mmBERT-small + span 0.983 (ties: SPAN-CE, SPAN, AL4 …) | AL2 0.999 (ties: AL8, mmBERT-base, B′ …) | MiniLM-L12 + span 0.979 (ties: MiniLM-L6 + span) | 0.981 / 0.995 | 0.979 / 0.996 |
+| tl | 7554 | AL8 0.982 (ties: AL4, InfoXLM-base + span-BS, AL2 …) | mmBERT-base 0.998 (ties: AL2, AL4, mmBERT-small …) | MiniLM-L12 + span 0.978 (ties: MiniLM-L6 + span) | 0.976 / 0.997 | 0.978 / 0.994 |
+
+<!-- v5-suggestions:end -->
+
+<!-- v5-experiments:start -->
+## v5 experiment log
+
+Every v5 experiment that has run, is running or is queued; ideas that were dropped, cancelled or not yet queued are in a separate table at the end. Each row changes **one thing** relative to its parent. Choices were made on the dev sets only; the held-out test sets (ml_struct_test, ml_wm_test) were used once, for v5.0. Single seed (42) throughout. Regenerate with `cd src && python experiments_table.py`.
+
+- **struct** = ml_struct_dev (unseen sentence structures), **wm** = ml_wm_dev (wealth-management grid, 12 languages + English–X), **synth** = ml_synth, **real** = ml_real (public data), **mixed** = ml_mixed (code-switched public data), **Kiii** = Korean financial documents.
+- Multilingual sets: punctuation trim on, merged-address gold for real / mixed, scored from saved predictions. English test / stress: evaluate.py, **untrimmed** (trim adds about +0.015 on English test for XLM-R-tokenizer models, e.g. v5.0 .894 → .911, SPAN .907 → .923). val macro = best ml_val_v5 macro-F1 during training (pilots / v4 rows: their own validation set).
+- Pilot rows train on a 50k-document pilot set; LR-sweep pilots are not listed. Older runs scored on `ml_struct` (the original name of ml_struct_dev, same 3,084 documents) are re-scored against today's gold.
+- Threshold rows: the per-label thresholds tuned on wm (results/v5_postproc.json) applied to the saved predictions; their wm column is the tuning set, so not a fair test. English needs a model run, so –.
+- Model names (AL, SPAN, SPAN-BS, …): see **Model names** in the suggestions section above.
+- **–** = not run, not scored on that set, or not recoverable (predictions not saved).
+
+### Strict F1
+
+| Group | Experiment | One change vs parent | Parent | Status | struct | wm | synth | real | mixed | Kiii | EN test | EN stress | val macro |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Baselines | v4.1 | v4 release (Model A): XLM-R base, v4 data | – | done | 0.541 | 0.739 | 0.896 | 0.905 | 0.912 | 0.852 | 0.910 | 0.955 | 0.946 |
+| Baselines | v4.2 | v4 release (Model B): per-language adapters | – | done | 0.474 | 0.606 | 0.705 | 0.894 | 0.901 | 0.848 | 0.821 | 0.907 | 0.937 |
+| Baselines | v4 MiniLM | v4 data, encoder Multilingual-MiniLM-L12 | v4.1 | done | 0.534 | 0.720 | 0.883 | 0.902 | 0.909 | 0.850 | 0.903 | 0.932 | 0.939 |
+| Stage 1: data | pilot r1 0% frames | 50k pilot, old frames, share 0% | – | done | 0.697 | – | – | 0.962 | – | – | – | – | 0.917 |
+| Stage 1: data | pilot r1 10% | frame share 10% | pilot r1 0% | done | 0.919 | – | – | 0.959 | – | – | – | – | 0.912 |
+| Stage 1: data | pilot r1 25% | frame share 25% | pilot r1 0% | done | 0.916 | – | – | 0.956 | – | – | – | – | 0.911 |
+| Stage 1: data | pilot r1 40% | frame share 40% | pilot r1 0% | done | 0.916 | – | – | 0.956 | – | – | – | – | 0.907 |
+| Stage 1: data | pilot r2 0% frames | 50k pilot, frames + wm grid, share 0% | – | done | 0.614 | 0.788 | – | 0.961 | – | – | – | – | 0.916 |
+| Stage 1: data | pilot r2 10% | frame share 10% | pilot r2 0% | done | 0.913 | 0.917 | – | 0.960 | – | – | – | – | 0.916 |
+| Stage 1: data | pilot r2 25% (chosen) | frame share 25% | pilot r2 0% | done | 0.930 | 0.935 | – | 0.959 | – | – | – | – | 0.910 |
+| Stage 1: data | pilot r2 40% | frame share 40% | pilot r2 0% | done | 0.945 | 0.937 | – | 0.953 | – | – | – | – | 0.908 |
+| Stage 1: data | **v5.0** (A-v5data) | data: ml_train_v5 (v4.1 recipe) | v4.1 | done | 0.921 | 0.934 | 0.960 | 0.973 | 0.974 | 0.851 | 0.894 | 0.963 | 0.945 |
+| Stage 2: what trains | H1 | encoder frozen, head only (LR 3e-3) | v5.0 | done | 0.637 | 0.618 | 0.659 | 0.729 | 0.723 | 0.486 | 0.613 | 0.563 | 0.642 |
+| Stage 2: what trains | P1 | top 4 layers + head (LR 1e-4) | v5.0 | done | 0.884 | 0.926 | 0.950 | 0.968 | 0.967 | 0.848 | 0.884 | 0.941 | 0.933 |
+| Stage 2: what trains | S1 | frozen encoder + one shared adapter (LR 3e-4) | v5.0 | done | 0.911 | 0.932 | 0.962 | 0.966 | 0.966 | 0.844 | 0.844 | 0.935 | 0.926 |
+| Stage 2: what trains | B1 | frozen encoder + per-language adapters (LR 1e-4) | v5.0 | done | 0.865 | 0.889 | 0.904 | 0.960 | 0.956 | 0.848 | 0.818 | 0.926 | 0.934 |
+| Stage 2: what trains | B1 lr 3e-4 | LR 1e-4 → 3e-4 | B1 | done | 0.865 | 0.885 | 0.900 | 0.962 | 0.961 | 0.850 | 0.817 | 0.936 | 0.935 |
+| Stage 2: what trains | B′ | per-language adapters on v5.0's encoder | B1 | done | 0.923 | 0.934 | 0.957 | 0.972 | 0.974 | 0.851 | 0.870 | 0.965 | 0.946 |
+| Deep head | AL2 | +2 transformer layers before the classifier (head LR 1e-4) | v5.0 | done | 0.923 | 0.935 | 0.966 | 0.973 | 0.974 | 0.851 | 0.895 | 0.963 | 0.945 |
+| Deep head | AL4 | +4 layers | v5.0 | done | 0.917 | 0.939 | 0.958 | 0.973 | 0.975 | 0.852 | 0.896 | 0.964 | 0.944 |
+| Deep head | AL8 | +8 layers | v5.0 | done | 0.930 | 0.940 | 0.966 | 0.973 | 0.975 | 0.853 | 0.897 | 0.974 | 0.945 |
+| Heads | CRF | CRF on the classifier (transitions LR 5e-3) | v5.0 | done | 0.933 | 0.942 | 0.964 | 0.974 | 0.975 | 0.848 | 0.902 | 0.970 | 0.949 |
+| Heads | **SPAN** | GlobalPointer span head (head LR 1e-4) | v5.0 | done | 0.932 | 0.951 | 0.970 | 0.975 | 0.976 | 0.854 | 0.907 | 0.976 | 0.949 |
+| Heads | SPAN-CE | span loss → per-span softmax CE | SPAN | done | 0.935 | 0.947 | 0.964 | 0.974 | 0.976 | 0.853 | 0.906 | 0.969 | 0.951 |
+| Heads | SPAN-BS | boundary smoothing ε 0.1, D 1 | SPAN-CE | done | 0.945 | 0.948 | 0.967 | 0.974 | 0.976 | 0.850 | 0.906 | 0.968 | 0.949 |
+| Encoders (softmax head) | mmBERT-small | encoder → mmBERT-small | v5.0 | done | 0.889 | 0.926 | 0.955 | 0.973 | 0.977 | 0.853 | 0.905 | 0.961 | 0.939 |
+| Encoders (softmax head) | mmBERT-base | encoder → mmBERT-base | v5.0 | done | 0.888 | 0.934 | 0.953 | 0.975 | 0.979 | 0.854 | 0.911 | 0.972 | 0.945 |
+| Encoders (softmax head) | MiniLM-L12 | encoder → mMiniLMv2-L12-H384 | v5.0 | done | 0.881 | 0.926 | 0.946 | 0.964 | 0.963 | 0.840 | 0.876 | 0.919 | 0.929 |
+| Encoders (softmax head) | MiniLM-L6 | encoder → mMiniLMv2-L6-H384 | v5.0 | done | 0.879 | 0.911 | 0.938 | 0.957 | 0.953 | 0.834 | 0.863 | 0.894 | 0.914 |
+| Encoders + span | mmBERT-small + span | span head | mmBERT-small | done | 0.914 | 0.938 | 0.961 | 0.976 | 0.979 | 0.855 | 0.921 | 0.966 | 0.947 |
+| Encoders + span | MiniLM-L12 + span | span head | MiniLM-L12 | done | 0.919 | 0.940 | 0.963 | 0.970 | 0.971 | 0.851 | 0.901 | 0.945 | 0.941 |
+| Encoders + span | MiniLM-L6 + span | span head | MiniLM-L6 | done | 0.919 | 0.926 | 0.952 | 0.964 | 0.963 | 0.846 | 0.890 | 0.916 | 0.929 |
+| Encoders + boundary-smoothed span | MiniLM-L12 + span-BS | head → SPAN-BS head (CE loss + boundary smoothing) | MiniLM-L12 + span | done | 0.921 | 0.940 | 0.961 | 0.969 | 0.968 | 0.849 | 0.900 | 0.945 | 0.941 |
+| Encoders + boundary-smoothed span | MiniLM-L6 + span-BS | head → SPAN-BS head (CE loss + boundary smoothing) | MiniLM-L6 + span | done | 0.917 | 0.927 | 0.953 | 0.964 | 0.963 | 0.844 | 0.891 | 0.920 | 0.929 |
+| Encoders + boundary-smoothed span | mDeBERTa-v3-base + span-BS | encoder → mDeBERTa-v3-base | SPAN-BS | queued | – | – | – | – | – | – | – | – | – |
+| Encoders + boundary-smoothed span | InfoXLM-base + span-BS | encoder → InfoXLM-base | SPAN-BS | done | 0.928 | 0.944 | 0.966 | 0.974 | 0.975 | 0.850 | 0.905 | 0.968 | 0.949 |
+| Encoders + boundary-smoothed span | XLM-V-base + span-BS | encoder → XLM-V-base | SPAN-BS | running | – | – | – | – | – | – | – | – | – |
+| Encoders + boundary-smoothed span | XLM-R large + span-BS | encoder → XLM-R large | SPAN-BS | queued | – | – | – | – | – | – | – | – | – |
+| Inference only | v5.0 merge central | overlapping windows: most central window | v5.0 | done | 0.921 | 0.934 | 0.960 | 0.973 | 0.974 | 0.852 | 0.894 | 0.963 | – |
+| Inference only | v5.0 merge avg | overlapping windows: mean probabilities | v5.0 | done | 0.921 | 0.934 | 0.960 | 0.973 | 0.974 | 0.851 | 0.894 | 0.963 | – |
+| Inference only | v5.0 overlap 64 | window overlap 96 → 64 | v5.0 | done | 0.921 | 0.934 | 0.960 | 0.973 | 0.974 | 0.851 | 0.895 | 0.963 | – |
+| Inference only | SPAN merge central | most central window | SPAN | done | 0.932 | 0.951 | 0.970 | 0.975 | 0.976 | 0.855 | 0.908 | 0.976 | – |
+| Inference only | SPAN merge avg | span scores averaged over windows | SPAN | done | 0.932 | 0.951 | 0.970 | 0.975 | 0.976 | 0.853 | 0.908 | 0.976 | – |
+| Inference only | SPAN overlap 64 | window overlap 96 → 64 | SPAN | done | 0.932 | 0.951 | 0.970 | 0.975 | 0.976 | 0.853 | 0.907 | 0.976 | – |
+| Inference only | v5.0 + label thresholds | per-label score thresholds (tuned on wm) | v5.0 | done | 0.928 | 0.941 | 0.962 | 0.973 | 0.975 | 0.852 | – | – | – |
+| Inference only | SPAN + label thresholds | per-label score thresholds (tuned on wm) | SPAN | done | 0.924 | 0.953 | 0.971 | 0.971 | 0.973 | 0.836 | – | – | – |
+
+### Coverage (share of gold PII spans overlapped by any prediction)
+
+| Group | Experiment | Status | struct | wm | synth | real | mixed | Kiii |
+|---|---|---|---|---|---|---|---|---|
+| Baselines | v4.1 | done | 0.919 | 0.908 | 0.970 | 0.998 | 0.997 | 0.999 |
+| Baselines | v4.2 | done | 0.895 | 0.896 | 0.945 | 0.996 | 0.993 | 0.998 |
+| Baselines | v4 MiniLM | done | 0.922 | 0.916 | 0.975 | 0.997 | 0.995 | 0.999 |
+| Stage 1: data | pilot r1 0% frames | done | 0.932 | – | – | 0.995 | – | – |
+| Stage 1: data | pilot r1 10% | done | 0.987 | – | – | 0.994 | – | – |
+| Stage 1: data | pilot r1 25% | done | 0.993 | – | – | 0.993 | – | – |
+| Stage 1: data | pilot r1 40% | done | 0.996 | – | – | 0.993 | – | – |
+| Stage 1: data | pilot r2 0% frames | done | 0.933 | 0.957 | – | 0.995 | – | – |
+| Stage 1: data | pilot r2 10% | done | 0.996 | 0.991 | – | 0.995 | – | – |
+| Stage 1: data | pilot r2 25% (chosen) | done | 0.996 | 0.994 | – | 0.995 | – | – |
+| Stage 1: data | pilot r2 40% | done | 0.997 | 0.993 | – | 0.993 | – | – |
+| Stage 1: data | **v5.0** (A-v5data) | done | 0.993 | 0.993 | 0.995 | 0.998 | 0.996 | 0.999 |
+| Stage 2: what trains | H1 | done | 0.936 | 0.959 | 0.985 | 0.973 | 0.967 | 0.968 |
+| Stage 2: what trains | P1 | done | 0.990 | 0.996 | 0.995 | 0.996 | 0.994 | 0.996 |
+| Stage 2: what trains | S1 | done | 0.986 | 0.995 | 0.999 | 0.996 | 0.993 | 0.997 |
+| Stage 2: what trains | B1 | done | 0.976 | 0.986 | 0.990 | 0.995 | 0.992 | 0.998 |
+| Stage 2: what trains | B1 lr 3e-4 | done | 0.974 | 0.985 | 0.992 | 0.995 | 0.993 | 0.998 |
+| Stage 2: what trains | B′ | done | 0.992 | 0.993 | 0.995 | 0.998 | 0.997 | 0.999 |
+| Deep head | AL2 | done | 0.987 | 0.995 | 0.999 | 0.997 | 0.995 | 0.998 |
+| Deep head | AL4 | done | 0.990 | 0.996 | 0.998 | 0.997 | 0.997 | 0.998 |
+| Deep head | AL8 | done | 0.991 | 0.995 | 0.999 | 0.997 | 0.996 | 0.998 |
+| Heads | CRF | done | 0.992 | 0.994 | 0.993 | 0.995 | 0.994 | 0.999 |
+| Heads | **SPAN** | done | 0.978 | 0.979 | 0.993 | 0.996 | 0.995 | 0.999 |
+| Heads | SPAN-CE | done | 0.981 | 0.986 | 0.993 | 0.996 | 0.994 | 0.999 |
+| Heads | SPAN-BS | done | 0.990 | 0.985 | 0.994 | 0.996 | 0.994 | 0.999 |
+| Encoders (softmax head) | mmBERT-small | done | 0.974 | 0.991 | 0.996 | 0.997 | 0.996 | 0.999 |
+| Encoders (softmax head) | mmBERT-base | done | 0.980 | 0.993 | 0.997 | 0.998 | 0.998 | 0.999 |
+| Encoders (softmax head) | MiniLM-L12 | done | 0.990 | 0.995 | 0.998 | 0.994 | 0.990 | 0.996 |
+| Encoders (softmax head) | MiniLM-L6 | done | 0.985 | 0.994 | 0.997 | 0.994 | 0.989 | 0.994 |
+| Encoders + span | mmBERT-small + span | done | 0.966 | 0.979 | 0.988 | 0.996 | 0.995 | 0.998 |
+| Encoders + span | MiniLM-L12 + span | done | 0.983 | 0.982 | 0.991 | 0.993 | 0.992 | 0.998 |
+| Encoders + span | MiniLM-L6 + span | done | 0.973 | 0.977 | 0.986 | 0.990 | 0.985 | 0.997 |
+| Encoders + boundary-smoothed span | MiniLM-L12 + span-BS | done | 0.980 | 0.986 | 0.989 | 0.993 | 0.991 | 0.997 |
+| Encoders + boundary-smoothed span | MiniLM-L6 + span-BS | done | 0.982 | 0.980 | 0.989 | 0.991 | 0.987 | 0.996 |
+| Encoders + boundary-smoothed span | mDeBERTa-v3-base + span-BS | queued | – | – | – | – | – | – |
+| Encoders + boundary-smoothed span | InfoXLM-base + span-BS | done | 0.989 | 0.986 | 0.995 | 0.996 | 0.993 | 0.998 |
+| Encoders + boundary-smoothed span | XLM-V-base + span-BS | running | – | – | – | – | – | – |
+| Encoders + boundary-smoothed span | XLM-R large + span-BS | queued | – | – | – | – | – | – |
+| Inference only | v5.0 merge central | done | 0.993 | 0.993 | 0.995 | 0.998 | 0.996 | 0.999 |
+| Inference only | v5.0 merge avg | done | 0.993 | 0.993 | 0.995 | 0.998 | 0.996 | 0.999 |
+| Inference only | v5.0 overlap 64 | done | 0.993 | 0.993 | 0.995 | 0.998 | 0.996 | 0.999 |
+| Inference only | SPAN merge central | done | 0.978 | 0.979 | 0.993 | 0.996 | 0.995 | 0.998 |
+| Inference only | SPAN merge avg | done | 0.978 | 0.979 | 0.993 | 0.996 | 0.995 | 0.999 |
+| Inference only | SPAN overlap 64 | done | 0.978 | 0.979 | 0.993 | 0.996 | 0.995 | 0.999 |
+| Inference only | v5.0 + label thresholds | done | 0.961 | 0.980 | 0.979 | 0.992 | 0.989 | 0.993 |
+| Inference only | SPAN + label thresholds | done | 0.936 | 0.973 | 0.987 | 0.986 | 0.986 | 0.967 |
+
+### Not run (dropped, cancelled, on hold or proposed)
+
+| Group | Experiment | Change vs parent | Parent | Why not run |
+|---|---|---|---|---|
+| Stage 2: what trains | B′ fresh head | B′ with the classifier re-initialised | B′ | stopped at 28% (B series dropped) |
+| Stage 2: what trains | B2 (DAPT + adapters) | per-language adapters on a financial-DAPT encoder | B1 | dropped (B series) |
+| Stage 2: what trains | DAPT row (H2 / P2 / A2) | multilingual financial DAPT before fine-tuning | v5.0 | planned, not built |
+| Deep head | AL16 | +16 layers | v5.0 | cancelled by user |
+| Deep head | HL2 / HL4 / HL8 | frozen encoder + 2/4/8 layers | H1 | dropped (head-only not promising) |
+| Encoders (softmax head) | EuroBERT-210m | encoder → EuroBERT-210m | v5.0 | dropped by user |
+| Encoders (softmax head) | Qwen3-Embedding-0.6B | encoder → Qwen3-Embedding-0.6B | v5.0 | dropped by user |
+| Encoders + span | mmBERT-base + span | span head | mmBERT-base | cancelled by user |
+| Inference only | checksum post-filter | drop IBAN-shaped accounts failing mod-97 | SPAN | not testable (synthetic IBANs invalid) |
+| Inference only | int8 (all Linear) | dynamic int8 encoder, CPU (300-doc sample: F1 ≈ 0.50) | v5.0 | paused by user |
+| Validation | seed runs (v5.0, SPAN × 2 seeds) | seed 42 → 2 more seeds | v5.0 / SPAN | proposed, not queued |
+<!-- v5-experiments:end -->
+
 ## Labels
 
 8 entity types, BIO-tagged (17 labels incl. `O`):

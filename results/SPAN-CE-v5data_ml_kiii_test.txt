@@ -1,0 +1,30 @@
+model: ../outputs/pii-ml-SPAN-CE-v5data
+split: ml_kiii_test (240 docs)
+script_boundaries: True
+
+=== decoding: default  (strict F1 = exact boundaries + label; lenient = any overlap)
+lang          P      R     F1  F1-len  detect  R-latin  R-nonlat  neg-FP  support
+ALL       0.858  0.860  0.859   0.995                                       16504
+ko        0.858  0.860  0.859   0.995   0.999    0.918     0.826       -    16504
+
+strict F1 per entity (default)
+lang       PERSON BUSINESS  ADDRESS      DOB  ACCOUNT    PHONE    EMAIL      TIN
+ko          0.852        -    0.873    0.539    0.878    0.927    0.910    0.885
+
+=== decoding: alltok  (strict F1 = exact boundaries + label; lenient = any overlap)
+lang          P      R     F1  F1-len  detect  R-latin  R-nonlat  neg-FP  support
+ALL       0.076  0.119  0.093   0.778                                       16504
+ko        0.076  0.119  0.093   0.778   0.999    0.118     0.119       -    16504
+
+strict F1 per entity (alltok)
+lang       PERSON BUSINESS  ADDRESS      DOB  ACCOUNT    PHONE    EMAIL      TIN
+ko          0.071        -    0.000    0.998    0.068    0.117    0.006    0.036
+
+what the gold spans were predicted as (alltok, largest-overlap prediction)
+  ko       PERSON    n= 7380  PERSON 100%, MISS 0%, ACCOUNT 0%
+  ko       ADDRESS   n=  608  ADDRESS 100%
+  ko       DOB       n=  625  DOB 100%
+  ko       ACCOUNT   n= 5720  ACCOUNT 99%, PHONE 0%, MISS 0%, TIN 0%
+  ko       PHONE     n= 1486  PHONE 100%, ACCOUNT 0%
+  ko       EMAIL     n=  557  EMAIL 100%
+  ko       TIN       n=  128  TIN 95%, ACCOUNT 5%
