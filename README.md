@@ -4,12 +4,14 @@ BIO token-classification models for detecting personally identifiable informatio
 text, following the [OpenMed](https://huggingface.co/OpenMed) PII recipe (Hugging Face Trainer, max
 length 384, first-sub-token labelling, seqeval F1):
 - **v5.x / v4.x, multilingual:** 12 languages, [XLM-R base](https://huggingface.co/FacebookAI/xlm-roberta-base)
-  (v5.0–v5.2, v4.1, v4.2) or [Multilingual-MiniLM](https://huggingface.co/microsoft/Multilingual-MiniLM-L12-H384) (v4.3).
+  (v5.0–v5.2, v4.1, v4.2), [XLM-R large](https://huggingface.co/FacebookAI/xlm-roberta-large) (v5.3) or [Multilingual-MiniLM](https://huggingface.co/microsoft/Multilingual-MiniLM-L12-H384) (v4.3).
   English, Simplified / Traditional Chinese, Japanese, Korean, Hindi, Arabic, Thai, Vietnamese, Malay,
   Indonesian, Tagalog.
 - **v1–v3, English:** [`microsoft/deberta-v3-xsmall`](https://huggingface.co/microsoft/deberta-v3-xsmall).
 
 **Which model** (multilingual; held-out test mean strict F1 / coverage over `ml_struct_test`, `ml_wm_test`, `ml_wm_known`):
+- **v5.3** (XLM-R large + span head): **most accurate**, 0.968 / 0.991, and best on every dev set and English.
+  About 3× slower than the base-size models (GPU 3.3 s, CPU 87 s per 100k characters).
 - **v5.1** (XLM-R base + span head): the most accurate base-size model, 0.954 / 0.976; better boundaries on long
   entities (addresses, company names) than v5.0.
 - **v5.2** (XLM-R base + span head with boundary smoothing): 0.951 / 0.984, level with v5.1 on accuracy with more coverage.
@@ -24,7 +26,8 @@ length 384, first-sub-token labelling, seqeval F1):
 
 | Version | Weights | Highlights | Model card |
 |---|---|---|---|
-| **v5.2** (current, multilingual) | [`xlmr-base-pii-ml-v5.2.zip`](../../releases/tag/v5.2) | v5.0 with one change: a **span head with boundary smoothing** (scores whole spans; near-miss boundaries get partial credit in training). Dev sets, strict F1: unseen structures 0.921 → **0.945**, wm grid 0.934 → 0.948, ADDRESS 0.888 → **0.918**, BUSINESS 0.908 → 0.927; coverage 0.996 → 0.993. 2–6% slower. Held-out tests 0.948 / 0.956 / 0.951 (mean 0.951), coverage 0.984 | [`model_card/v5.2.md`](model_card/v5.2.md) |
+| **v5.3** (current, most accurate, multilingual) | [`xlmr-large-pii-ml-v5.3.zip`](../../releases/tag/v5.3) | v5.2's head on **XLM-R large** (560M parameters). Held-out tests, strict F1: unseen structures **0.970**, wm grid **0.969**, known formats **0.967** (v5.0: 0.948 / 0.949 / 0.946), coverage 0.991; ADDRESS 0.888 → **0.944**, BUSINESS 0.908 → **0.954** (dev); English test / stress 0.911 / 0.983. About 3× slower than v5.0 | [`model_card/v5.3.md`](model_card/v5.3.md) |
+| v5.2 (multilingual) | [`xlmr-base-pii-ml-v5.2.zip`](../../releases/tag/v5.2) | v5.0 with one change: a **span head with boundary smoothing** (scores whole spans; near-miss boundaries get partial credit in training). Dev sets, strict F1: unseen structures 0.921 → **0.945**, wm grid 0.934 → 0.948, ADDRESS 0.888 → **0.918**, BUSINESS 0.908 → 0.927; coverage 0.996 → 0.993. 2–6% slower. Held-out tests 0.948 / 0.956 / 0.951 (mean 0.951), coverage 0.984 | [`model_card/v5.2.md`](model_card/v5.2.md) |
 | v5.1 (multilingual) | [`xlmr-base-pii-ml-v5.1.zip`](../../releases/tag/v5.1) | v5.0 with one change: a **span head** (GlobalPointer). Dev sets, strict F1: unseen structures 0.921 → 0.932, wm grid 0.934 → **0.951**, public data 0.975, English stress 0.976; coverage 0.996 → 0.990. Held-out tests 0.945 / 0.960 / 0.957 (mean **0.954**, best base-size model), coverage 0.976 | [`model_card/v5.1.md`](model_card/v5.1.md) |
 | **v5.0** (multilingual) | [`xlmr-base-pii-ml-v5.0.zip`](../../releases/tag/v5.0) | v4.1's model and recipe on new training data built for **unseen sentence structures**: hand-written and generated wealth-management frames in 12 languages and English + X code-switching, real bank / custodian / broker account formats, look-alike contrasts, whole-address labels. Held-out unseen-structure tests **0.557 → 0.948** and **0.725 → 0.949** (strict F1); accounts no longer read as tax IDs (account recall 0.54 → 0.97, incl. IBAN / IBKR / Fidelity / Pershing formats); look-alikes tagged as PII 24.8% → 0.8%; public data and English test level or better on the same gold; punctuation trim on by default | [`model_card/v5.md`](model_card/v5.md) |
 | v4.1 (multilingual) | [`xlmr-base-pii-ml-v4.1.zip`](../../releases/tag/v4.1) | **12 languages**, XLM-R base fully fine-tuned on 337k docs from 14 public sources (+ generated data only where none exists). Multilingual real-data F1 0.675 → **0.942**, wealth-management docs 0.523 → **0.873** (v3 with the new CJK / Thai word boundaries); English stress 0.936 → 0.955, English test 0.925 → 0.910 | [`model_card/v4.md`](model_card/v4.md) |
