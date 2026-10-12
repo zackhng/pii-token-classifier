@@ -22,6 +22,7 @@ from evaluate import overlaps, prf, score_doc
 from predict import trim_span
 
 SETS = ["ml_struct_dev", "ml_wm_dev", "ml_synth", "ml_real", "ml_mixed", "ml_kiii_test"]
+TEST_SETS = ["ml_struct_test", "ml_wm_test", "ml_wm_known"]     # held out: not used for any v5 choice
 SHORT = {"ml_struct_dev": "struct", "ml_wm_dev": "wm", "ml_synth": "synth", "ml_real": "real",
          "ml_mixed": "mixed", "ml_kiii_test": "Kiii"}
 MERGE = {"ml_real", "ml_mixed"}
@@ -72,10 +73,10 @@ EXPS = [
     ("Encoders + span", "MiniLM-L6 + span", "MML6-SPAN-v5data", "MML6-SPAN-v5data", "span head", "MiniLM-L6", DONE),
     ("Encoders + boundary-smoothed span", "MiniLM-L12 + span-BS", "MML12-BS-v5data", "MML12-BS-v5data", "head → SPAN-BS head (CE loss + boundary smoothing)", "MiniLM-L12 + span", DONE),
     ("Encoders + boundary-smoothed span", "MiniLM-L6 + span-BS", "MML6-BS-v5data", "MML6-BS-v5data", "head → SPAN-BS head (CE loss + boundary smoothing)", "MiniLM-L6 + span", DONE),
-    ("Encoders + boundary-smoothed span", "mDeBERTa-v3-base + span-BS", "MDEB-BS-v5data", "MDEB-BS-v5data", "encoder → mDeBERTa-v3-base", "SPAN-BS", QUEUED),
+    ("Encoders + boundary-smoothed span", "mDeBERTa-v3-base + span-BS", "MDEB-BS-v5data", "MDEB-BS-v5data", "encoder → mDeBERTa-v3-base", "SPAN-BS", DONE),
     ("Encoders + boundary-smoothed span", "InfoXLM-base + span-BS", "INFO-BS-v5data", "INFO-BS-v5data", "encoder → InfoXLM-base", "SPAN-BS", DONE),
-    ("Encoders + boundary-smoothed span", "XLM-V-base + span-BS", "XLMV-BS-v5data", "XLMV-BS-v5data", "encoder → XLM-V-base", "SPAN-BS", RUN),
-    ("Encoders + boundary-smoothed span", "XLM-R large + span-BS", "XLMRL-BS-v5data", "XLMRL-BS-v5data", "encoder → XLM-R large", "SPAN-BS", QUEUED),
+    ("Encoders + boundary-smoothed span", "XLM-V-base + span-BS", "XLMV-BS-v5data", "XLMV-BS-v5data", "encoder → XLM-V-base (resumed from step 32,000 after a crash)", "SPAN-BS", QUEUED),
+    ("Encoders + boundary-smoothed span", "XLM-R large + span-BS", "XLMRL-BS-v5data", "XLMRL-BS-v5data", "encoder → XLM-R large", "SPAN-BS", RUN),
     ("Inference only", "v5.0 merge central", "A-v5data_merge-central", "–", "overlapping windows: most central window", "v5.0", DONE),
     ("Inference only", "v5.0 merge avg", "A-v5data_merge-avg", "–", "overlapping windows: mean probabilities", "v5.0", DONE),
     ("Inference only", "v5.0 overlap 64", "A-v5data_stride64", "–", "window overlap 96 → 64", "v5.0", DONE),
@@ -159,6 +160,9 @@ def main():
     cover = ["| " + " | ".join(["Group", "Experiment", "Status"] + [SHORT[s] for s in SETS]) + " |",
              "|" + "---|" * (3 + len(SETS))]
     notrun = ["| Group | Experiment | Change vs parent | Parent | Why not run |", "|---|---|---|---|---|"]
+    test = ["| Group | Experiment | Status | " + " | ".join(f"{s.removeprefix('ml_')} strict" for s in TEST_SETS)
+            + " | " + " | ".join(f"{s.removeprefix('ml_')} coverage" for s in TEST_SETS) + " |",
+            "|" + "---|" * (3 + 2 * len(TEST_SETS))]
     for grp, name, tag, log, change, parent, status in EXPS:
         if status not in (DONE, RUN, QUEUED):          # dropped / cancelled / on hold / proposed: own table
             notrun.append(f"| {grp} | {name} | {change} | {parent} | {status} |")
@@ -179,6 +183,10 @@ def main():
         strict.append("| " + " | ".join([grp, name, change, parent, status] + [f(v) for v in st + en]
                                        + [f(val_f1(log))]) + " |")
         cover.append("| " + " | ".join([grp, name, status] + [f(v) for v in cv]) + " |")
+        if grp != "Inference only" and (grp != "Stage 1: data" or tag == "A-v5data") and tag != "–":
+            r = [score(tag, s) for s in TEST_SETS]
+            test.append("| " + " | ".join([grp, name, status] + [f(x[0] if x else None) for x in r]
+                                          + [f(x[1] if x else None) for x in r]) + " |")
     block = "\n".join([
         START,
         "## v5 experiment log",
@@ -209,6 +217,13 @@ def main():
         "### Coverage (share of gold PII spans overlapped by any prediction)",
         "",
         *cover,
+        "",
+        "### Held-out test sets",
+        "",
+        "Scored once per model, after every v5 choice was made on the dev sets (struct = ml_struct_test, wm = "
+        "ml_wm_test, wm_known = ml_wm_known, the same grid with accounts in known institution formats such as IBAN, IBKR, Fidelity). Same scoring as above.",
+        "",
+        *test,
         "",
         "### Not run (dropped, cancelled, on hold or proposed)",
         "",
