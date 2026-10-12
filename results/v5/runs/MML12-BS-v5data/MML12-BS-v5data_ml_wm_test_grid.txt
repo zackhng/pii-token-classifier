@@ -1,0 +1,53 @@
+split ml_wm_test  predictions ../outputs/MML12-BS-v5data_ml_wm_test_predictions.jsonl  decoding default
+overall recall strict 0.930  lenient 0.974  (n=22085)
+
+recall (strict) by context x label
+context      PERSON BUSINESS  ADDRESS      DOB  ACCOUNT    PHONE    EMAIL      TIN      ALL
+field         0.993    0.920    0.905    0.953    0.908    0.928    0.994    0.940    0.943
+before        0.932    0.898    0.858    0.930    0.955    0.975    1.000    0.996    0.942
+after         0.906    0.928    0.820    0.952    0.941    0.969    0.997    0.972    0.934
+narrative     0.920    0.821    0.882    0.899    0.864    0.933    1.000    0.898    0.901
+list          0.973    0.924    0.876    0.957    0.961    0.920    0.980    0.939    0.942
+bracket       0.979    0.781    0.905    0.945    0.881    0.887    0.948    0.900    0.901
+spoken        0.909    0.916    0.781    0.947    0.940    0.975    0.989    0.945    0.925
+
+recall (strict) by format: md_table 0.946  bullets 0.932  numbered 0.924  lines 0.928  prose 0.917  transcript 0.925
+recall (strict) by mode: mono 0.922  cs_sentence 0.929  cs_document 0.938
+
+recall (strict) by language setting
+  ar/cs_document         0.938  (n=659)
+  ar/cs_sentence         0.923  (n=665)
+  ar/mono                0.913  (n=645)
+  en/mono                0.962  (n=625)
+  hi/cs_document         0.949  (n=648)
+  hi/cs_sentence         0.965  (n=661)
+  hi/mono                0.956  (n=663)
+  id/cs_document         0.951  (n=632)
+  id/cs_sentence         0.969  (n=668)
+  id/mono                0.959  (n=653)
+  ja/cs_document         0.903  (n=650)
+  ja/cs_sentence         0.845  (n=647)
+  ja/mono                0.836  (n=652)
+  ko/cs_document         0.867  (n=624)
+  ko/cs_sentence         0.816  (n=675)
+  ko/mono                0.753  (n=631)
+  ms/cs_document         0.932  (n=649)
+  ms/cs_sentence         0.943  (n=668)
+  ms/mono                0.918  (n=644)
+  th/cs_document         0.963  (n=624)
+  th/cs_sentence         0.962  (n=631)
+  th/mono                0.962  (n=663)
+  tl/cs_document         0.956  (n=655)
+  tl/cs_sentence         0.966  (n=615)
+  tl/mono                0.961  (n=659)
+  vi/cs_document         0.939  (n=628)
+  vi/cs_sentence         0.958  (n=645)
+  vi/mono                0.928  (n=636)
+  zh-Hans/cs_document    0.962  (n=632)
+  zh-Hans/cs_sentence    0.927  (n=670)
+  zh-Hans/mono           0.943  (n=651)
+  zh-Hant/cs_document    0.957  (n=658)
+  zh-Hant/cs_sentence    0.953  (n=684)
+  zh-Hant/mono           0.966  (n=675)
+
+look-alikes tagged as PII, by context: ALL 0.006  after 0.006  before 0.004  field 0.002  filler 0.008  spoken 0.007
